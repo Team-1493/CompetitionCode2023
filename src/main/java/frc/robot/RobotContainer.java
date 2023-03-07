@@ -73,7 +73,7 @@ public class RobotContainer {
   public JoystickButton btnShootCube3 = operatorJoystick.getButton(3);
   public JoystickButton btnShootCubeAuto = operatorJoystick.getButton(4);
   public JoystickButton btnIntakeCube = operatorJoystick.getButton(6);
-  public JoystickButton btnArmToGetcone = operatorJoystick.getButton(7);
+  public JoystickButton btnArmToGetcone = operatorJoystick.getButton(10);
   public JoystickButton btnIntakeFromShooter = operatorJoystick.getButton(7);
   public JoystickButton btnReverseIntake = operatorJoystick.getButton(8);
   public JoystickButton btnStow = operatorJoystick.getButton(9);
@@ -107,11 +107,14 @@ public class RobotContainer {
 
     new Trigger(btnIntakeCube).whileTrue(cubeIntake);
     new Trigger(btnIntakeCube).onFalse(stowCommand);
+
     new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
     new Trigger(btnReverseIntake).onFalse(stowCommand);
 
-    new Trigger(btnArmToGetcone).whileTrue(new ArmOverCone(m_ArmSystem, m_IntakeSystem));
-//    new Trigger(btnIntakeFromShooter).whileFalse(new IntakeFromShooter(m_IntakeSystem));
+    //new Trigger(btnArmToGetcone).whileTrue(new ArmOverCone(m_ArmSystem, m_IntakeSystem));
+    
+    new Trigger(btnIntakeFromShooter).whileTrue(new IntakeFromShooter(m_IntakeSystem));
+
     new Trigger(btnStow).onTrue(stowCommand);
 
     new Trigger(driverJoystick.pov0).whileTrue(m_swervedriveSystem.rotateInPlace(0.));

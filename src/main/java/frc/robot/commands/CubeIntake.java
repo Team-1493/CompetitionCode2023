@@ -21,7 +21,7 @@ public class CubeIntake extends CommandBase {
   @Override
   public void initialize() {
     arm.resetIntegralAccumulator();
-    intake.IntakeCube();
+    intake.Unstow(0.5);
     arm.motorActive=true;
 
   }
@@ -29,6 +29,9 @@ public class CubeIntake extends CommandBase {
   // Called every time the scheduler runs while the command is schedule d.
   @Override
   public void execute() {
+    if (arm.getLowerLimitSwitch()){
+      intake.IntakeCube();
+    }
     arm.setPositionInCounts(arm.posCubeIntake);
   }
 

@@ -37,7 +37,7 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
 
   public final Pigeon gyro = new Pigeon(20);
   public SwerveModuleState[] moduleStatesOptimized = new SwerveModuleState[4];
-  public double heading=gyro.getHeadingRadians();
+  public double heading=-gyro.getHeadingRadians();
   public SwerveModulePosition[] modulePos = new SwerveModulePosition[4];
   public SwerveDriveOdometry m_odometry ;
   public PIDController rotatePID;
@@ -84,7 +84,7 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
   public void setMotorsFromStick(double[] stickState ) {
     double vx=stickState[0]*maxVelocityMPS;
     double vy=stickState[1]*maxVelocityMPS;
-    double omega=stickState[2];
+    double omega=2*stickState[2];
 
     if (Math.abs(omega)<0.001){
       if( !rotatePIDon) {
@@ -243,7 +243,7 @@ public void resetOdometryToZero(){
 
   @Override
   public void periodic() {
-    heading=gyro.getHeadingRadians();
+    heading=-gyro.getHeadingRadians();
     modulePos=getModulePositions();    
     try{
     m_odometry.update(

@@ -26,13 +26,13 @@ public class IntakeSystem extends SubsystemBase {
 
 
     private double ShootSpeedUpper1=700;
-    private double ShootSpeedUpper2=1200;
+    private double ShootSpeedUpper2=1100;
     private double ShootSpeedUpper3=1600;
     private double ShootSpeedLower1=700;
-    private double ShootSpeedLower2=1200;
+    private double ShootSpeedLower2=1100;
     private double ShootSpeedLower3=1300;
-    private double ShooterUpperRevSetSpeed=-1200;
-    private double ShooterLowerRevSetSpeed=-1200;
+    private double ShooterUpperRevSetSpeed=-1000;
+    private double ShooterLowerRevSetSpeed=-1000;
 
     private double cubeIntakePower = 0.20;
     private double frontIntakePower = 0.2;
@@ -127,16 +127,20 @@ public class IntakeSystem extends SubsystemBase {
 
   public void reverseIntake() {
     TopConveyor.set(ControlMode.Velocity,-topConveyorIntakeSpeed);
-    FrontIntakeBar.set(ControlMode.PercentOutput, -cubeIntakePower);
-    RearIntakeBars.set(ControlMode.PercentOutput, -rearIntakePower);
-    ShooterTop.set(ControlMode.Velocity, -ShootSpeedUpper2);
-    ShooterBottom.set(ControlMode.Velocity, ShootSpeedLower2);
+//    FrontIntakeBar.set(ControlMode.PercentOutput, -cubeIntakePower);
+//    RearIntakeBars.set(ControlMode.PercentOutput, -rearIntakePower);
+    ShooterTop.set(ControlMode.Velocity, ShooterUpperRevSetSpeed);
+    ShooterBottom.set(ControlMode.Velocity,ShooterLowerRevSetSpeed);
   }
 
   public void IntakeCube() {
       TopConveyor.set(ControlMode.Velocity,topConveyorIntakeSpeed);
       FrontIntakeBar.set(ControlMode.PercentOutput, cubeIntakePower);
       RearIntakeBars.set(ControlMode.PercentOutput, rearIntakePower);
+  }
+
+  public void Unstow(double vel){
+    FrontIntakeBar.set(ControlMode.PercentOutput, vel);
   }
 
   public void runFrontIntakeBar() {
@@ -161,7 +165,7 @@ public void runFrontIntakeBar(double speed) {
   }
 
   public void stowRollers(){
-    FrontIntakeBar.set(ControlMode.PercentOutput, -0.25);
+    FrontIntakeBar.set(ControlMode.PercentOutput, -0.35);
 
   }
 

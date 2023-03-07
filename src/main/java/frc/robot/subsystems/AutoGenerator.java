@@ -44,7 +44,7 @@ public class AutoGenerator extends SubsystemBase{
     
     
     //Loading all autonomous paths and storing them in variables
-    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
+    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(2, 1));
     public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("testPath2", new PathConstraints(4, 3));
     public PathPlannerTrajectory testPath3 = PathPlanner.loadPath("testPath3", new PathConstraints(4, 3)); 
 

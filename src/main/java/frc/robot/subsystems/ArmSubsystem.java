@@ -27,9 +27,9 @@ public class ArmSubsystem extends SubsystemBase {
     DigitalInput limitUpper = new DigitalInput(0);
     DigitalInput limitLower = new DigitalInput(4);
     // Gains for position control
-    double armkP = 0.3, armkD = 100, armkI = 0.00075, armkIZone=100, armkF = 5;
-    double armkP2 =0.75, armkD2 = 75, armkI2 = 0.0, armkIZone2=100, armkF2 =3;
-    double magicVel=75,magicAcc=75;
+    double armkP = 0.1, armkD = 100, armkI = 0.0, armkIZone=100, armkF = 4;
+    double armkP2 =0.2, armkD2 = 100, armkI2 = 0.0, armkIZone2=100, armkF2 =6;
+    double magicVel=50,magicAcc=50;
 
     // feedforward accounts for gravity, friction and s g
     // 3 sets of gains, depending on where arm is relative to neutral position -69 deg
@@ -165,19 +165,19 @@ public class ArmSubsystem extends SubsystemBase {
         
         // slot 0 for high position gains, slot 2 for low position gains
         if(setPoint==posCubeIntake && slot!=0) {
-            armMotor.selectProfileSlot(2, 0);
+            armMotor.selectProfileSlot(0, 0);
             slot=0;
         }
 
         else if (setPoint==posStow && slot!=1){
-            armMotor.selectProfileSlot(0, 0);
+            armMotor.selectProfileSlot(1, 0);
             slot=1;
         }
 
 
         else if (setPoint==posOverCone && slot!=2){
-            armMotor.selectProfileSlot(0, 0);
-            slot=0;
+            armMotor.selectProfileSlot(2, 0);
+            slot=2;
         }
         calculateFeedfwd();
         if(!lsState && motorActive)
