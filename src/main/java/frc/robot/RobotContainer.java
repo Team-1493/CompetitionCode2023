@@ -27,6 +27,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -48,14 +49,14 @@ public class RobotContainer {
   public final Stick driverJoystick =new Stick(0);
   public final Stick operatorJoystick =new Stick(1);
 
-
   Supplier<double[]> driverStickState = () -> driverJoystick.readStick();
   Supplier<double[]> operatorStickState = () -> operatorJoystick.readStick();
 
   public final Stow stowCommand = new Stow(m_ArmSystem,m_IntakeSystem);
   public final ReverseIntake reverseIntake = new ReverseIntake(m_ArmSystem,m_IntakeSystem);
+  public JoystickButton btnIntakeCube = operatorJoystick.getButton(6);
 
-  public final CubeIntake cubeIntake = new CubeIntake(m_ArmSystem,m_IntakeSystem);
+  public final CubeIntake cubeIntake = new CubeIntake(m_ArmSystem,m_IntakeSystem,btnIntakeCube);
   public final ArmOverCone armOverConeCommand = 
       new ArmOverCone(m_ArmSystem, m_IntakeSystem);
   public final ArmDefaultCommand armDefault=
@@ -71,15 +72,14 @@ public class RobotContainer {
 //  public JoystickButton btnGrabCone = driverJoystick.getButton(6); // R1
 
 
-  public JoystickButton btnShootCube1 = operatorJoystick.getButton(2);
-  public JoystickButton btnShootCube2 = operatorJoystick.getButton(1);
-  public JoystickButton btnShootCube3 = operatorJoystick.getButton(3);
-  public JoystickButton btnShootCubeFarLow = operatorJoystick.getButton(4);
+  public JoystickButton btnShootCube1 = operatorJoystick.getButton(2); // A
+  public JoystickButton btnShootCube2 = operatorJoystick.getButton(1); //B
+  public JoystickButton btnShootCube3 = operatorJoystick.getButton(3); // Y
+  public JoystickButton btnShootCubeFarLow = operatorJoystick.getButton(4); //X
   public JoystickButton btnShootCubeFarHigh = operatorJoystick.getButton(8);
   
   public POVButton btnShootCubeAuto = operatorJoystick.pov180;
 
-  public JoystickButton btnIntakeCube = operatorJoystick.getButton(6);
 
  // public JoystickButton btnReverseIntake = operatorJoystick.getButton(8);
   public JoystickButton btnStow = operatorJoystick.getButton(9);
@@ -105,11 +105,21 @@ public class RobotContainer {
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
     new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
 
+    new Trigger(driverJoystick.pov0).onTrue
+       (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(0)));
+    new Trigger(driverJoystick.pov90).onTrue
+       (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(Math.PI/2)));
+    new Trigger(driverJoystick.pov180).onTrue
+       (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(Math.PI)));
+    new Trigger(driverJoystick.pov270).onTrue
+       (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(-Math.PI/2)));
+
+/*     
     new Trigger(driverJoystick.pov0).onTrue(new RotateInPlace(m_swervedriveSystem, 0));
     new Trigger(driverJoystick.pov90).onTrue(new RotateInPlace(m_swervedriveSystem, Math.PI/2));
     new Trigger(driverJoystick.pov180).onTrue(new RotateInPlace(m_swervedriveSystem, Math.PI));  
     new Trigger(driverJoystick.pov270).onTrue(new RotateInPlace(m_swervedriveSystem, -Math.PI/2));
- 
+ */
 
 //    new Trigger(btnGrabCone).whileTrue(new GrabCone(m_IntakeSystem,m_ArmSystem));
 //    new Trigger(btnDropCone).whileTrue(new DropCone(m_IntakeSystem,m_ArmSystem));
@@ -126,10 +136,9 @@ public class RobotContainer {
     new Trigger(operatorJoystick.mapStick(3)).whileTrue(new IntakeFromShooter(m_IntakeSystem));
 
     
-    new Trigger(btnIntakeCube).whileTrue(cubeIntake);
-    new Trigger(btnIntakeCube).onFalse(stowCommand);
-
-//    new Trigger(btnIntakeFromShooter).whileTrue(new IntakeFromShooter(m_IntakeSystem));
+//    new Trigger(btnIntakeCube).whileTrue(cubeIntake);
+//    new Trigger(btnIntakeCube).onFalse(stowCommand);
+      new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
 
 //    new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
 //    new Trigger(btnReverseIntake).onFalse(stowCommand);

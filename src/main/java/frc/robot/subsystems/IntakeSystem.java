@@ -38,7 +38,7 @@ public class IntakeSystem extends SubsystemBase {
     private double ShootSpeedLower4=1300;
 
     private double ShootSpeedUpper5=2000;
-    private double ShootSpeedLower5=1800;
+    private double ShootSpeedLower5=1975;
 
     private double ShooterUpperRevSetSpeed=-1000;
     private double ShooterLowerRevSetSpeed=-1000;
@@ -54,12 +54,13 @@ public class IntakeSystem extends SubsystemBase {
 
 
     private double shooterKf = .244;
-    private double shooterKp = 0.012;
+    private double shooterKp = -0.012;  // NOT SURE WHY NEGATIVE IS BEST?
     private double shooterKi = 0.0;
     private double shooterKizone = 0.0;
 
     private double ShooterUpperSetSpeed=0;
     private double ShooterLowerSetSpeed=0;
+    private int shootLevel;
 
     
     public IntakeSystem() {
@@ -185,7 +186,7 @@ public void runFrontIntakeBar(double speed) {
 
 
   public boolean AtShootSpeed(){
-    return getBottomShooterRPM()>=0.9*ShooterLowerSetSpeed;
+    return (getBottomShooterRPM()>=0.9*ShooterLowerSetSpeed);
   }
 
   public void ShootCube(int level){

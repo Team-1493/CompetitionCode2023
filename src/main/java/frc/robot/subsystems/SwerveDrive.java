@@ -79,6 +79,7 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     
     rotatePID=new ProfiledPIDController(kProtate, 0, kDrotate, trapProf);   // need to tune this
     rotatePID.setTolerance(.02);
+
     rotatePID.enableContinuousInput(-Math.PI, Math.PI);
     resetRotatePID(0);
 
@@ -106,9 +107,6 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
       */
     if(rotatePIDon) setMotors(vx, vy);
     else setMotors(vx, vy,0);
-
-
-
     }
     else {
       rotatePIDon=false;
@@ -118,17 +116,19 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     SmartDashboard.putNumber("heading set", headingSet);
 }
 
+
 //  set motors to provided vx,vy and an omega calculated from the rotation PID controller
 // must have set the reset the controller and set its goal  
 public void setMotors(double vx,double vy) {
   //  control will return immediately back to setMotorsFromStick. 
   // We don't want to change the heading setpoint. Robot will keep turning to setpoint
   // until rotate stick is pushed or this method is called again. 
-  rotatePIDon=true;  
+
   double pidOutput= rotatePID.calculate(heading);
   SmartDashboard.putNumber("rotatePID calc",pidOutput);
   SmartDashboard.putNumber("heading error", rotatePID.getPositionError());
   setMotors(vx,vy,pidOutput);
+  if (rotatePID.atGoal()) rotatePIDon=false;
 }
 
 // set motors using specified  vx,vy, omega in meters/sec and radians/sec
@@ -343,6 +343,7 @@ static public  SwerveModuleState optimize(SwerveModuleState sms, double currentA
 public void resetRotatePID(double goal){
   rotatePID.reset(heading);
   rotatePID.setGoal(goal);
+  rotatePIDon=true;
 }
 
 }

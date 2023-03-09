@@ -1,24 +1,20 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSystem;
 
-public class CubeIntake extends CommandBase {
+public class CubeIntakeAuto extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 
     private ArmSubsystem arm;
     private IntakeSystem intake;
-    private JoystickButton btn;
 
-  public CubeIntake(ArmSubsystem m_arm,IntakeSystem m_intake,JoystickButton m_btn) {
+  public CubeIntakeAuto(ArmSubsystem m_arm,IntakeSystem m_intake) {
     arm = m_arm;
     intake = m_intake;
-    btn=m_btn;
     addRequirements(arm,intake);
   }
 
@@ -51,7 +47,7 @@ public class CubeIntake extends CommandBase {
   public boolean isFinished() { 
     boolean ir = intake.HasCube();
     SmartDashboard.putBoolean("hasCube", ir);
-    return ir||!btn.getAsBoolean();
+    return ir;
   }
 }
 

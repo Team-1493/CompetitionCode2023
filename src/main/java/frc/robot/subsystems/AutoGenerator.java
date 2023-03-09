@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.CubeIntake;
+import frc.robot.commands.CubeIntakeAuto;
 import frc.robot.commands.Stow;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveModule;
@@ -36,7 +36,7 @@ public class AutoGenerator extends SubsystemBase{
     private SwerveDrive sds;   
     
     //Defining the CubeIntake and Stow commands used by the AutoGenerator in placeholder variables
-    private CubeIntake intake_cube;
+    private CubeIntakeAuto intake_cube;
     private Stow stow_arm;
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
@@ -69,7 +69,7 @@ public class AutoGenerator extends SubsystemBase{
         sds = m_sds;
 
         //defining the CubeIntake and Stow commands used by this class by using the given ArmSubsystem and IntakeSystem
-        intake_cube = new CubeIntake(arm, intake);
+        intake_cube = new CubeIntakeAuto(arm, intake);
         stow_arm = new Stow(arm, intake);
 
         //When 360 degrees is exceeded, the rotation will loop back to 1 (no going over 360 degrees or 2*PI radians)
