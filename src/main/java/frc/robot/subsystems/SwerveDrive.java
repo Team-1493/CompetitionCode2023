@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,18 +42,23 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
   public double heading=-gyro.getHeadingRadians();
   public SwerveModulePosition[] modulePos = new SwerveModulePosition[4];
   public SwerveDriveOdometry m_odometry ;
-  public PIDController rotatePID;
-  private double kProtate=0.01,kDrotate=0.0;
+  public ProfiledPIDController rotatePID;
+  private double kProtate=4.0,kDrotate=0.1;
+  public double TrapMaxVel_rotate=20;
+  public double TrapMaxAcc_rotate=30;
+  private TrapezoidProfile.Constraints trapProf =
+  new TrapezoidProfile.Constraints(TrapMaxVel_rotate,TrapMaxAcc_rotate);
+
+    
   private double[] encPositionRad = new double[4];   // encoder position of swerve motors
   private String[] moduleNames={"FR","FL","BR","BL"};
   double headingSet=0;
-  boolean rotatePIDon=false;
- 
+  public boolean rotatePIDon=false;
+  
 
  // Constrcutor 
   public SwerveDrive(){
     
-
     // Turn Module Offsets in degrees   FR-FL-BR-BL
     double[] turnMotorZeroPos={57.7,-85.4,117.2,-77.6};
 
@@ -68,9 +75,13 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     m_odometry=new SwerveDriveOdometry(m_kinematics,new Rotation2d(heading),modulePos, 
         new Pose2d(0,0,new Rotation2d(0)));
 
-    rotatePID=new PIDController(kProtate, 0, kDrotate);   // need to tune this
+        
+    
+    rotatePID=new ProfiledPIDController(kProtate, 0, kDrotate, trapProf);   // need to tune this
     rotatePID.setTolerance(.02);
-    rotatePID.setSetpoint(0);
+    rotatePID.enableContinuousInput(-Math.PI, Math.PI);
+    resetRotatePID(0);
+
     SmartDashboard.putNumber("Max Vel FPS",maxVelocityFPS);
     SmartDashboard.putNumber("Max Drive RPM",modules[0].MPStoRPM(maxVelocityMPS));
     SmartDashboard.putNumber("kProtate",kProtate);
@@ -87,13 +98,17 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     double omega=2*stickState[2];
 
     if (Math.abs(omega)<0.001){
+/* 
       if( !rotatePIDon) {
         headingSet=heading;
         rotatePIDon=true;
       }
-//      setMotors(vx, vy,new Rotation2d(headingSet));
- //     setMotors(vx, vy,new Rotation2d(headingSet));
-      setMotors(vx, vy,0);
+      */
+    if(rotatePIDon) setMotors(vx, vy);
+    else setMotors(vx, vy,0);
+
+
+
     }
     else {
       rotatePIDon=false;
@@ -103,21 +118,21 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     SmartDashboard.putNumber("heading set", headingSet);
 }
 
-
-public void setMotors(double vx,double vy, Rotation2d angle ) {
+//  set motors to provided vx,vy and an omega calculated from the rotation PID controller
+// must have set the reset the controller and set its goal  
+public void setMotors(double vx,double vy) {
   //  control will return immediately back to setMotorsFromStick. 
   // We don't want to change the heading setpoint. Robot will keep turning to setpoint
   // until rotate stick is pushed or this method is called again. 
   rotatePIDon=true;  
-  rotatePID.setSetpoint(angle.getRadians()); 
-  SmartDashboard.putNumber("rotatePID calc", rotatePID.calculate(heading));
+  double pidOutput= rotatePID.calculate(heading);
+  SmartDashboard.putNumber("rotatePID calc",pidOutput);
   SmartDashboard.putNumber("heading error", rotatePID.getPositionError());
-  setMotors(vx,vy,rotatePID.calculate(heading));
+  setMotors(vx,vy,pidOutput);
 }
 
 // set motors using specified  vx,vy, omega in meters/sec and radians/sec
    public void setMotors(double vx,double vy, double omega ) {
-  SmartDashboard.putNumber("headng", heading);
     ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
     vx, vy, omega,  new Rotation2d(heading));
 // Convert to speeds module states
@@ -156,11 +171,11 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
 
   }
 
-  public CommandBase rotateInPlace(double angle) {
-    // implicitly require `this`
-    Rotation2d rot = new Rotation2d(angle);
-    return this.runOnce(() -> setMotors(0, 0, rot));
+
+  public CommandBase stopRotateInPlace() {
+    return this.runOnce(() -> rotatePIDon=false);
   }
+
 
 
 // a bunch of getters - so that the everything except the SwerveModules class can be 
@@ -323,6 +338,11 @@ static public  SwerveModuleState optimize(SwerveModuleState sms, double currentA
     double speed = sms.speedMetersPerSecond*rev;    
     return new SwerveModuleState(
         speed, new Rotation2d(optimizedAngle));
+}
+
+public void resetRotatePID(double goal){
+  rotatePID.reset(heading);
+  rotatePID.setGoal(goal);
 }
 
 }

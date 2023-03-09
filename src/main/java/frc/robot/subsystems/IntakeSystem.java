@@ -25,12 +25,21 @@ public class IntakeSystem extends SubsystemBase {
     private double topConveyorInjectSpeed = 0.35;
 
 
-    private double ShootSpeedUpper1=700;
-    private double ShootSpeedUpper2=1100;
-    private double ShootSpeedUpper3=1600;
-    private double ShootSpeedLower1=700;
-    private double ShootSpeedLower2=1100;
-    private double ShootSpeedLower3=1300;
+    private double ShootSpeedUpper1=500;
+    private double ShootSpeedLower1=500;
+
+    private double ShootSpeedUpper2=700;
+    private double ShootSpeedLower2=700;
+
+    private double ShootSpeedUpper3=1100;
+    private double ShootSpeedLower3=1100;
+
+    private double ShootSpeedUpper4=1600;
+    private double ShootSpeedLower4=1300;
+
+    private double ShootSpeedUpper5=2000;
+    private double ShootSpeedLower5=1800;
+
     private double ShooterUpperRevSetSpeed=-1000;
     private double ShooterLowerRevSetSpeed=-1000;
 
@@ -63,10 +72,15 @@ public class IntakeSystem extends SubsystemBase {
         SmartDashboard.putNumber("Shoot Speed U1", ShootSpeedUpper1);
         SmartDashboard.putNumber("Shoot Speed U2", ShootSpeedUpper2);
         SmartDashboard.putNumber("Shoot Speed U3", ShootSpeedUpper3);
+        SmartDashboard.putNumber("Shoot Speed U4", ShootSpeedUpper4);
+        SmartDashboard.putNumber("Shoot Speed U5", ShootSpeedUpper5);
+
 
         SmartDashboard.putNumber("Shoot Speed L1", ShootSpeedLower1);
         SmartDashboard.putNumber("Shoot Speed L2", ShootSpeedLower2);
         SmartDashboard.putNumber("Shoot Speed L3", ShootSpeedLower3);
+        SmartDashboard.putNumber("Shoot Speed L4", ShootSpeedLower4);
+        SmartDashboard.putNumber("Shoot Speed L5", ShootSpeedLower5);
 
         SmartDashboard.putNumber("Shoot Rev Speed L", ShooterLowerRevSetSpeed);
         SmartDashboard.putNumber("Shoot Rev Speed U", ShooterUpperRevSetSpeed);
@@ -183,10 +197,21 @@ public void runFrontIntakeBar(double speed) {
       ShooterUpperSetSpeed=ShootSpeedUpper2;
       ShooterLowerSetSpeed=ShootSpeedLower2;
       }
-    else {
+    else if (level==3) {
       ShooterUpperSetSpeed=ShootSpeedUpper3;
       ShooterLowerSetSpeed=ShootSpeedLower3;
       }
+
+    else if (level==4) {
+        ShooterUpperSetSpeed=ShootSpeedUpper4;
+        ShooterLowerSetSpeed=ShootSpeedLower4;
+    }
+
+    else {
+      ShooterUpperSetSpeed=ShootSpeedUpper5;
+      ShooterLowerSetSpeed=ShootSpeedLower5;
+    }
+      
     ShooterTop.set(ControlMode.Velocity, ShooterUpperSetSpeed);
     ShooterBottom.set(ControlMode.Velocity, ShooterLowerSetSpeed);
     SmartDashboard.putNumber("Shooter Top RPM", getTopShooterRPM());
@@ -243,9 +268,13 @@ public void runFrontIntakeBar(double speed) {
     ShootSpeedLower1 = SmartDashboard.getNumber("Shoot Speed L1", ShootSpeedLower1);
     ShootSpeedLower2 = SmartDashboard.getNumber("Shoot Speed L2", ShootSpeedLower2);
     ShootSpeedLower3 = SmartDashboard.getNumber("Shoot Speed L3", ShootSpeedLower3);
+    ShootSpeedLower4 = SmartDashboard.getNumber("Shoot Speed L5", ShootSpeedLower4);
+    ShootSpeedLower5 = SmartDashboard.getNumber("Shoot Speed L5", ShootSpeedLower5);
     ShootSpeedUpper1 = SmartDashboard.getNumber("Shoot Speed U1", ShootSpeedUpper1);
     ShootSpeedUpper2 = SmartDashboard.getNumber("Shoot Speed U2", ShootSpeedUpper2);
     ShootSpeedUpper3 = SmartDashboard.getNumber("Shoot Speed U3", ShootSpeedUpper3);
+    ShootSpeedUpper4 = SmartDashboard.getNumber("Shoot Speed U4", ShootSpeedUpper4);
+    ShootSpeedUpper5 = SmartDashboard.getNumber("Shoot Speed U5", ShootSpeedUpper5);
 
     ShooterLowerRevSetSpeed =   SmartDashboard.getNumber("Shoot Rev Speed L", ShooterLowerRevSetSpeed);
     ShooterUpperRevSetSpeed =   SmartDashboard.getNumber("Shoot Rev Speed U", ShooterUpperRevSetSpeed);

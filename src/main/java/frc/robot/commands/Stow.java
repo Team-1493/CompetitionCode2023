@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSystem;
@@ -9,6 +10,9 @@ public class Stow extends CommandBase {
  
     private ArmSubsystem m_ArmSubsystem;
     private IntakeSystem m_IntakeSystem;
+    private double lsTime;
+    private double currentTime;
+    private double timeToRunWheels=0.25;
 
   public Stow(ArmSubsystem arm,IntakeSystem intake) {
     m_ArmSubsystem = arm;
@@ -21,16 +25,29 @@ public class Stow extends CommandBase {
   @Override
   public void initialize() {
     m_ArmSubsystem.resetIntegralAccumulator();  
-    m_IntakeSystem.stowRollers();;
+    m_IntakeSystem.stowRollers();
+    currentTime=Timer.getFPGATimestamp();
+    lsTime=currentTime;
 
   }
 
   // Called every time the scheduler runs while the command is schedule d.
   @Override
   public void execute() {
-    m_ArmSubsystem.setPositionInCounts(m_ArmSubsystem.posStow);
-    
-  }
+    currentTime=Timer.getFPGATimestamp();
+  
+    if(m_ArmSubsystem.getLowerLimitSwitch()) {     
+        m_ArmSubsystem.setPositionInCounts(m_ArmSubsystem.posStow);
+        lsTime=currentTime;
+    }
+
+    else{     
+      m_ArmSubsystem.StopMotors();    
+    }
+// TO DO - add a line to stop wheels if current gets to high so we don't burn
+// out the motor if something goes wrong.
+
+    }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -42,8 +59,10 @@ public class Stow extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !m_ArmSubsystem.getLowerLimitSwitch();
-    //return m_ArmSubsystem.getCounts() <= m_ArmSubsystem.posStowFinish;
+//    return !m_ArmSubsystem.getLowerLimitSwitch();
+
+//    checks to see if sufficient time has passed since triggering limit switch 
+    return ( currentTime-lsTime>=timeToRunWheels);
   }
 }
 

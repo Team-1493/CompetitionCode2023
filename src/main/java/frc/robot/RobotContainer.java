@@ -16,6 +16,7 @@ import frc.robot.commands.ArmOverCone;
 import frc.robot.commands.CubeIntake;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ReverseIntake;
+import frc.robot.commands.RotateInPlace;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.Stow;
 import frc.robot.subsystems.IntakeSystem;
@@ -27,6 +28,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.SwerveDrive;
 
@@ -46,6 +48,7 @@ public class RobotContainer {
   public final Stick driverJoystick =new Stick(0);
   public final Stick operatorJoystick =new Stick(1);
 
+
   Supplier<double[]> driverStickState = () -> driverJoystick.readStick();
   Supplier<double[]> operatorStickState = () -> operatorJoystick.readStick();
 
@@ -61,22 +64,28 @@ public class RobotContainer {
   public final DriveStick driveCommand = new DriveStick(m_swervedriveSystem,driverStickState); 
 
   public JoystickButton btnAimAtTape = driverJoystick.getButton(1);
-  public JoystickButton btnResetGyro = driverJoystick.getButton(2);
+  public JoystickButton btnResetGyro = driverJoystick.getButton(6);
   public JoystickButton btnUpdateConstants = driverJoystick.getButton(3);
   public JoystickButton btnFollowLimelight = driverJoystick.getButton(4);
   public JoystickButton btnDropCone = driverJoystick.getButton(5); //L1
-  public JoystickButton btnGrabCone = driverJoystick.getButton(6); // R1
+//  public JoystickButton btnGrabCone = driverJoystick.getButton(6); // R1
 
 
-  public JoystickButton btnShootCube1 = operatorJoystick.getButton(1);
-  public JoystickButton btnShootCube2 = operatorJoystick.getButton(2);
+  public JoystickButton btnShootCube1 = operatorJoystick.getButton(2);
+  public JoystickButton btnShootCube2 = operatorJoystick.getButton(1);
   public JoystickButton btnShootCube3 = operatorJoystick.getButton(3);
-  public JoystickButton btnShootCubeAuto = operatorJoystick.getButton(4);
+  public JoystickButton btnShootCubeFarLow = operatorJoystick.getButton(4);
+  public JoystickButton btnShootCubeFarHigh = operatorJoystick.getButton(8);
+  
+  public POVButton btnShootCubeAuto = operatorJoystick.pov180;
+
   public JoystickButton btnIntakeCube = operatorJoystick.getButton(6);
-  public JoystickButton btnArmToGetcone = operatorJoystick.getButton(10);
-  public JoystickButton btnIntakeFromShooter = operatorJoystick.getButton(7);
-  public JoystickButton btnReverseIntake = operatorJoystick.getButton(8);
+
+ // public JoystickButton btnReverseIntake = operatorJoystick.getButton(8);
   public JoystickButton btnStow = operatorJoystick.getButton(9);
+ 
+  public JoystickButton btnArmToGetcone = operatorJoystick.getButton(10);
+
 
 
   
@@ -92,45 +101,40 @@ public class RobotContainer {
 
   private void configureBindings() {
 
+// driver functions    
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
-    new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));    
+    new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
+
+    new Trigger(driverJoystick.pov0).onTrue(new RotateInPlace(m_swervedriveSystem, 0));
+    new Trigger(driverJoystick.pov90).onTrue(new RotateInPlace(m_swervedriveSystem, Math.PI/2));
+    new Trigger(driverJoystick.pov180).onTrue(new RotateInPlace(m_swervedriveSystem, Math.PI));  
+    new Trigger(driverJoystick.pov270).onTrue(new RotateInPlace(m_swervedriveSystem, -Math.PI/2));
+ 
 
 //    new Trigger(btnGrabCone).whileTrue(new GrabCone(m_IntakeSystem,m_ArmSystem));
 //    new Trigger(btnDropCone).whileTrue(new DropCone(m_IntakeSystem,m_ArmSystem));
-    
-    new Trigger(btnShootCube1).whileTrue(new ShootCube(m_IntakeSystem,1));
-    new Trigger(btnShootCube2).whileTrue(new ShootCube(m_IntakeSystem,2));
-    new Trigger(btnShootCube3).whileTrue(new ShootCube(m_IntakeSystem,3));
-    new Trigger(btnShootCube1).whileTrue(new ShootCube(m_IntakeSystem,1));
-    new Trigger(btnShootCube2).whileTrue(new ShootCube(m_IntakeSystem,2));
-    new Trigger(btnShootCube3).whileTrue(new ShootCube(m_IntakeSystem,3));
 
+
+// operator functions
+
+    new Trigger(btnShootCube1).whileTrue(new ShootCube(m_IntakeSystem,1));
+    new Trigger(btnShootCube2).whileTrue(new ShootCube(m_IntakeSystem,2));
+    new Trigger(btnShootCube3).whileTrue(new ShootCube(m_IntakeSystem,3));
+    new Trigger(btnShootCubeFarLow).whileTrue(new ShootCube(m_IntakeSystem,4));
+    new Trigger(btnShootCubeFarHigh).whileTrue(new ShootCube(m_IntakeSystem,5));
+
+    new Trigger(operatorJoystick.mapStick(3)).whileTrue(new IntakeFromShooter(m_IntakeSystem));
+
+    
     new Trigger(btnIntakeCube).whileTrue(cubeIntake);
     new Trigger(btnIntakeCube).onFalse(stowCommand);
 
-    new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
-    new Trigger(btnReverseIntake).onFalse(stowCommand);
+//    new Trigger(btnIntakeFromShooter).whileTrue(new IntakeFromShooter(m_IntakeSystem));
 
-    //new Trigger(btnArmToGetcone).whileTrue(new ArmOverCone(m_ArmSystem, m_IntakeSystem));
-    
-    new Trigger(btnIntakeFromShooter).whileTrue(new IntakeFromShooter(m_IntakeSystem));
+//    new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
+//    new Trigger(btnReverseIntake).onFalse(stowCommand);
 
     new Trigger(btnStow).onTrue(stowCommand);
-
-    new Trigger(driverJoystick.pov0).whileTrue(m_swervedriveSystem.rotateInPlace(0.));
-    new Trigger(driverJoystick.pov90).onTrue(m_swervedriveSystem.rotateInPlace(90));
-    new Trigger(driverJoystick.pov180).onTrue(m_swervedriveSystem.rotateInPlace(180));   
-    new Trigger(driverJoystick.pov270).onTrue(m_swervedriveSystem.rotateInPlace(-90));
-
-    //operator buttons
-/*  Tayab - you need to rethink these
- 
-    new Trigger(moveMotorForward).onTrue(grabbingCone.rotateMotorFoward.until(coneLimitSwitch::get));
-    new Trigger(moveMotorBackward).onTrue(grabbingCone.rotateMotorBackward.until(coneLimitSwitch::get));
-
-    new Trigger(coneGrabberForwardButton).onTrue(grabbingCone.rotateMotorFoward);
-    new Trigger(coneGrabberBackwardButton).onTrue(grabbingCone.rotateMotorBackward);
- */
 
   }
 

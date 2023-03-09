@@ -144,7 +144,7 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
 
     m_turn.configFactoryDefault();
     
-
+    m_turn.setNeutralMode(NeutralMode.Brake);
     m_turn.configRemoteFeedbackFilter(e_turn, 0, 25);
     m_turn.configSelectedFeedbackSensor(TalonFXFeedbackDevice.RemoteSensor0,0,25);       
 //    m_turn.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);                
