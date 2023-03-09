@@ -26,15 +26,15 @@
     },
     {
       "anchorPoint": {
-        "x": 5.378678471642658,
-        "y": 1.660510178163214
+        "x": 3.5,
+        "y": 0.701422402844806
       },
       "prevControl": {
-        "x": 4.949236184186654,
-        "y": 0.3006096012192034
+        "x": 2.5,
+        "y": 0.701422402844806
       },
       "nextControl": null,
-      "holonomicAngle": 88.89829388479369,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -51,15 +51,21 @@
   ],
   "markers": [
     {
-      "position": 0.16363636363636352,
+      "position": 0.0,
       "names": [
-        "intake_cube"
+        "marker_1"
       ]
     },
     {
-      "position": 0.7909090909090915,
+      "position": 0.5,
       "names": [
-        "stow"
+        "marker_2"
+      ]
+    },
+    {
+      "position": 1.0,
+      "names": [
+        "marker_3"
       ]
     }
   ]

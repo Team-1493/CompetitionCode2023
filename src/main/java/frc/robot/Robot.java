@@ -19,12 +19,13 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
+  private static final String kTestAuto1 = "Test Auto 1";
+  private static final String kTestAuto2 = "Test Auto 2";
+  private static final String kTestAuto3 = "Test Auto 3";
   private static final String kAuto1 = "Auto 1";
-  private static final String kAuto2 = "Auto 2";
-  private static final String kAuto3 = "Auto 3";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  Command auto1Command, auto2Command, auto3Command;
+  Command testAuto1Command, testAuto2Command, testAuto3Command, auto1Command;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -34,12 +35,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings
     m_robotContainer = new RobotContainer();
+    testAuto1Command=m_robotContainer.getTestAutonomousCommand1();
+    testAuto2Command=m_robotContainer.getTestAutonomousCommand2();
+    testAuto3Command=m_robotContainer.getTestAutonomousCommand3();
     auto1Command=m_robotContainer.getAutonomousCommand1();
-    auto2Command=m_robotContainer.getAutonomousCommand2();
-    auto3Command=m_robotContainer.getAutonomousCommand3();
     m_chooser.setDefaultOption("Auto 1", kAuto1);
-    m_chooser.addOption("Auto 2", kAuto2);
-    m_chooser.addOption("Auto 3", kAuto3);
+    m_chooser.addOption("Test Auto 1", kTestAuto1);
+    m_chooser.addOption("Test Auto 2", kTestAuto2);
+    m_chooser.addOption("Test Auto 3", kTestAuto3);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -75,14 +78,16 @@ public class Robot extends TimedRobot {
 
     switch (m_autoSelected) {
       case kAuto1:
-        m_autonomousCommand=m_robotContainer.getAutonomousCommand1();
+        m_autonomousCommand=auto1Command;
         break;
-      case kAuto2:
-        m_autonomousCommand=auto2Command;
+      case kTestAuto1:
+        m_autonomousCommand=testAuto1Command;
         break;
-      case kAuto3:
-        m_autonomousCommand=auto3Command;
+      case kTestAuto2:
+        m_autonomousCommand=testAuto2Command;
         break;
+      case kTestAuto3:
+        m_autonomousCommand=testAuto3Command;
       default:
         m_autonomousCommand=auto1Command;
         break;
