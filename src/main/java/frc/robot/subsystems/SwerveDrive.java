@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Sensors.Pigeon;
 
 public class SwerveDrive extends SubsystemBase {
-
     public SwerveModule[] modules = new SwerveModule[4];
     // Robot Dimensions for MK4 Swerve
     public  double  maxVelocityFPS = 11.48;  //max speed in feet/sec
@@ -116,7 +115,8 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     SmartDashboard.putNumber("heading set", headingSet);
 }
 
-
+  public double roll = Pigeon.getRoll();
+  public Double pitch = Pigeon.Instance.getPitch();
 //  set motors to provided vx,vy and an omega calculated from the rotation PID controller
 // must have set the reset the controller and set its goal  
 public void setMotors(double vx,double vy) {

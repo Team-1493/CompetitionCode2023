@@ -19,7 +19,9 @@ import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.RotateInPlace;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.Stow;
+import frc.robot.commands.autobalancer;
 import frc.robot.subsystems.IntakeSystem;
+import frc.robot.subsystems.LEDsystem;
 import frc.robot.subsystems.Stick;
 import frc.robot.subsystems.Limelight;
 
@@ -46,6 +48,9 @@ public class RobotContainer {
   public final Limelight m_LimelightBack = new Limelight();
   public final IntakeSystem m_IntakeSystem = new IntakeSystem();
   public final AutoGenerator autoGenerator = new AutoGenerator(m_swervedriveSystem, m_ArmSystem, m_IntakeSystem);
+  public final LEDsystem led = new LEDsystem();
+  public final autobalancer m_autobalancer = new autobalancer(m_swervedriveSystem);
+
   public final Stick driverJoystick =new Stick(0);
   public final Stick operatorJoystick =new Stick(1);
 
@@ -69,14 +74,15 @@ public class RobotContainer {
   public JoystickButton btnUpdateConstants = driverJoystick.getButton(3);
   public JoystickButton btnFollowLimelight = driverJoystick.getButton(4);
   public JoystickButton btnDropCone = driverJoystick.getButton(5); //L1
+  public JoystickButton autobalance = driverJoystick.getButton(7);
 //  public JoystickButton btnGrabCone = driverJoystick.getButton(6); // R1
 
 
-  public JoystickButton btnShootCube1 = operatorJoystick.getButton(2); // A
-  public JoystickButton btnShootCube2 = operatorJoystick.getButton(1); //B
-  public JoystickButton btnShootCube3 = operatorJoystick.getButton(3); // Y
-  public JoystickButton btnShootCubeFarLow = operatorJoystick.getButton(4); //X
-  public JoystickButton btnShootCubeFarHigh = operatorJoystick.getButton(8);
+  public JoystickButton btnShootCube1 = operatorJoystick.getButton(2); // A - low
+  public JoystickButton btnShootCube2 = operatorJoystick.getButton(1); //B - med
+  public JoystickButton btnShootCube3 = operatorJoystick.getButton(3); // Y - high
+  public JoystickButton btnShootCubeFarLow = operatorJoystick.getButton(4); //X - far floor
+  public JoystickButton btnShootCubeFarHigh = operatorJoystick.getButton(8); // 8 - far high
   
   public POVButton btnShootCubeAuto = operatorJoystick.pov180;
 
@@ -104,7 +110,7 @@ public class RobotContainer {
 // driver functions    
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
     new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
-
+    new Trigger(autobalance).whileTrue(new InstantCommand(() -> m_autobalancer.getandsetheading()));
     new Trigger(driverJoystick.pov0).onTrue
        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(0)));
     new Trigger(driverJoystick.pov90).onTrue
