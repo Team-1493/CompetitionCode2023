@@ -69,15 +69,20 @@ public class RobotContainer {
 
   public final DriveStick driveCommand = new DriveStick(m_swervedriveSystem,driverStickState); 
 
-  public JoystickButton btnAimAtTape = driverJoystick.getButton(1);
+//  public JoystickButton btnAimAtTape = driverJoystick.getButton(1);
+//  public JoystickButton btnFollowLimelight = driverJoystick.getButton(4);
+
+
+public JoystickButton btnRot0 = driverJoystick.getButton(4);
+public JoystickButton btnRot90 = driverJoystick.getButton(3);
+public JoystickButton btnRot180 = driverJoystick.getButton(1);
+public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
+
   public JoystickButton btnResetGyro = driverJoystick.getButton(6);
-  public JoystickButton btnUpdateConstants = driverJoystick.getButton(3);
-  public JoystickButton btnFollowLimelight = driverJoystick.getButton(4);
-  public JoystickButton btnDropCone = driverJoystick.getButton(5); //L1
   public JoystickButton autobalance = driverJoystick.getButton(7);
-//  public JoystickButton btnGrabCone = driverJoystick.getButton(6); // R1
+  public JoystickButton btnUpdateConstants = driverJoystick.getButton(8);
 
-
+  
   public JoystickButton btnShootCube1 = operatorJoystick.getButton(2); // A - low
   public JoystickButton btnShootCube2 = operatorJoystick.getButton(1); //B - med
   public JoystickButton btnShootCube3 = operatorJoystick.getButton(3); // Y - high
@@ -87,7 +92,7 @@ public class RobotContainer {
   public POVButton btnShootCubeAuto = operatorJoystick.pov180;
 
 
- // public JoystickButton btnReverseIntake = operatorJoystick.getButton(8);
+  public JoystickButton btnReverseIntake = operatorJoystick.getButton(7);
   public JoystickButton btnStow = operatorJoystick.getButton(9);
  
   public JoystickButton btnArmToGetcone = operatorJoystick.getButton(10);
@@ -111,45 +116,29 @@ public class RobotContainer {
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
     new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
     new Trigger(autobalance).whileTrue(new InstantCommand(() -> m_autobalancer.getandsetheading()));
-    new Trigger(driverJoystick.pov0).onTrue
-       (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(0)));
-    new Trigger(driverJoystick.pov90).onTrue
+    new Trigger(btnRot0).onTrue
+        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(0)));
+    new Trigger(btnRot90).onTrue
        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(Math.PI/2)));
-    new Trigger(driverJoystick.pov180).onTrue
+    new Trigger(btnRot180).onTrue
        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(Math.PI)));
-    new Trigger(driverJoystick.pov270).onTrue
+    new Trigger(btnRotneg90).onTrue
        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(-Math.PI/2)));
 
-/*     
-    new Trigger(driverJoystick.pov0).onTrue(new RotateInPlace(m_swervedriveSystem, 0));
-    new Trigger(driverJoystick.pov90).onTrue(new RotateInPlace(m_swervedriveSystem, Math.PI/2));
-    new Trigger(driverJoystick.pov180).onTrue(new RotateInPlace(m_swervedriveSystem, Math.PI));  
-    new Trigger(driverJoystick.pov270).onTrue(new RotateInPlace(m_swervedriveSystem, -Math.PI/2));
- */
-
-//    new Trigger(btnGrabCone).whileTrue(new GrabCone(m_IntakeSystem,m_ArmSystem));
-//    new Trigger(btnDropCone).whileTrue(new DropCone(m_IntakeSystem,m_ArmSystem));
 
 
 // operator functions
-
     new Trigger(btnShootCube1).whileTrue(new ShootCube(m_IntakeSystem,1));
     new Trigger(btnShootCube2).whileTrue(new ShootCube(m_IntakeSystem,2));
     new Trigger(btnShootCube3).whileTrue(new ShootCube(m_IntakeSystem,3));
     new Trigger(btnShootCubeFarLow).whileTrue(new ShootCube(m_IntakeSystem,4));
     new Trigger(btnShootCubeFarHigh).whileTrue(new ShootCube(m_IntakeSystem,5));
-
-    new Trigger(operatorJoystick.mapStick(3)).whileTrue(new IntakeFromShooter(m_IntakeSystem));
-
-    
-//    new Trigger(btnIntakeCube).whileTrue(cubeIntake);
-//    new Trigger(btnIntakeCube).onFalse(stowCommand);
-      new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
-
-//    new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
-//    new Trigger(btnReverseIntake).onFalse(stowCommand);
-
+    new Trigger(operatorJoystick.mapStick(3)).whileTrue
+      (new IntakeFromShooter(m_IntakeSystem));
+    new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
     new Trigger(btnStow).onTrue(stowCommand);
+    new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
+    new Trigger(btnArmToGetcone).onTrue(new InstantCommand(()-> updateConstants()));
 
   }
 

@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -26,7 +24,8 @@ public class CubeIntake extends CommandBase {
   @Override
   public void initialize() {
     arm.resetIntegralAccumulator();
-    intake.Unstow(0.5);
+    intake.Unstow();
+    arm.setArmPercentOutput(0.1);
     arm.motorActive=true;
 
   }
@@ -34,10 +33,8 @@ public class CubeIntake extends CommandBase {
   // Called every time the scheduler runs while the command is schedule d.
   @Override
   public void execute() {
-    if (arm.getLowerLimitSwitch()){
-      intake.IntakeCube();
-    }
-    arm.setPositionInCounts(arm.posCubeIntake);
+    if (!arm.getLowerLimitSwitch())  arm.setPositionInCounts(arm.posCubeIntake);
+    intake.IntakeCube();
   }
 
   // Called once the command ends or is interrupted.

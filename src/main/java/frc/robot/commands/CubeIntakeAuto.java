@@ -22,7 +22,7 @@ public class CubeIntakeAuto extends CommandBase {
   @Override
   public void initialize() {
     arm.resetIntegralAccumulator();
-    intake.Unstow(0.5);
+    intake.Unstow();
     arm.motorActive=true;
 
   }

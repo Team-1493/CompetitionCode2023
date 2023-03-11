@@ -25,14 +25,14 @@ public class IntakeSystem extends SubsystemBase {
     private double topConveyorInjectSpeed = 0.35;
 
 
-    private double ShootSpeedUpper1=500;
-    private double ShootSpeedLower1=500;
+    private double ShootSpeedUpper1=325;
+    private double ShootSpeedLower1=325;
 
     private double ShootSpeedUpper2=700;
     private double ShootSpeedLower2=700;
 
-    private double ShootSpeedUpper3=1100;
-    private double ShootSpeedLower3=1100;
+    private double ShootSpeedUpper3=1050;
+    private double ShootSpeedLower3=1050;
 
     private double ShootSpeedUpper4=1600;
     private double ShootSpeedLower4=1300;
@@ -46,6 +46,8 @@ public class IntakeSystem extends SubsystemBase {
     private double cubeIntakePower = 0.20;
     private double frontIntakePower = 0.2;
     private double rearIntakePower = 0.2;
+    private double stowRollerSpeed = -0.25;
+    private double unstowRollerSpeed = 0.4;
 
     private double topConveyorKf = .244;
     private double topConveyorKp = 0;
@@ -61,6 +63,7 @@ public class IntakeSystem extends SubsystemBase {
     private double ShooterUpperSetSpeed=0;
     private double ShooterLowerSetSpeed=0;
     private int shootLevel;
+    static boolean sensorValue=true;
 
     
     public IntakeSystem() {
@@ -69,6 +72,9 @@ public class IntakeSystem extends SubsystemBase {
         SmartDashboard.putNumber("Top Conveyor Intake Rev Speed",topConveyorRevIntakeSpeed);
         SmartDashboard.putNumber("Front Intake Power",frontIntakePower);
         SmartDashboard.putNumber("Rear Intake Power",rearIntakePower);
+        SmartDashboard.putNumber("Stow Roller Speed",stowRollerSpeed);
+        SmartDashboard.putNumber("Unstow Roller Speed",unstowRollerSpeed);
+
 
         SmartDashboard.putNumber("Shoot Speed U1", ShootSpeedUpper1);
         SmartDashboard.putNumber("Shoot Speed U2", ShootSpeedUpper2);
@@ -134,8 +140,7 @@ public class IntakeSystem extends SubsystemBase {
         ShooterTop.setInverted(InvertType.InvertMotorOutput);
         FrontIntakeBar.setInverted(InvertType.InvertMotorOutput);
         
-        irSensorL = new DigitalInput(1);
-        
+        irSensorL = new DigitalInput(1);        
     }
 
 
@@ -154,8 +159,8 @@ public class IntakeSystem extends SubsystemBase {
       RearIntakeBars.set(ControlMode.PercentOutput, rearIntakePower);
   }
 
-  public void Unstow(double vel){
-    FrontIntakeBar.set(ControlMode.PercentOutput, vel);
+  public void Unstow(){
+    FrontIntakeBar.set(ControlMode.PercentOutput, unstowRollerSpeed);
   }
 
   public void runFrontIntakeBar() {
@@ -180,7 +185,7 @@ public void runFrontIntakeBar(double speed) {
   }
 
   public void stowRollers(){
-    FrontIntakeBar.set(ControlMode.PercentOutput, -0.35);
+    FrontIntakeBar.set(ControlMode.PercentOutput, stowRollerSpeed);
 
   }
 
@@ -243,6 +248,10 @@ public void runFrontIntakeBar(double speed) {
     return ShooterBottom.getClosedLoopError();
   }
 
+  public double getFrontRollerCurrent(){
+    return FrontIntakeBar.getStatorCurrent();
+  }
+
 
 
   public void StopMotors(){
@@ -253,8 +262,14 @@ public void runFrontIntakeBar(double speed) {
     RearIntakeBars.set(ControlMode.PercentOutput, 0);
     }
 
+
+    @Override
+    public void periodic() {
+      sensorValue=!irSensorL.get();
+    }
+
   public boolean HasCube(){
-    return !irSensorL.get();
+    return sensorValue;
   }
 
 
@@ -265,7 +280,9 @@ public void runFrontIntakeBar(double speed) {
 
     frontIntakePower = SmartDashboard.getNumber("Front Intake Power",frontIntakePower);
     rearIntakePower = SmartDashboard.getNumber("Rear Intake Power",rearIntakePower);
-    
+    stowRollerSpeed = SmartDashboard.getNumber("Stow Roller Speed",stowRollerSpeed);
+    unstowRollerSpeed= SmartDashboard.getNumber("Unstow Roller Speed",unstowRollerSpeed);
+
     ShootSpeedLower1 = SmartDashboard.getNumber("Shoot Speed L1", ShootSpeedLower1);
     ShootSpeedLower2 = SmartDashboard.getNumber("Shoot Speed L2", ShootSpeedLower2);
     ShootSpeedLower3 = SmartDashboard.getNumber("Shoot Speed L3", ShootSpeedLower3);

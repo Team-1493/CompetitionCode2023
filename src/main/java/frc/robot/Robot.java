@@ -25,6 +25,7 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   Command auto1Command, auto2Command, auto3Command;
+  public static boolean enabled;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,7 +41,8 @@ public class Robot extends TimedRobot {
     m_chooser.setDefaultOption("Auto 1", kAuto1);
     m_chooser.addOption("Auto 2", kAuto2);
     m_chooser.addOption("Auto 3", kAuto3);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    SmartDashboard.putData("Auto choices", m_chooser); 
+    enabled=false;
   }
 
   /**
@@ -61,7 +63,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {enabled=false;}
 
   @Override
   public void disabledPeriodic() {}
@@ -69,6 +71,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    enabled=true;
     m_robotContainer.setPIDslot(1);  // use the auto PID gains for auto
 
     m_autoSelected = m_chooser.getSelected();
@@ -99,6 +102,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    enabled=true;
      if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

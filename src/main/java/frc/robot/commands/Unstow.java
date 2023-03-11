@@ -1,16 +1,20 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSystem;
 
-public class ArmOverCone extends CommandBase {
+public class Unstow extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
  
     private ArmSubsystem m_ArmSubsystem;
     private IntakeSystem m_IntakeSystem;
+    private double lsTime;
+    private double currentTime;
+    private double timeToRunWheels=0.5;
 
-  public ArmOverCone(ArmSubsystem arm,IntakeSystem intake) {
+  public Unstow(ArmSubsystem arm,IntakeSystem intake) {
     m_ArmSubsystem = arm;
     m_IntakeSystem = intake;
 
@@ -21,32 +25,41 @@ public class ArmOverCone extends CommandBase {
   @Override
   public void initialize() {
     m_ArmSubsystem.resetIntegralAccumulator();  
+    m_IntakeSystem.stowRollers();
+    currentTime=Timer.getFPGATimestamp();
+    lsTime=currentTime;
 
   }
 
   // Called every time the scheduler runs while the command is schedule d.
   @Override
   public void execute() {
-    m_ArmSubsystem.motorActive=true;
-    m_ArmSubsystem.setPositionInCounts(m_ArmSubsystem.posOverCone);
+    currentTime=Timer.getFPGATimestamp();
 
-    if(m_ArmSubsystem.getCounts()<1400)m_IntakeSystem.Unstow();
-    else m_IntakeSystem.reverseIntake();
+    if(m_ArmSubsystem.getLowerLimitSwitch() ) {     
+        m_ArmSubsystem.setPositionInCounts(m_ArmSubsystem.posStow);
+        lsTime=currentTime;
+    }
 
-    
+    else{     
+      m_ArmSubsystem.StopMotors();    
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-//    m_ArmSubsystem.StopMotors();
+    m_ArmSubsystem.StopMotors();
     m_IntakeSystem.StopMotors();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+//    return !m_ArmSubsystem.getLowerLimitSwitch();
+
+//    checks to see if sufficient time has passed since triggering limit switch 
+    return ( currentTime-lsTime>=timeToRunWheels);
   }
 }
 

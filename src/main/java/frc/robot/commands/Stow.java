@@ -12,7 +12,7 @@ public class Stow extends CommandBase {
     private IntakeSystem m_IntakeSystem;
     private double lsTime;
     private double currentTime;
-    private double timeToRunWheels=0.25;
+    private double timeToRunWheels=0.5;
 
   public Stow(ArmSubsystem arm,IntakeSystem intake) {
     m_ArmSubsystem = arm;
@@ -35,19 +35,17 @@ public class Stow extends CommandBase {
   @Override
   public void execute() {
     currentTime=Timer.getFPGATimestamp();
-  
-    if(m_ArmSubsystem.getLowerLimitSwitch()) {     
-        m_ArmSubsystem.setPositionInCounts(m_ArmSubsystem.posStow);
+
+    if(m_ArmSubsystem.getLowerLimitSwitch() ) {     
+//        m_ArmSubsystem.setPositionInCounts(m_ArmSubsystem.posStow);
+          m_ArmSubsystem.setArmPercentOutput(-.06);
         lsTime=currentTime;
     }
 
     else{     
       m_ArmSubsystem.StopMotors();    
     }
-// TO DO - add a line to stop wheels if current gets to high so we don't burn
-// out the motor if something goes wrong.
-
-    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override

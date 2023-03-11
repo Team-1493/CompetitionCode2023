@@ -27,19 +27,19 @@ public class ArmSubsystem extends SubsystemBase {
     DigitalInput limitUpper = new DigitalInput(0);
     DigitalInput limitLower = new DigitalInput(4);
     // Gains for position control
-    double armkP = 0.1, armkD = 100, armkI = 0.0, armkIZone=100, armkF = 4;
+    // intake
+    double armkP = 0.2, armkD = 100, armkI = 0.0, armkIZone=100, armkF = 2;
+    // stow
+    double armkP1 = 1, armkD1 = 75, armkI1 = 0.0, armkIZone1=100, armkF1 = 1;
+    // high
     double armkP2 =0.2, armkD2 = 100, armkI2 = 0.0, armkIZone2=100, armkF2 =6;
     double magicVel=50,magicAcc=50;
 
     // feedforward accounts for gravity, friction and s g
-    // 3 sets of gains, depending on where arm is relative to neutral position -69 deg
-    // region 1, -69 to 0 deg   
-    // region 2, -69 to -90 deg
-    // region 3, >0 
-    double armkG1 = 0.01, armkS1 = 0.0;
+    double armkG1 = 0.02, armkS1 = 0.1;
     
     double armForwardSensorLim = 2600, armReverseSensorLim = 1140;
-    double armMaxOutput = .15;
+    double armMaxOutput = .25;
     public double posStow=1130,posStowFinish=1120;
     public double posCubeIntake=1330,posConeGrab=2000,posConePlace=2300;
     public double posOverCone=2000;
@@ -51,7 +51,7 @@ public class ArmSubsystem extends SubsystemBase {
     double arbff;
     int button = 0,slot=0;
 
-    boolean ls_upper = true, ls_lower = false;
+    static boolean ls_upper = true, ls_lower = false;
     boolean lsState=false;
     public boolean motorActive=false;
     
@@ -106,6 +106,12 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("arm kD", armkD);
         SmartDashboard.putNumber("arm kF", armkF);
         SmartDashboard.putNumber("arm kIzone", armkIZone);
+
+        SmartDashboard.putNumber("arm kP1", armkP1);
+        SmartDashboard.putNumber("arm kI1", armkI1);
+        SmartDashboard.putNumber("arm kD1", armkD1);
+        SmartDashboard.putNumber("arm kF1", armkF1);
+        SmartDashboard.putNumber("arm kIzone1", armkIZone1);
 
         SmartDashboard.putNumber("arm kP2", armkP2);
         SmartDashboard.putNumber("arm kI2", armkI2);
@@ -163,18 +169,19 @@ public class ArmSubsystem extends SubsystemBase {
     public void setPositionInCounts(double counts) {    
         setPoint=counts;
         
-        // slot 0 for high position gains, slot 2 for low position gains
+        // slot 0 for intake position gains
         if(setPoint==posCubeIntake && slot!=0) {
             armMotor.selectProfileSlot(0, 0);
             slot=0;
         }
 
+        // slot 1 for stow position gains
         else if (setPoint==posStow && slot!=1){
             armMotor.selectProfileSlot(1, 0);
             slot=1;
         }
 
-
+        // slot 2 for high position gains
         else if (setPoint==posOverCone && slot!=2){
             armMotor.selectProfileSlot(2, 0);
             slot=2;
@@ -198,6 +205,10 @@ public class ArmSubsystem extends SubsystemBase {
         }
     }
 
+    public void setArmPercentOutput(double value){
+        armMotor.set(ControlMode.PercentOutput,value);
+    }
+
     public void StopMotors() {
         motorActive=false;
         armMotor.set(ControlMode.PercentOutput, 0);
@@ -212,13 +223,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
 
-// region 1: feedforward is positive   counts>=1377
-// region 2: feedforward is negative   counts<=1309
-// region 3:  mushy zone, interpolate  1309 < counts < 1377
     public void calculateFeedfwd(){
         double cosAngle=Math.cos(Math.PI*angle/180);
         arbff=armkG1*cosAngle+armkS1;
-//        if (setPoint==posCubeIntake) arbff= SmartDashboard.getNumber("arbff cubein",0);
     }
 
 
@@ -256,22 +263,20 @@ public class ArmSubsystem extends SubsystemBase {
         armMotor.config_kF(0, armkF);
         armMotor.config_IntegralZone(0, armkIZone);
 
+        armMotor.config_kP(1, 1);
+        armMotor.config_kI(1, 0);
+        armMotor.config_kD(1, 75);
+        armMotor.config_kF(1, 1);
+        armMotor.config_IntegralZone(0, 0);
+
         armMotor.config_kP(2, armkP2);
         armMotor.config_kI(2, armkI2);
         armMotor.config_kD(2, armkD2);
         armMotor.config_kF(2, armkF2);
         armMotor.config_IntegralZone(0, armkIZone2);
 
-        armMotor.config_kP(1, 1);
-        armMotor.config_kI(1, 0);
-        armMotor.config_kD(1, 75);
-        armMotor.config_kF(1, 2);
-        armMotor.config_IntegralZone(0, 0);
-
-
         armMotor.configMotionAcceleration(magicAcc);
         armMotor.configMotionCruiseVelocity(magicVel);
-
 
         armForwardSensorLim = SmartDashboard.getNumber("arm ForSensorLim", 0);
         armReverseSensorLim = SmartDashboard.getNumber("arm RevSensorLim", 0);
