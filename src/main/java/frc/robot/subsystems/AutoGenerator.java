@@ -25,7 +25,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.CubeIntake;
 import frc.robot.commands.CubeIntakeAuto;
+import frc.robot.commands.ShootCube;
 import frc.robot.commands.Stow;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveModule;
@@ -36,17 +38,30 @@ public class AutoGenerator extends SubsystemBase{
     private SwerveDrive sds;   
     
     //Defining the CubeIntake and Stow commands used by the AutoGenerator in placeholder variables
-    private CubeIntakeAuto intake_cube;
-    private Stow stow_arm;
+    private CubeIntakeAuto intakeCube;
+    private Stow stowArm;
+
+    private ShootCube shootCloseHigh;
+    private ShootCube shootCloseLow;
+    private ShootCube shootFarHigh;
+    private ShootCube shootFarLow;
+
+
+    private int closeHighSpeed = 0; //placeholder
+    private int closeLowSpeed = 0; //placeholder
+    private int farHighSpeed = 0; //placeholder
+    private int farLowSpeed = 0; //placeholder
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
     private HashMap<String, Command> eventMap = new HashMap<>();
     
     
     //Loading all autonomous paths and storing them in variables
-    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(2, 1));
+    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
     public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("testPath2", new PathConstraints(4, 3));
     public PathPlannerTrajectory testPath3 = PathPlanner.loadPath("testPath3", new PathConstraints(4, 3)); 
+
+    public PathPlannerTrajectory path1 = PathPlanner.loadPath("path1", new PathConstraints(4, 3));
 
     //Creates a path using the robot's initial position (from sds) and the desired position (given by vision)
     public PathPlannerTrajectory getPathUsingVision(Translation2d end_pose, Double end_heading, Double end_rotation){
@@ -69,8 +84,14 @@ public class AutoGenerator extends SubsystemBase{
         sds = m_sds;
 
         //defining the CubeIntake and Stow commands used by this class by using the given ArmSubsystem and IntakeSystem
-        intake_cube = new CubeIntakeAuto(arm, intake);
-        stow_arm = new Stow(arm, intake);
+        intakeCube = new CubeIntakeAuto(arm, intake);
+        stowArm = new Stow(arm, intake);
+
+        shootCloseHigh = new ShootCube(intake, closeHighSpeed);
+        shootCloseLow = new ShootCube(intake, closeHighSpeed);
+
+        shootFarHigh = new ShootCube(intake, farHighSpeed);
+        shootFarLow = new ShootCube(intake, farLowSpeed);
 
         //When 360 degrees is exceeded, the rotation will loop back to 1 (no going over 360 degrees or 2*PI radians)
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -93,9 +114,17 @@ public class AutoGenerator extends SubsystemBase{
         SmartDashboard.putString("Path3_position", "none");
         
         //These events are used in all or multiple autonomous paths
-        eventMap.put("intake_cube", intake_cube);
-        eventMap.put("stow", stow_arm);
+        eventMap.put("intake_cube", intakeCube);
+        eventMap.put("stow", stowArm);
 
+        eventMap.put("shoot_close_high", shootCloseHigh);
+
+        eventMap.put("shoot_close_low", shootCloseLow);
+
+        eventMap.put("shoot_far_high", shootFarHigh);
+        eventMap.put("shoot_far_low", shootFarLow);
+
+        
         
         
         
@@ -147,7 +176,7 @@ public class AutoGenerator extends SubsystemBase{
     
 
     //This is a list of commands to run during autonomous if testPath1 is being run
-    public SequentialCommandGroup autoCommand1() {
+    public SequentialCommandGroup testAutoCommand1() {
         return new SequentialCommandGroup(
             new InstantCommand( () -> sds.resetOdometry(testPath1.getInitialHolonomicPose())),
             followEventBuilder(testPath1),
@@ -156,7 +185,7 @@ public class AutoGenerator extends SubsystemBase{
     }
 
     //This is a list of commands to run during autonomous if testPath2 is being run
-    public SequentialCommandGroup autoCommand2(){
+    public SequentialCommandGroup testAutoCommand2(){
         return new SequentialCommandGroup(
             new InstantCommand( () -> sds.resetOdometry(testPath2.getInitialHolonomicPose())),
             followEventBuilder(testPath2),
@@ -165,13 +194,24 @@ public class AutoGenerator extends SubsystemBase{
     }
 
     //This is a list of commands to run during autonomous if testPath3 is being run
-    public SequentialCommandGroup autoCommand3(){
+    public SequentialCommandGroup testAutoCommand3(){
         return new SequentialCommandGroup(
             new InstantCommand( () -> sds.resetOdometry(testPath3.getInitialHolonomicPose())),
             followEventBuilder(testPath3),
             new InstantCommand( () -> sds.allStop())
         );
     }
+
+    public SequentialCommandGroup autoCommand1(){
+        return new SequentialCommandGroup(
+            new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),
+            followEventBuilder(path1),
+            new InstantCommand( () -> sds.allStop())
+        );
+    }
+
+
+
 
     //Runs a path from the robot's current position to a new position (given by vision)
     //end_pose = x and y,   end_heading = angle of movement in degrees (look at pathplanner),   end_rotation = robot's rotation in degrees 

@@ -143,21 +143,26 @@ public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
   }
 
 
-  public Command getAutonomousCommand1() {
+  public Command getTestAutonomousCommand1() {
     // An example command will be run in autonomous
-    autoGenerator.updatePID();;
+    return autoGenerator.testAutoCommand1();
+  }
+
+  public Command getTestAutonomousCommand2() {
+    // An example command will be run in autonomous
+    return autoGenerator.testAutoCommand2();
+  }
+
+  public Command getTestAutonomousCommand3() {
+    //An example command will be run in autonomous
+    return autoGenerator.testAutoCommand3();
+  }
+
+  public Command getAutonomousCommand1(){
+    autoGenerator.updatePID();
     return autoGenerator.autoCommand1();
   }
 
-  public Command getAutonomousCommand2() {
-    // An example command will be run in autonomous
-    return autoGenerator.autoCommand2();
-  }
-
-  public Command getAutonomousCommand3() {
-    //An example command will be run in autonomous
-    return autoGenerator.autoCommand3();
-  }
 
 // We have different PID constants for the drive wheels between teleop and auto
 // Switch between slot 0 for teleop and slot 1 for auto 
