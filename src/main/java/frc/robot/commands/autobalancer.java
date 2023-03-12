@@ -16,13 +16,16 @@ public class autobalancer {
         sds = m_sds;
     }
 
-    public void getandsetheading() {
-        double desiredHeading=0;
-        desiredHeading = Math.round(sds.heading/(Math.PI/2));
-        double heading = desiredHeading * (180/Math.PI);
-        
-        sds.setHeading(heading);
-        if(heading<30 && heading> -30){
+    public void getandsetheading(double m_heading) {
+//        double desiredHeading=0;
+//        desiredHeading = Math.round(sds.heading/(Math.PI/2));
+//        double heading = desiredHeading * (180/Math.PI);
+          double heading = m_heading;
+            sds.resetRotatePID(heading*Math.PI/180.);
+//        sds.setHeading(heading);
+        double sign=1;
+         if (heading==180) sign=-1;
+
             System.out.println("heading"+heading);
             //use pitch
             double Pitch = sds.pitch;
@@ -34,7 +37,7 @@ public class autobalancer {
                     System.out.print("xpos:"+xpos);
                     Pitch = Pigeon.Instance.getPitch();
                     System.out.println("pitch"+Pitch);
-                    sds.setMotors(-0.25, 0, 0);
+                    sds.setMotors(-0.25*sign, 0);
                     xpos = sds.getPose().getX();
 
                 }
@@ -47,13 +50,18 @@ public class autobalancer {
                     // System.out.println("pitch"+pitch);
                     xpos = sds.getPose().getX();
                     // System.out.println("xpos="+xpos);
-                    sds.setMotors(0.25, 0, 0);
+                    sds.setMotors(0.25*sign, 0);
                     Double Desiredxpos = sds.getPose().getX();
                     // System.out.println("desired xpos = " +Desiredxpos);
                 
                 }
-            }
-        } 
+            
+        }
+        
+        
+
+
+    /* 
         if(heading>100 || heading<-100){
             //use pitch
             Double pitch = sds.pitch;
@@ -80,5 +88,6 @@ public class autobalancer {
                     }
                 }
         }
+        */
     }
 }
