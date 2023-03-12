@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9472041801226463,
-        "y": 4.723865162016039
+        "x": 3.18852280561704,
+        "y": 5.081733734896042
       },
       "holonomicAngle": 0.0,
       "isReversal": false,
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.1,
-        "y": 4.566402989948838
+        "x": 7.6,
+        "y": 4.6
       },
       "prevControl": {
-        "x": 5.554007765158388,
-        "y": 4.509144018288037
+        "x": 6.054007765158388,
+        "y": 4.542741028339199
       },
       "nextControl": {
-        "x": 5.554007765158388,
-        "y": 4.509144018288037
+        "x": 6.054007765158388,
+        "y": 4.542741028339199
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -206,7 +206,7 @@
   "isReversed": null,
   "markers": [
     {
-      "position": 0.8272727272727272,
+      "position": 0.1,
       "names": [
         "intake_cube",
         "intake_cube"
@@ -264,12 +264,6 @@
       "position": 7.0,
       "names": [
         "event"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "shoot_close_high"
       ]
     }
   ]

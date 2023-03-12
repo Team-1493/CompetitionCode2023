@@ -25,7 +25,7 @@ import frc.robot.Sensors.Pigeon;
 public class SwerveDrive extends SubsystemBase {
     public SwerveModule[] modules = new SwerveModule[4];
     // Robot Dimensions for MK4 Swerve
-    public  double  maxVelocityFPS = 11.48;  //max speed in feet/sec
+    public  double  maxVelocityFPS = 16.0;  //max speed in feet/sec
     public double maxVelocityMPS = 0.3048*maxVelocityFPS; // 3.5     
 
 
@@ -95,7 +95,7 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
   public void setMotorsFromStick(double[] stickState ) {
     double vx=stickState[0]*maxVelocityMPS;
     double vy=stickState[1]*maxVelocityMPS;
-    double omega=2*stickState[2];
+    double omega=stickState[2];
 
     if (Math.abs(omega)<0.001){
 /* 
@@ -345,5 +345,6 @@ public void resetRotatePID(double goal){
   rotatePID.setGoal(goal);
   rotatePIDon=true;
 }
+
 
 }

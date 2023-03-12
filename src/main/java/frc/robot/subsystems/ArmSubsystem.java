@@ -28,21 +28,22 @@ public class ArmSubsystem extends SubsystemBase {
     DigitalInput limitLower = new DigitalInput(4);
     // Gains for position control
     // intake
-    double armkP = 0.2, armkD = 100, armkI = 0.0, armkIZone=100, armkF = 2;
+    double armkP = 0.3, armkD = 100, armkI = 0.0, armkIZone=100, armkF = 2;
     // stow
     double armkP1 = 1, armkD1 = 75, armkI1 = 0.0, armkIZone1=100, armkF1 = 1;
     // high
     double armkP2 =0.2, armkD2 = 100, armkI2 = 0.0, armkIZone2=100, armkF2 =6;
     double magicVel=50,magicAcc=50;
+    double magicVelFast=125,magicAccFast=125;
 
     // feedforward accounts for gravity, friction and s g
-    double armkG1 = 0.02, armkS1 = 0.1;
+    double armkG1 = 0.0, armkS1 = 0.02;
     
     double armForwardSensorLim = 2600, armReverseSensorLim = 1140;
-    double armMaxOutput = .25;
+    double armMaxOutput = .35;
     public double posStow=1130,posStowFinish=1120;
     public double posCubeIntake=1330,posConeGrab=2000,posConePlace=2300;
-    public double posOverCone=2000;
+    public double posOverCone=1600;
     public double setPoint=posStow;
     public double angleCounts;
     double angleOffset=-96;
@@ -94,8 +95,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     // set current limit
         StatorCurrentLimitConfiguration currentConfig = 
-        new StatorCurrentLimitConfiguration(true, 30, 
-        32, .1);
+        new StatorCurrentLimitConfiguration(true, 40, 
+        45, .1);
         armMotor.configStatorCurrentLimit(currentConfig);
 
         armMotor.setStatusFramePeriod(StatusFrame.Status_10_Targets, 5);
@@ -231,6 +232,18 @@ public class ArmSubsystem extends SubsystemBase {
 
     public double getCounts() {
         return angleCounts;
+    }
+
+    public  void setMagicFast() {
+        armMotor.configMotionAcceleration(magicAccFast);
+        armMotor.configMotionCruiseVelocity(magicVelFast);
+
+    }
+
+    public  void setMagicSlow() {
+        armMotor.configMotionAcceleration(magicAcc);
+        armMotor.configMotionCruiseVelocity(magicVel);
+
     }
 
 

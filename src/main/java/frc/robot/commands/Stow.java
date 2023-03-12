@@ -38,7 +38,7 @@ public class Stow extends CommandBase {
 
     if(m_ArmSubsystem.getLowerLimitSwitch() ) {     
 //        m_ArmSubsystem.setPositionInCounts(m_ArmSubsystem.posStow);
-          m_ArmSubsystem.setArmPercentOutput(-.06);
+          m_ArmSubsystem.setArmPercentOutput(-.08);
         lsTime=currentTime;
     }
 

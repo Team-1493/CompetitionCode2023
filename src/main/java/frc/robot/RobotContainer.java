@@ -45,7 +45,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here..
   private final ArmSubsystem m_ArmSystem = new ArmSubsystem();
   public final SwerveDrive m_swervedriveSystem = new SwerveDrive();
-  public final Limelight m_LimelightBack = new Limelight();
+  public final Limelight m_Limelight = new Limelight();
   public final IntakeSystem m_IntakeSystem = new IntakeSystem();
   public final AutoGenerator autoGenerator = new AutoGenerator(m_swervedriveSystem, m_ArmSystem, m_IntakeSystem);
   public final LEDsystem led = new LEDsystem();
@@ -70,14 +70,13 @@ public class RobotContainer {
   public final DriveStick driveCommand = new DriveStick(m_swervedriveSystem,driverStickState); 
 
 //  public JoystickButton btnAimAtTape = driverJoystick.getButton(1);
-//  public JoystickButton btnFollowLimelight = driverJoystick.getButton(4);
+//public JoystickButton btnFollowLimelight = driverJoystick.getButton(5);
 
 
-public JoystickButton btnRot0 = driverJoystick.getButton(4);
-public JoystickButton btnRot90 = driverJoystick.getButton(3);
-public JoystickButton btnRot180 = driverJoystick.getButton(1);
-public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
-
+public JoystickButton btnRot0 = driverJoystick.getButton(1);
+public JoystickButton btnRot90 = driverJoystick.getButton(2);
+public JoystickButton btnRot180 = driverJoystick.getButton(4);
+public JoystickButton btnRotneg90 = driverJoystick.getButton(3);
   public JoystickButton btnResetGyro = driverJoystick.getButton(6);
   public JoystickButton autobalance = driverJoystick.getButton(7);
   public JoystickButton btnUpdateConstants = driverJoystick.getButton(8);
@@ -103,7 +102,7 @@ public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_swervedriveSystem.setDefaultCommand(driveCommand);
-    m_ArmSystem.setDefaultCommand(armDefault);
+//    m_ArmSystem.setDefaultCommand(armDefault);
 
     // Configure the trigger bindings
     configureBindings();
@@ -114,7 +113,7 @@ public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
 
 // driver functions    
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
-    new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
+//    new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
     new Trigger(autobalance).whileTrue(new InstantCommand(() -> m_autobalancer.getandsetheading()));
     new Trigger(btnRot0).onTrue
         (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(0)));
@@ -125,7 +124,7 @@ public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
     new Trigger(btnRotneg90).onTrue
        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(-Math.PI/2)));
 
-
+//    new Trigger(btnFollowLimelight).whileTrue(new FollowLimelight(m_swervedriveSystem,m_Limelight,true,true));
 
 // operator functions
     new Trigger(btnShootCube1).whileTrue(new ShootCube(m_IntakeSystem,1));
@@ -137,11 +136,13 @@ public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
       (new IntakeFromShooter(m_IntakeSystem));
     new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
     new Trigger(btnStow).onTrue(stowCommand);
-    new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
-    new Trigger(btnArmToGetcone).onTrue(new InstantCommand(()-> updateConstants()));
+//    new Trigger(btnReverseIntake).whileTrue(armOverConeCommand.andThen(reverseIntake));
+//    new Trigger(btnArmToGetcone).onTrue(new InstantCommand(()-> updateConstants()));
 
   }
 
+
+ 
 
   public Command getTestAutonomousCommand1() {
     // An example command will be run in autonomous
@@ -174,6 +175,8 @@ public JoystickButton btnRotneg90 = driverJoystick.getButton(2);
     m_swervedriveSystem.updateConstants();
     m_ArmSystem.updateConstants();
     m_IntakeSystem.UpdateConstants(); 
+    autoGenerator.updatePID();
+
   }
 
 

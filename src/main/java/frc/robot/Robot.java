@@ -24,13 +24,9 @@ public class Robot extends TimedRobot {
   private static final String kTestAuto3 = "Test Auto 3";
   private static final String kAuto1 = "Auto 1";
   private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-<<<<<<< HEAD
-  Command auto1Command, auto2Command, auto3Command;
   public static boolean enabled;
-=======
+  private final SendableChooser<String> m_chooser = new SendableChooser<>();
   Command testAuto1Command, testAuto2Command, testAuto3Command, auto1Command;
->>>>>>> d4d6617d8acd884c6572926312a29b867b551507
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -45,17 +41,10 @@ public class Robot extends TimedRobot {
     testAuto3Command=m_robotContainer.getTestAutonomousCommand3();
     auto1Command=m_robotContainer.getAutonomousCommand1();
     m_chooser.setDefaultOption("Auto 1", kAuto1);
-<<<<<<< HEAD
-    m_chooser.addOption("Auto 2", kAuto2);
-    m_chooser.addOption("Auto 3", kAuto3);
-    SmartDashboard.putData("Auto choices", m_chooser); 
-    enabled=false;
-=======
     m_chooser.addOption("Test Auto 1", kTestAuto1);
     m_chooser.addOption("Test Auto 2", kTestAuto2);
     m_chooser.addOption("Test Auto 3", kTestAuto3);
     SmartDashboard.putData("Auto choices", m_chooser);
->>>>>>> d4d6617d8acd884c6572926312a29b867b551507
   }
 
   /**

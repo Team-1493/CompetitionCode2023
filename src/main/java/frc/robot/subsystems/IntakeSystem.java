@@ -28,14 +28,14 @@ public class IntakeSystem extends SubsystemBase {
     private double ShootSpeedUpper1=325;
     private double ShootSpeedLower1=325;
 
-    private double ShootSpeedUpper2=700;
-    private double ShootSpeedLower2=700;
+    private double ShootSpeedUpper2=650;
+    private double ShootSpeedLower2=650;
 
-    private double ShootSpeedUpper3=1050;
-    private double ShootSpeedLower3=1050;
+    private double ShootSpeedUpper3=925;
+    private double ShootSpeedLower3=925;
 
-    private double ShootSpeedUpper4=1600;
-    private double ShootSpeedLower4=1300;
+    private double ShootSpeedUpper4=1325;
+    private double ShootSpeedLower4=1125;
 
     private double ShootSpeedUpper5=2000;
     private double ShootSpeedLower5=1975;
@@ -46,8 +46,8 @@ public class IntakeSystem extends SubsystemBase {
     private double cubeIntakePower = 0.20;
     private double frontIntakePower = 0.2;
     private double rearIntakePower = 0.2;
-    private double stowRollerSpeed = -0.25;
-    private double unstowRollerSpeed = 0.4;
+    private double stowRollerSpeed = -0.4;
+    private double unstowRollerSpeed =1.0;
 
     private double topConveyorKf = .244;
     private double topConveyorKp = 0;
@@ -139,7 +139,12 @@ public class IntakeSystem extends SubsystemBase {
 
         ShooterTop.setInverted(InvertType.InvertMotorOutput);
         FrontIntakeBar.setInverted(InvertType.InvertMotorOutput);
+
+        ShooterTop.configVoltageCompSaturation(12.0);        
+        ShooterBottom.configVoltageCompSaturation(12.0);
         
+
+
         irSensorL = new DigitalInput(1);        
     }
 

@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.CubeIntake;
 import frc.robot.commands.CubeIntakeAuto;
-import frc.robot.commands.ShootCube;
+import frc.robot.commands.ShootCubeAuto;
 import frc.robot.commands.Stow;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveModule;
@@ -41,16 +41,16 @@ public class AutoGenerator extends SubsystemBase{
     private CubeIntakeAuto intakeCube;
     private Stow stowArm;
 
-    private ShootCube shootCloseHigh;
-    private ShootCube shootCloseLow;
-    private ShootCube shootFarHigh;
-    private ShootCube shootFarLow;
+    private ShootCubeAuto shootCloseHigh;
+    private ShootCubeAuto shootCloseLow;
+    private ShootCubeAuto shootFarHigh;
+    private ShootCubeAuto shootFarLow;
 
 
-    private int closeHighSpeed = 0; //placeholder
-    private int closeLowSpeed = 0; //placeholder
-    private int farHighSpeed = 0; //placeholder
-    private int farLowSpeed = 0; //placeholder
+    private int closeHighSpeed = 3; //placeholder
+    private int closeLowSpeed = 2; //placeholder
+    private int farHighSpeed = 5; //placeholder
+    private int farLowSpeed = 4; //placeholder
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
     private HashMap<String, Command> eventMap = new HashMap<>();
@@ -58,7 +58,7 @@ public class AutoGenerator extends SubsystemBase{
     
     //Loading all autonomous paths and storing them in variables
     public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
-    public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("testPath2", new PathConstraints(4, 3));
+    public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("testPath2", new PathConstraints(2, 2));
     public PathPlannerTrajectory testPath3 = PathPlanner.loadPath("testPath3", new PathConstraints(4, 3)); 
 
     public PathPlannerTrajectory path1 = PathPlanner.loadPath("path1", new PathConstraints(4, 3));
@@ -73,9 +73,9 @@ public class AutoGenerator extends SubsystemBase{
             );
     }
     
-    //PID controllers for rotation and position (position is used for both x and y)
-    PIDController thetaController = new PIDController(.01, 0, 0);
-    PIDController positionController = new PIDController(0.01, 0, 0);
+    //PID controllers for position and rotation (position is used for both x and y)
+    PIDController positionController = new PIDController(.0025, 0, 0);
+    PIDController thetaController = new PIDController(1.0, 0, 0);
 
 
     //This method will be called once during the beginning of autonomous
@@ -87,11 +87,11 @@ public class AutoGenerator extends SubsystemBase{
         intakeCube = new CubeIntakeAuto(arm, intake);
         stowArm = new Stow(arm, intake);
 
-        shootCloseHigh = new ShootCube(intake, closeHighSpeed);
-        shootCloseLow = new ShootCube(intake, closeHighSpeed);
+        shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseLow = new ShootCubeAuto(intake, closeLowSpeed);
 
-        shootFarHigh = new ShootCube(intake, farHighSpeed);
-        shootFarLow = new ShootCube(intake, farLowSpeed);
+        shootFarHigh = new ShootCubeAuto(intake, farHighSpeed);
+        shootFarLow = new ShootCubeAuto(intake, farLowSpeed);
 
         //When 360 degrees is exceeded, the rotation will loop back to 1 (no going over 360 degrees or 2*PI radians)
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -125,6 +125,7 @@ public class AutoGenerator extends SubsystemBase{
         eventMap.put("shoot_far_low", shootFarLow);
 
         
+
         
         
         
@@ -153,7 +154,7 @@ public class AutoGenerator extends SubsystemBase{
             positionController, //y PID controller
             thetaController, //rotation PID controller
             sds::setModuleStates, 
-            true, //if the robot is on the red alliance, the path will be reflected
+            false, //if the robot is on the red alliance, the path will be reflected
             sds //the AutoGenerator's instance of the SwerveDrive
         );
     }
@@ -205,6 +206,7 @@ public class AutoGenerator extends SubsystemBase{
     public SequentialCommandGroup autoCommand1(){
         return new SequentialCommandGroup(
             new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),
+            shootCloseHigh,
             followEventBuilder(path1),
             new InstantCommand( () -> sds.allStop())
         );

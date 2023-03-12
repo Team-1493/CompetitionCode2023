@@ -45,8 +45,8 @@ public class FollowLimelight extends CommandBase {
   private double counter = 0;
   private boolean counterBool;
   private double desiredCounter = 50;
-  private Boolean horizontal;
-  private Boolean forward;
+  private Boolean horizontal = true;
+  private Boolean forward = true;
 
   public FollowLimelight(SwerveDrive sd, Limelight limelight, Boolean horizontal, Boolean forward) {
     m_SwerveDrive = sd;
@@ -92,7 +92,7 @@ public class FollowLimelight extends CommandBase {
   @Override
   public void execute() {
     currentHeading = m_SwerveDrive.heading;
-    target = m_limelight.getFrontLimelight();
+    target = m_limelight.getBackLimelight();
 
     rotation = RotPIDController.calculate(target[1]);//target[1]*kP_rotation;
     
@@ -111,6 +111,7 @@ public class FollowLimelight extends CommandBase {
       desiredHeading=0;
       sideDistance = (currentHeading-desiredHeading);
     }
+    System.out.print("AAAAAAAAAAAAAAAAAAAAAAAAAA");
 //    if (sideDistance>Math.PI){
 //      sideDistance = sideDistance - 2*Math.PI;
 //    }
@@ -130,12 +131,14 @@ public class FollowLimelight extends CommandBase {
 
     xVel = Math.cos(m_SwerveDrive.heading) * forwardDistance;// + Math.sin(sideDistance)*kP_sideDistance;// FIELD FORWARD
     yVel = Math.sin(m_SwerveDrive.heading) * forwardDistance + SidePIDController.calculate(sideDistance);// + Math.cos(sideDistance)*kP_sideDistance;// FIELD LEFT & RIGHT
-
+    System.out.print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
     if (target[0] == 1) {
 //      System.out.println("vx "+xVel+"  yvel "+yVel+"   rotation"+rotation);
       m_SwerveDrive.setMotors(xVel, yVel, rotation);
     }
-    if (horizontal){
+
+    System.out.print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+    /*if (horizontal){
       if (Math.abs(target[1]) <= rotationCutOff && sideDistance <= sideDistanceCutOff){
         if (forward){
           if (desiredForwardDistance - target[3] <= forwardDistanceCutOff && forward){
@@ -165,7 +168,7 @@ public class FollowLimelight extends CommandBase {
       else{
         counter += 1;
       }
-    }
+    }*/
 
     
     
@@ -180,6 +183,6 @@ public class FollowLimelight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return counter >= desiredCounter;
+    return false;//counter >= desiredCounter;
   }
 }
