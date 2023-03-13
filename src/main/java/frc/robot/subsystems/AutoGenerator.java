@@ -57,11 +57,12 @@ public class AutoGenerator extends SubsystemBase{
     
     
     //Loading all autonomous paths and storing them in variables
-    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
+//    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
+    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("path2b", new PathConstraints(2, 2));
     public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("testPath2", new PathConstraints(2, 2));
     public PathPlannerTrajectory testPath3 = PathPlanner.loadPath("testPath3", new PathConstraints(4, 3)); 
 
-    public PathPlannerTrajectory path1 = PathPlanner.loadPath("path1", new PathConstraints(4, 3));
+    public PathPlannerTrajectory path1 = PathPlanner.loadPath("path1", new PathConstraints(2, 2));
 
     //Creates a path using the robot's initial position (from sds) and the desired position (given by vision)
     public PathPlannerTrajectory getPathUsingVision(Translation2d end_pose, Double end_heading, Double end_rotation){
@@ -154,7 +155,7 @@ public class AutoGenerator extends SubsystemBase{
             positionController, //y PID controller
             thetaController, //rotation PID controller
             sds::setModuleStates, 
-            false, //if the robot is on the red alliance, the path will be reflected
+            true, //if the robot is on the red alliance, the path will be reflected
             sds //the AutoGenerator's instance of the SwerveDrive
         );
     }
@@ -179,8 +180,10 @@ public class AutoGenerator extends SubsystemBase{
     //This is a list of commands to run during autonomous if testPath1 is being run
     public SequentialCommandGroup testAutoCommand1() {
         return new SequentialCommandGroup(
+            shootCloseHigh,
             new InstantCommand( () -> sds.resetOdometry(testPath1.getInitialHolonomicPose())),
-            followEventBuilder(testPath1),
+            followEventBuilder(path1),
+            shootFarLow,
             new InstantCommand( () -> sds.allStop())
         );
     }
@@ -206,7 +209,7 @@ public class AutoGenerator extends SubsystemBase{
     public SequentialCommandGroup autoCommand1(){
         return new SequentialCommandGroup(
             new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),
-            shootCloseHigh,
+//            shootCloseHigh,
             followEventBuilder(path1),
             new InstantCommand( () -> sds.allStop())
         );

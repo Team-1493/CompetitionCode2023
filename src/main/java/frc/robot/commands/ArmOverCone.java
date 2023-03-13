@@ -33,9 +33,11 @@ public class ArmOverCone extends CommandBase {
   @Override
   public void execute() {
     double counts = arm.getCounts();
-    
-    if(counts < 1250 && !flag1)intake.Unstow();
-    if(counts>=1250) intake.reverseIntake();
+     
+    if (arm.getCounts() >1250 ) { 
+        arm.setPositionInCounts(arm.posCubeIntake);
+        intake.reverseIntake();
+    }
     }
   
 

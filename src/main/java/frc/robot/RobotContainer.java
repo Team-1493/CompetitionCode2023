@@ -136,8 +136,8 @@ public class RobotContainer {
     new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
     new Trigger(btnStow).onTrue(stowCommand);
     
-    new Trigger(btnReverseIntake).onTrue
-      (new SequentialCommandGroup(armOverConeCommand,stowCommand));
+   // new Trigger(btnReverseIntake).onTrue
+   //   (new SequentialCommandGroup(armOverConeCommand,stowCommand));
 
       new Trigger(btnUpdateConstantsOp).onTrue(new InstantCommand(()-> updateConstants()));
 

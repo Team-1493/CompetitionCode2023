@@ -12,6 +12,8 @@ public class ShootCubeAuto extends CommandBase {
     private boolean shoot;
     private int speedLevel; 
     private double timeStart;
+    private double eject_delay;
+    private double shoot_delay;
   public ShootCubeAuto(IntakeSystem intake, int m_speedLevel) {
     m_IntakeSystem = intake;
     speedLevel=m_speedLevel;
@@ -23,6 +25,20 @@ public class ShootCubeAuto extends CommandBase {
   public void initialize() {
     timeStart=Timer.getFPGATimestamp();
     m_IntakeSystem.ShootCube(speedLevel);
+    if (speedLevel == 2) {
+      eject_delay = 0.75;
+      shoot_delay = 1.25;
+    } else if (speedLevel == 3){
+      eject_delay = 0.5;
+      shoot_delay = 1.0;
+    } else if (speedLevel == 4){
+      eject_delay = 0.75;
+      shoot_delay = 1.25;
+    } else if (speedLevel == 5){
+      eject_delay = 0.75;
+      shoot_delay = 1.25;
+    }
+
     shoot=false;
   }
 
@@ -30,12 +46,13 @@ public class ShootCubeAuto extends CommandBase {
   @Override
   public void execute() {
     
-    if(Timer.getFPGATimestamp()>timeStart+0.5) m_IntakeSystem.injectCube();
+    if(Timer.getFPGATimestamp()>timeStart+eject_delay) m_IntakeSystem.injectCube(speedLevel);
     SmartDashboard.putNumber("Top Conveyor RPM", m_IntakeSystem.getTopConveyorSpeed()*600/2048);
     SmartDashboard.putNumber("Shooter Top RPM", m_IntakeSystem.getTopShooterRPM() );
     SmartDashboard.putNumber("Shooter Bot RPM", m_IntakeSystem.getBottomShooterRPM() );
     SmartDashboard.putNumber("BotConveyor CLE", m_IntakeSystem.getShooterCLE());
-   
+    System.out.println("t="+Timer.getFPGATimestamp()+"   delay="+shoot_delay);
+
   } 
 
   
@@ -49,7 +66,7 @@ public class ShootCubeAuto extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Timer.getFPGATimestamp()>timeStart+1;
+    return Timer.getFPGATimestamp()>timeStart+shoot_delay;
   }
 }
 
