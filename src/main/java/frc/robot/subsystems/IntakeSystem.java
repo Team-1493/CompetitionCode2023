@@ -25,8 +25,8 @@ public class IntakeSystem extends SubsystemBase {
     private double topConveyorInjectSpeed = 0.35;
 
 
-    private double ShootSpeedUpper1=325;
-    private double ShootSpeedLower1=325;
+    private double ShootSpeedUpper1=275;
+    private double ShootSpeedLower1=100;
 
     private double ShootSpeedUpper2=650;
     private double ShootSpeedLower2=650;
@@ -185,8 +185,11 @@ public void runFrontIntakeBar(double speed) {
       RearIntakeBars.set(ControlMode.PercentOutput, rearIntakePower);
   }
 
-  public void injectCube(){
-    TopConveyor.set(ControlMode.PercentOutput,topConveyorInjectSpeed);
+  public void injectCube(int speedLevel){
+    double speed;
+    if (speedLevel==1)speed=0.35;
+    else speed=topConveyorInjectSpeed;
+    TopConveyor.set(ControlMode.PercentOutput,speed);
   }
 
   public void stowRollers(){
