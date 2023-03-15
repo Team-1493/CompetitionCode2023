@@ -120,7 +120,7 @@ public class RobotContainer {
 //new Trigger(driverJoystick.getButton(7)).whileTrue
 //          (new InstantCommand(() -> m_autobalancer.getandsetheading(0)));
 
-    new Trigger(driverJoystick.getButton(7)).onTrue(ab2);
+    new Trigger(driverJoystick.getButton(7)).whileTrue(ab2);
 
 
     new Trigger(btnRot0).onTrue

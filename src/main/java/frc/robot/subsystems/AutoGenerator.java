@@ -33,6 +33,7 @@ import frc.robot.commands.CubeIntake;
 import frc.robot.commands.CubeIntakeAuto;
 import frc.robot.commands.ShootCubeAuto;
 import frc.robot.commands.Stow;
+import frc.robot.commands.autobalancer2;
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveModule;
 
@@ -51,11 +52,14 @@ public class AutoGenerator extends SubsystemBase{
     private ShootCubeAuto shootCloseLow;
     private ShootCubeAuto shootFarHigh;
     private ShootCubeAuto shootFarLow;
+    private ShootCubeAuto shootFarLowEnd;
 
     private InstantCommand prepareCloseHigh;
     private InstantCommand prepareCloseLow;
     private InstantCommand prepareFarHigh;
     private InstantCommand prepareFarLow;
+
+    private InstantCommand rotateHalfCircle;
 
     private InstantCommand injectCube;
 
@@ -68,6 +72,9 @@ public class AutoGenerator extends SubsystemBase{
     private int farHighSpeed = 5; //placeholder
     private int farLowSpeed = 4; //placeholder
 
+
+
+    private autobalancer2 balance;
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
     private HashMap<String, Command> eventMap = new HashMap<>();
@@ -102,6 +109,10 @@ public class AutoGenerator extends SubsystemBase{
         sds = m_sds;
         intake=m_intake;
 
+        balance = new autobalancer2(sds);
+        rotateHalfCircle = new InstantCommand( ()-> sds.resetRotatePID(Math.PI));
+
+
         //defining the CubeIntake and Stow commands used by this class by using the given ArmSubsystem and IntakeSystem
         intakeCube = new CubeIntakeAuto(arm, intake);
         cancelIntakeCube=new InstantCommand(() -> intakeCube.cancel());
@@ -115,6 +126,7 @@ public class AutoGenerator extends SubsystemBase{
 
         shootFarHigh = new ShootCubeAuto(intake, farHighSpeed);
         shootFarLow = new ShootCubeAuto(intake, farLowSpeed);
+        shootFarLowEnd = new ShootCubeAuto(intake, farLowSpeed);
 
         prepareCloseHigh = new InstantCommand(() -> intake.ShootCube(closeHighSpeed));
         prepareCloseLow = new InstantCommand(() -> intake.ShootCube(closeLowSpeed));
@@ -123,6 +135,7 @@ public class AutoGenerator extends SubsystemBase{
 
         injectCube = new InstantCommand(() -> intake.injectCube(0) );
         endShoot = new InstantCommand(() -> intake.StopMotors());
+
 
         //When 360 degrees is exceeded, the rotation will loop back to 1 (no going over 360 degrees or 2*PI radians)
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -248,9 +261,10 @@ public class AutoGenerator extends SubsystemBase{
             shootCloseHighInitial,
             new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),            
             followEventBuilder(path1),
+            balance,
+            rotateHalfCircle,
+            shootFarLowEnd,
             new InstantCommand( () -> sds.allStop())
-//            new InstantCommand(()-> System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"))
-
         );
     }
 
