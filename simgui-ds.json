@@ -1,5 +1,5 @@
 {
-  "Keyboard 0 Settings": {
+  "Keyboard 1 Settings": {
     "window": {
       "visible": true
     }
@@ -56,12 +56,15 @@
         }
       ],
       "axisCount": 2,
-      "buttonCount": 4,
+      "buttonCount": 7,
       "buttonKeys": [
         77,
         44,
         46,
-        47
+        47,
+        -1,
+        79,
+        80
       ],
       "povCount": 0
     },
@@ -97,6 +100,9 @@
   "robotJoysticks": [
     {
       "guid": "Keyboard0"
+    },
+    {
+      "guid": "Keyboard1"
     }
   ]
 }

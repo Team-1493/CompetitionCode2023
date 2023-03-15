@@ -186,6 +186,7 @@ public void runFrontIntakeBar(double speed) {
   }
 
   public void injectCube(int speedLevel){
+//    System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
     double speed;
     if (speedLevel==1)speed=0.35;
     else speed=topConveyorInjectSpeed;
@@ -212,11 +213,13 @@ public void runFrontIntakeBar(double speed) {
       ShooterLowerSetSpeed=ShootSpeedLower2;
       }
     else if (level==3) {
+//      System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
       ShooterUpperSetSpeed=ShootSpeedUpper3;
       ShooterLowerSetSpeed=ShootSpeedLower3;
       }
 
     else if (level==4) {
+//      System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
         ShooterUpperSetSpeed=ShootSpeedUpper4;
         ShooterLowerSetSpeed=ShootSpeedLower4;
     }

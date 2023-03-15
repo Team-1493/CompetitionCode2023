@@ -9,7 +9,6 @@ public class ShootCubeAuto extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
 
     private IntakeSystem m_IntakeSystem;
-    private boolean shoot;
     private int speedLevel; 
     private double timeStart;
     private double eject_delay;
@@ -23,23 +22,22 @@ public class ShootCubeAuto extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+//    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     timeStart=Timer.getFPGATimestamp();
     m_IntakeSystem.ShootCube(speedLevel);
     if (speedLevel == 2) {
-      eject_delay = 0.75;
+      eject_delay = 0.25;
       shoot_delay = 1.25;
     } else if (speedLevel == 3){
-      eject_delay = 0.5;
+      eject_delay = 0.25;
       shoot_delay = 1.0;
     } else if (speedLevel == 4){
-      eject_delay = 0.75;
+      eject_delay = 0.25;
       shoot_delay = 1.25;
     } else if (speedLevel == 5){
-      eject_delay = 0.75;
+      eject_delay = 0.25;
       shoot_delay = 1.25;
     }
-
-    shoot=false;
   }
 
   // Called every time the scheduler runs while the command is schedule d.
@@ -51,8 +49,6 @@ public class ShootCubeAuto extends CommandBase {
     SmartDashboard.putNumber("Shooter Top RPM", m_IntakeSystem.getTopShooterRPM() );
     SmartDashboard.putNumber("Shooter Bot RPM", m_IntakeSystem.getBottomShooterRPM() );
     SmartDashboard.putNumber("BotConveyor CLE", m_IntakeSystem.getShooterCLE());
-    System.out.println("t="+Timer.getFPGATimestamp()+"   delay="+shoot_delay);
-
   } 
 
   
@@ -61,6 +57,7 @@ public class ShootCubeAuto extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_IntakeSystem.StopMotors();
+
   }
 
   // Returns true when the command should end.

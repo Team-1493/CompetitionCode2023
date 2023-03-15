@@ -1,4 +1,5 @@
 package frc.robot.subsystems;
+import java.time.Instant;
 // comment added from computer 12 for github test
 import java.util.HashMap;
 
@@ -10,6 +11,8 @@ import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+
+import edu.wpi.first.hal.EncoderJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.Trajectory.State;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -36,21 +40,34 @@ import frc.robot.subsystems.SwerveModule;
 public class AutoGenerator extends SubsystemBase{
     //Defining the SwerveDrive subsystem used by the AutoGenerator in a placeholder variable
     private SwerveDrive sds;   
+    private IntakeSystem intake;
     
     //Defining the CubeIntake and Stow commands used by the AutoGenerator in placeholder variables
     private CubeIntakeAuto intakeCube;
     private Stow stowArm;
 
+    private ShootCubeAuto shootCloseHighInitial;
     private ShootCubeAuto shootCloseHigh;
     private ShootCubeAuto shootCloseLow;
     private ShootCubeAuto shootFarHigh;
     private ShootCubeAuto shootFarLow;
 
+    private InstantCommand prepareCloseHigh;
+    private InstantCommand prepareCloseLow;
+    private InstantCommand prepareFarHigh;
+    private InstantCommand prepareFarLow;
+
+    private InstantCommand injectCube;
+
+    private InstantCommand endShoot;
+
+    private InstantCommand cancelIntakeCube;
 
     private int closeHighSpeed = 3; //placeholder
     private int closeLowSpeed = 2; //placeholder
     private int farHighSpeed = 5; //placeholder
     private int farLowSpeed = 4; //placeholder
+
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
     private HashMap<String, Command> eventMap = new HashMap<>();
@@ -80,19 +97,32 @@ public class AutoGenerator extends SubsystemBase{
 
 
     //This method will be called once during the beginning of autonomous
-    public AutoGenerator(SwerveDrive m_sds, ArmSubsystem arm, IntakeSystem intake) {
+    public AutoGenerator(SwerveDrive m_sds, ArmSubsystem arm, IntakeSystem m_intake) {
         //defining the SwerveDrive used by this class as the given SwerveDrive instance
         sds = m_sds;
+        intake=m_intake;
 
         //defining the CubeIntake and Stow commands used by this class by using the given ArmSubsystem and IntakeSystem
         intakeCube = new CubeIntakeAuto(arm, intake);
-        stowArm = new Stow(arm, intake);
+        cancelIntakeCube=new InstantCommand(() -> intakeCube.cancel());
 
+        stowArm = new Stow(arm, intake);
+        
+//        shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseLow = new ShootCubeAuto(intake, closeLowSpeed);
 
         shootFarHigh = new ShootCubeAuto(intake, farHighSpeed);
         shootFarLow = new ShootCubeAuto(intake, farLowSpeed);
+
+        prepareCloseHigh = new InstantCommand(() -> intake.ShootCube(closeHighSpeed));
+        prepareCloseLow = new InstantCommand(() -> intake.ShootCube(closeLowSpeed));
+        prepareFarHigh = new InstantCommand(() -> intake.ShootCube(farHighSpeed));
+        prepareFarLow = new InstantCommand(() -> intake.ShootCube(farLowSpeed));
+
+        injectCube = new InstantCommand(() -> intake.injectCube(0) );
+        endShoot = new InstantCommand(() -> intake.StopMotors());
 
         //When 360 degrees is exceeded, the rotation will loop back to 1 (no going over 360 degrees or 2*PI radians)
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -116,6 +146,7 @@ public class AutoGenerator extends SubsystemBase{
         
         //These events are used in all or multiple autonomous paths
         eventMap.put("intake_cube", intakeCube);
+        eventMap.put("cancel_intake_cube", cancelIntakeCube);
         eventMap.put("stow", stowArm);
 
         eventMap.put("shoot_close_high", shootCloseHigh);
@@ -125,7 +156,13 @@ public class AutoGenerator extends SubsystemBase{
         eventMap.put("shoot_far_high", shootFarHigh);
         eventMap.put("shoot_far_low", shootFarLow);
 
-        
+        eventMap.put("prepare_close_high", prepareCloseHigh);
+        eventMap.put("prepare_close_low", prepareCloseLow);
+        eventMap.put("prepare_far_high", prepareFarHigh);
+        eventMap.put("prepare_far_low", prepareFarLow);
+
+        eventMap.put("inject_cube", injectCube);
+        eventMap.put("endShoot", endShoot);
 
         
         
@@ -208,10 +245,12 @@ public class AutoGenerator extends SubsystemBase{
 
     public SequentialCommandGroup autoCommand1(){
         return new SequentialCommandGroup(
-            new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),
-//            shootCloseHigh,
+            shootCloseHighInitial,
+            new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),            
             followEventBuilder(path1),
             new InstantCommand( () -> sds.allStop())
+//            new InstantCommand(()-> System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"))
+
         );
     }
 

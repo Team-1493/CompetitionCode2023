@@ -17,9 +17,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
-        "executionBehavior": "parallel",
+        "executionBehavior": "sequential",
         "waitBehavior": "none",
-        "waitTime": 0.05
+        "waitTime": 0.75
       }
     },
     {
@@ -50,15 +50,18 @@
     {
       "anchorPoint": {
         "x": 11.332020997375327,
-        "y": 3.8
+        "y": 3.2399999999999998
       },
       "prevControl": {
         "x": 10.888265811114158,
-        "y": 3.7570367197162664
+        "y": 3.1970367197162664
       },
-      "nextControl": null,
+      "nextControl": {
+        "x": 10.888265811114158,
+        "y": 3.1970367197162664
+      },
       "holonomicAngle": 180.0,
-      "isReversal": false,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -70,22 +73,93 @@
         "waitBehavior": "minimum",
         "waitTime": 2.0
       }
+    },
+    {
+      "anchorPoint": {
+        "x": 8.95,
+        "y": 2.81
+      },
+      "prevControl": {
+        "x": 10.162983659300652,
+        "y": 2.769505122343579
+      },
+      "nextControl": {
+        "x": 10.162983659300652,
+        "y": 2.769505122343579
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 12.1,
+        "y": 2.02
+      },
+      "prevControl": {
+        "x": 10.775335012215566,
+        "y": 2.02
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
     }
   ],
-  "maxVelocity": 4.0,
-  "maxAcceleration": 3.0,
+  "maxVelocity": 2.0,
+  "maxAcceleration": 2.0,
   "isReversed": null,
   "markers": [
     {
-      "position": 0.1,
+      "position": 2.4,
       "names": [
         "intake_cube"
       ]
     },
     {
-      "position": 0.0,
+      "position": 0.21,
       "names": [
-        "event"
+        "intake_cube"
+      ]
+    },
+    {
+      "position": 1.2,
+      "names": [
+        "cancel_intake_cube"
+      ]
+    },
+    {
+      "position": 3.2,
+      "names": [
+        "cancel_intake_cube"
+      ]
+    },
+    {
+      "position": 1.9,
+      "names": [
+        "shoot_far_low"
+      ]
+    },
+    {
+      "position": 3.75,
+      "names": [
+        "shoot_far_low"
       ]
     }
   ]

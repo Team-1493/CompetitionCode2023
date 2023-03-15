@@ -24,6 +24,7 @@ public class Stow extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+//    System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
     m_ArmSubsystem.resetIntegralAccumulator();  
     m_IntakeSystem.stowRollers();
     currentTime=Timer.getFPGATimestamp();

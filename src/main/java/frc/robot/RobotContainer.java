@@ -20,6 +20,7 @@ import frc.robot.commands.RotateInPlace;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.Stow;
 import frc.robot.commands.autobalancer;
+import frc.robot.commands.autobalancer2;
 import frc.robot.subsystems.IntakeSystem;
 import frc.robot.subsystems.LEDsystem;
 import frc.robot.subsystems.Stick;
@@ -52,6 +53,7 @@ public class RobotContainer {
   public JoystickButton btnRot180 = driverJoystick.getButton(4);
   // button 5 used for slow rotate in Stick
   public JoystickButton btnResetGyro = driverJoystick.getButton(6);
+  public JoystickButton btnAprilTagAlign = driverJoystick.getButton(7);
   public JoystickButton btnUpdateConstants = driverJoystick.getButton(8);
     
   public JoystickButton btnShootCube2 = operatorJoystick.getButton(1); //B - med\
@@ -80,6 +82,7 @@ public class RobotContainer {
   Supplier<double[]> operatorStickState = () -> operatorJoystick.readStick();
 
   public final Stow stowCommand = new Stow(m_ArmSystem,m_IntakeSystem);
+  public final Stow stowCommand2 = new Stow(m_ArmSystem,m_IntakeSystem);
   public final ReverseIntake reverseIntake = new ReverseIntake(m_ArmSystem,m_IntakeSystem);
 
   public final CubeIntake cubeIntake = new CubeIntake(m_ArmSystem,m_IntakeSystem,btnIntakeCube);
@@ -112,8 +115,14 @@ public class RobotContainer {
 // driver functions    
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
 //    new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
+
+//new Trigger(driverJoystick.getButton(7)).whileTrue
+//          (new InstantCommand(() -> m_autobalancer.getandsetheading(0)));
+
     new Trigger(driverJoystick.getButton(7)).whileTrue
-          (new InstantCommand(() -> m_autobalancer.getandsetheading(0)));
+          (new InstantCommand(() -> new autobalancer2(m_swervedriveSystem, 0)  ));
+
+
     new Trigger(btnRot0).onTrue
         (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(0)));
     new Trigger(btnRot90).onTrue
@@ -123,7 +132,7 @@ public class RobotContainer {
     new Trigger(btnRotneg90).onTrue
        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(-Math.PI/2)));
 
-//    new Trigger(btnFollowLimelight).whileTrue(new FollowLimelight(m_swervedriveSystem,m_Limelight,true,true));
+    new Trigger(btnAprilTagAlign).whileTrue(new FollowLimelight(m_swervedriveSystem,m_Limelight));
 
 // operator functions
     new Trigger(btnShootCube1).whileTrue(new ShootCube(m_IntakeSystem,1));
@@ -133,13 +142,14 @@ public class RobotContainer {
     new Trigger(btnShootCubeFarHigh).whileTrue(new ShootCube(m_IntakeSystem,5));
     new Trigger(operatorJoystick.mapStick(3)).whileTrue
       (new IntakeFromShooter(m_IntakeSystem));
-    new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
-    new Trigger(btnStow).onTrue(stowCommand);
     
-   // new Trigger(btnReverseIntake).onTrue
-   //   (new SequentialCommandGroup(armOverConeCommand,stowCommand));
-
-      new Trigger(btnUpdateConstantsOp).onTrue(new InstantCommand(()-> updateConstants()));
+      new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
+   
+    
+    new Trigger(btnReverseIntake).onTrue(armOverConeCommand);
+    new Trigger(btnReverseIntake).onFalse(stowCommand2);
+    
+    new Trigger(btnUpdateConstantsOp).onTrue(new InstantCommand(()-> updateConstants()));
 
   }
 

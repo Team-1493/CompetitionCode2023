@@ -1,4 +1,11 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -8,6 +15,9 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
+        "Auto choices": {
+          "open": true
+        },
         "open": true
       }
     }

@@ -48,7 +48,7 @@ public class FollowLimelight extends CommandBase {
   private Boolean horizontal = true;
   private Boolean forward = true;
 
-  public FollowLimelight(SwerveDrive sd, Limelight limelight, Boolean horizontal, Boolean forward) {
+  public FollowLimelight(SwerveDrive sd, Limelight limelight) {
     m_SwerveDrive = sd;
     m_limelight = limelight;
     SmartDashboard.putNumber("Limelight Rotation kP", kP_rotation);

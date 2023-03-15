@@ -22,6 +22,7 @@ public class CubeIntakeAuto extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+//    System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
     arm.resetIntegralAccumulator();
     intake.Unstow();
     arm.setArmPercentOutput(0.5);
