@@ -24,6 +24,7 @@ import frc.robot.subsystems.IntakeSystem;
 import frc.robot.subsystems.LEDsystem;
 import frc.robot.subsystems.Stick;
 import frc.robot.subsystems.Limelight;
+import frc.robot.commands.PreAutoBalancer;
 
 import java.util.function.Supplier;
 
@@ -76,6 +77,8 @@ public class RobotContainer {
   public final LEDsystem led = new LEDsystem();
   public final autobalancer m_autobalancer = new autobalancer(m_swervedriveSystem);
   public final autobalancer2 ab2 = new autobalancer2(m_swervedriveSystem);
+  public final PreAutoBalancer m_preautobalancer = new PreAutoBalancer(m_swervedriveSystem);
+  // public final 
 
 
   Supplier<double[]> driverStickState = () -> driverJoystick.readStick();
@@ -117,8 +120,13 @@ public class RobotContainer {
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
 //    new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
 
-//new Trigger(driverJoystick.getButton(7)).whileTrue
-//          (new InstantCommand(() -> m_autobalancer.getandsetheading(0)));
+
+    var thingy = new SequentialCommandGroup(
+    (Command)m_preautobalancer,
+      (Command)m_autobalancer
+  );
+new Trigger(driverJoystick.getButton(7)).whileTrue
+         (thingy);
 
     new Trigger(driverJoystick.getButton(7)).whileTrue(ab2);
 
