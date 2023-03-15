@@ -6,15 +6,14 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSystem;
 
-public class ArmOverCone extends CommandBase {
+public class ReachForCone extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
  
     private ArmSubsystem arm;
     private IntakeSystem intake;
     private JoystickButton btn;
-    double time1=0;
     boolean  flag1=false,flag2=false;
-  public ArmOverCone(ArmSubsystem m_arm,IntakeSystem m_intake,JoystickButton m_btn) {
+  public ReachForCone(ArmSubsystem m_arm,IntakeSystem m_intake,JoystickButton m_btn) {
     arm=m_arm;
     intake = m_intake;
     btn=m_btn;
@@ -24,7 +23,6 @@ public class ArmOverCone extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    arm.setMagicFast();
     arm.motorActive=true;
     arm.setPositionInCounts(arm.posOverCone);
     intake.Unstow();
@@ -33,10 +31,7 @@ public class ArmOverCone extends CommandBase {
   // Called every time the scheduler runs while the command is schedule d.
   @Override
   public void execute() {
-    double counts = arm.getCounts();
-     
-    if (arm.getCounts() >1250 ) intake.reverseIntake();
-  
+    if (arm.getCounts() >1250 ) intake.StopMotors();
     }
   
 
@@ -44,7 +39,6 @@ public class ArmOverCone extends CommandBase {
   @Override
   public void end(boolean interrupted) {
 //    m_ArmSubsystem.StopMotors();
-    arm.setMagicSlow();
     intake.StopMotors();
   }
 

@@ -34,7 +34,7 @@ public class Pigeon {
         return roll;
     }
     public double getPitch(){
-        double pitch = pigeon.getPitch();
+        double pitch = pigeon.getRoll();
         return pitch;
     }
     public double getHeadingRadians(){

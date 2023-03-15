@@ -14,10 +14,12 @@ public class autobalancer2 extends CommandBase {
     private double direction,directionRad;
     private double sign;
     double scaleFactor=1./20.;
+    double xposStart;
+  
 
-  public autobalancer2(SwerveDrive m_sds, double m_direction) {
+  public autobalancer2(SwerveDrive m_sds) {
     sds=m_sds;
-    direction=m_direction;
+    direction=0;
     directionRad=direction*Math.PI/180;
     addRequirements(sds);
   }
@@ -25,15 +27,14 @@ public class autobalancer2 extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    sign=1;
-    if (direction==180) sign=-1;
-
+    sign=-1;
+    if (sds.heading>90 || sds.heading <-90) sign=1;
 }
 
-  // Called every time the scheduler runs while the command is schedule d.
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double pitch=sds.pitch;
+     double pitch=sds.pitch;
     double vx=pitch*scaleFactor;
     double heading = sds.heading;
     double omega=(heading-directionRad)*2;
@@ -41,7 +42,7 @@ public class autobalancer2 extends CommandBase {
     if(Math.abs(omega)<0.02) omega=0;
     System.out.println("pitch = "+pitch+"    vx = "+
       vx+"   heading = "+heading+"     omega = "+omega);
-    sds.setMotors(vx, 0, 0);
+    sds.setMotors(vx*sign, 0, 0);
     
   }
 

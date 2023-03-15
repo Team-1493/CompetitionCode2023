@@ -57,8 +57,8 @@ public class SwerveModule{
     private double kP_drive=0.01;  //1.19 from characterization;
     private double kF_drive=0.0;   // 1023/20660
     private double kD_drive=0.0;   // 1023/20660
-    private double kS_drive= 0.05; 
-    private double kV_drive= 0.220;  // 
+    private double kS_drive= 0.05; //0.05
+    private double kV_drive= 0.220;  // 0.220
     private double kA_drive= 0.0;  //
    
 
@@ -111,7 +111,7 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_drive.config_kD(1, kD_driveAuto);
     
     m_drive.configClosedLoopPeakOutput(0,kMaxOutputDrive);
-                    
+    m_drive.configClosedloopRamp(0.35);                    
 
 
 // set up the turn encoder

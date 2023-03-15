@@ -25,7 +25,7 @@ import frc.robot.Sensors.Pigeon;
 public class SwerveDrive extends SubsystemBase {
     public SwerveModule[] modules = new SwerveModule[4];
     // Robot Dimensions for MK4 Swerve
-    public  double  maxVelocityFPS = 16.0;  //max speed in feet/sec
+    public  double  maxVelocityFPS = 11.5;  //max speed in feet/sec
     public double maxVelocityMPS = 0.3048*maxVelocityFPS; // 3.5     
 
 
@@ -261,6 +261,7 @@ public void resetOdometryToZero(){
   public void periodic() {
     heading=-gyro.getHeadingRadians();
     modulePos=getModulePositions();    
+    pitch=gyro.getPitch();
     try{
     m_odometry.update(
         new Rotation2d(heading),modulePos);

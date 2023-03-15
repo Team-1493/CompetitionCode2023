@@ -25,7 +25,7 @@ public class IntakeSystem extends SubsystemBase {
     private double topConveyorInjectSpeed = 0.35;
 
 
-    private double ShootSpeedUpper1=275;
+    private double ShootSpeedUpper1=325;
     private double ShootSpeedLower1=100;
 
     private double ShootSpeedUpper2=650;
@@ -198,6 +198,13 @@ public void runFrontIntakeBar(double speed) {
 
   }
 
+  public double getFrontIntakeBarCurrent(){
+    return FrontIntakeBar.getStatorCurrent();
+  }
+
+  public double getRearIntakeBarCurrent(){
+    return RearIntakeBars.getStatorCurrent();
+  }
 
   public boolean AtShootSpeed(){
     return (getBottomShooterRPM()>=0.9*ShooterLowerSetSpeed);
