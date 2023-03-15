@@ -11,12 +11,11 @@ import frc.robot.commands.DropCone;
 import frc.robot.commands.FollowLimelight;
 import frc.robot.commands.GrabCone;
 import frc.robot.commands.IntakeFromShooter;
-import frc.robot.commands.ArmDefaultCommand;
+import frc.robot.commands.ReachForCone;
 import frc.robot.commands.ArmOverCone;
 import frc.robot.commands.CubeIntake;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ReverseIntake;
-import frc.robot.commands.RotateInPlace;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.Stow;
 import frc.robot.commands.autobalancer;
@@ -53,7 +52,7 @@ public class RobotContainer {
   public JoystickButton btnRot180 = driverJoystick.getButton(4);
   // button 5 used for slow rotate in Stick
   public JoystickButton btnResetGyro = driverJoystick.getButton(6);
-  public JoystickButton btnAprilTagAlign = driverJoystick.getButton(7);
+  public JoystickButton btnAprilTagAlign = driverJoystick.getButton(10);
   public JoystickButton btnUpdateConstants = driverJoystick.getButton(8);
     
   public JoystickButton btnShootCube2 = operatorJoystick.getButton(1); //B - med\
@@ -63,8 +62,8 @@ public class RobotContainer {
   public JoystickButton btnIntakeCube = operatorJoystick.getButton(6);
   public JoystickButton btnReverseIntake = operatorJoystick.getButton(7);
   public JoystickButton btnShootCubeFarHigh = operatorJoystick.getButton(8); // 8 - far high
-  public JoystickButton btnStow = operatorJoystick.getButton(9);
-  public JoystickButton btnUpdateConstantsOp = operatorJoystick.getButton(10);
+  public JoystickButton btnReachForCone = operatorJoystick.getButton(9);
+  public JoystickButton btnGrabCone = operatorJoystick.getButton(10);
   
   
 
@@ -76,6 +75,7 @@ public class RobotContainer {
   public final AutoGenerator autoGenerator = new AutoGenerator(m_swervedriveSystem, m_ArmSystem, m_IntakeSystem);
   public final LEDsystem led = new LEDsystem();
   public final autobalancer m_autobalancer = new autobalancer(m_swervedriveSystem);
+  public final autobalancer2 ab2 = new autobalancer2(m_swervedriveSystem);
 
 
   Supplier<double[]> driverStickState = () -> driverJoystick.readStick();
@@ -88,8 +88,10 @@ public class RobotContainer {
   public final CubeIntake cubeIntake = new CubeIntake(m_ArmSystem,m_IntakeSystem,btnIntakeCube);
   public final ArmOverCone armOverConeCommand = 
       new ArmOverCone(m_ArmSystem, m_IntakeSystem,btnReverseIntake);
-  public final ArmDefaultCommand armDefault=
-      new ArmDefaultCommand(m_ArmSystem,operatorStickState);
+  
+  public final ReachForCone reachForCone = new ReachForCone(m_ArmSystem,m_IntakeSystem, btnReverseIntake);
+  public final GrabCone grabCone = new GrabCone(m_IntakeSystem,m_ArmSystem, btnReverseIntake);
+
 
   public final DriveStick driveCommand = new DriveStick(m_swervedriveSystem,driverStickState); 
 
@@ -103,7 +105,6 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     m_swervedriveSystem.setDefaultCommand(driveCommand);
-//    m_ArmSystem.setDefaultCommand(armDefault);
 
     // Configure the trigger bindings
     configureBindings();
@@ -119,8 +120,7 @@ public class RobotContainer {
 //new Trigger(driverJoystick.getButton(7)).whileTrue
 //          (new InstantCommand(() -> m_autobalancer.getandsetheading(0)));
 
-    new Trigger(driverJoystick.getButton(7)).whileTrue
-          (new InstantCommand(() -> new autobalancer2(m_swervedriveSystem, 0)  ));
+    new Trigger(driverJoystick.getButton(7)).onTrue(ab2);
 
 
     new Trigger(btnRot0).onTrue
@@ -148,8 +148,9 @@ public class RobotContainer {
     
     new Trigger(btnReverseIntake).onTrue(armOverConeCommand);
     new Trigger(btnReverseIntake).onFalse(stowCommand2);
-    
-    new Trigger(btnUpdateConstantsOp).onTrue(new InstantCommand(()-> updateConstants()));
+
+    new Trigger(btnReachForCone).whileTrue(reachForCone);
+    new Trigger(btnGrabCone).whileTrue(grabCone);
 
   }
 

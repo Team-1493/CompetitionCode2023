@@ -42,7 +42,7 @@ public class ArmSubsystem extends SubsystemBase {
     double armForwardSensorLim = 1410, armReverseSensorLim = 1140;
     double armMaxOutput = .35;
     public double posStow=1130,posStowFinish=1120;
-    public double posCubeIntake=1380,posConeGrab=1405,posConePlace=1405;
+    public double posCubeIntake=1380,posConeGrab=1380,posConePlace=1405;
     public double posOverCone=1405;
     public double setPoint=posStow;
     public double angleCounts;
