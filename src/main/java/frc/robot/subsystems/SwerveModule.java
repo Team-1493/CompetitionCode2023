@@ -111,7 +111,7 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_drive.config_kD(1, kD_driveAuto);
     
     m_drive.configClosedLoopPeakOutput(0,kMaxOutputDrive);
-    m_drive.configClosedloopRamp(0.35);                    
+//    m_drive.configClosedloopRamp(0.35);                    
 
 
 // set up the turn encoder

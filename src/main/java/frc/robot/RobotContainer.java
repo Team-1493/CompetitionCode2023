@@ -177,6 +177,10 @@ public class RobotContainer {
     return autoGenerator.autoCommand1();
   }
 
+  public Command getAutonomousCommand2(){
+    return autoGenerator.autoCommand2();
+  }
+
 
 // We have different PID constants for the drive wheels between teleop and auto
 // Switch between slot 0 for teleop and slot 1 for auto 

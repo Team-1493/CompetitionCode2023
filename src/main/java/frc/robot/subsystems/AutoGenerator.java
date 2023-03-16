@@ -48,6 +48,8 @@ public class AutoGenerator extends SubsystemBase{
     private Stow stowArm;
 
     private ShootCubeAuto shootCloseHighInitial;
+    private ShootCubeAuto shootCloseHighInitial2;
+
     private ShootCubeAuto shootCloseHigh;
     private ShootCubeAuto shootCloseLow;
     private ShootCubeAuto shootFarHigh;
@@ -75,6 +77,7 @@ public class AutoGenerator extends SubsystemBase{
 
 
     private autobalancer2 balance;
+    private autobalancer2 balance2;
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
     private HashMap<String, Command> eventMap = new HashMap<>();
@@ -86,7 +89,8 @@ public class AutoGenerator extends SubsystemBase{
     public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("testPath2", new PathConstraints(2, 2));
     public PathPlannerTrajectory testPath3 = PathPlanner.loadPath("testPath3", new PathConstraints(4, 3)); 
 
-    public PathPlannerTrajectory path1 = PathPlanner.loadPath("path1", new PathConstraints(2, 2));
+    public PathPlannerTrajectory path1 = PathPlanner.loadPath("path1", new PathConstraints(2.5, 2.5));
+    public PathPlannerTrajectory path2 = PathPlanner.loadPath("path2", new PathConstraints(2.2, 2.2));
 
     //Creates a path using the robot's initial position (from sds) and the desired position (given by vision)
     public PathPlannerTrajectory getPathUsingVision(Translation2d end_pose, Double end_heading, Double end_rotation){
@@ -110,6 +114,7 @@ public class AutoGenerator extends SubsystemBase{
         intake=m_intake;
 
         balance = new autobalancer2(sds);
+        balance2 = new autobalancer2(sds);
         rotateHalfCircle = new InstantCommand( ()-> sds.resetRotatePID(Math.PI));
 
 
@@ -121,6 +126,7 @@ public class AutoGenerator extends SubsystemBase{
         
 //        shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial = new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial2 = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseLow = new ShootCubeAuto(intake, closeLowSpeed);
 
@@ -262,8 +268,20 @@ public class AutoGenerator extends SubsystemBase{
             new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),            
             followEventBuilder(path1),
             balance,
-            rotateHalfCircle,
-            shootFarLowEnd,
+            //new InstantCommand( () -> sds.allStop()),
+            //rotateHalfCircle,
+            //new InstantCommand(() ->Timer.delay(1)),
+            //shootFarLowEnd,
+            new InstantCommand( () -> sds.allStop())
+        );
+    }
+
+    public SequentialCommandGroup autoCommand2(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial2,
+            new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),            
+            followEventBuilder(path2),
+            balance2,
             new InstantCommand( () -> sds.allStop())
         );
     }

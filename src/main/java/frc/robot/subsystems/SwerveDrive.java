@@ -52,6 +52,8 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
   private double[] encPositionRad = new double[4];   // encoder position of swerve motors
   private String[] moduleNames={"FR","FL","BR","BL"};
   double headingSet=0;
+  double pitchOffset=0;
+  public double pitch;
   public boolean rotatePIDon=false;
   
 
@@ -73,6 +75,7 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     modulePos=getModulePositions();    
     m_odometry=new SwerveDriveOdometry(m_kinematics,new Rotation2d(heading),modulePos, 
         new Pose2d(0,0,new Rotation2d(0)));
+    pitchOffset=gyro.getPitch();
 
         
     
@@ -116,7 +119,6 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
 }
 
   public double roll = Pigeon.getRoll();
-  public Double pitch = Pigeon.Instance.getPitch();
   
 //  set motors to provided vx,vy and an omega calculated from the rotation PID controller
 // must have set the reset the controller and set its goal  
@@ -261,7 +263,7 @@ public void resetOdometryToZero(){
   public void periodic() {
     heading=-gyro.getHeadingRadians();
     modulePos=getModulePositions();    
-    pitch=gyro.getPitch();
+    pitch=gyro.getPitch()-pitchOffset;
     try{
     m_odometry.update(
         new Rotation2d(heading),modulePos);

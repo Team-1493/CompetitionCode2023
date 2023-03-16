@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -13,8 +14,10 @@ public class autobalancer2 extends CommandBase {
     private SwerveDrive sds;
     private double direction,directionRad;
     private double sign;
-    double scaleFactor=1./20.;
+    double scaleFactor=1./38.; //was 40
     double xposStart;
+    double pitch;
+    double timeBalance;
   
 
   public autobalancer2(SwerveDrive m_sds) {
@@ -27,17 +30,19 @@ public class autobalancer2 extends CommandBase {
   @Override
   public void initialize() {
 //    sds.resetGyro();
+    pitch=sds.pitch;
     sign=1;
+    timeBalance=Timer.getFPGATimestamp();
 }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-     double pitch=sds.pitch;
+    pitch=sds.pitch;
     double vx=pitch*scaleFactor;
     double heading = sds.heading;
     double omega=(heading-directionRad)*2;
-    if(Math.abs(pitch)<8) vx=0;
+    if(Math.abs(pitch)<4) vx=0;
     if(Math.abs(omega)<0.02) omega=0;
     System.out.println("pitch = "+pitch+"    vx = "+
       vx+"   heading = "+heading+"     omega = "+omega);
@@ -54,7 +59,8 @@ public class autobalancer2 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-    return false;
+    if(pitch<4)timeBalance=Timer.getFPGATimestamp();
+    return (Timer.getFPGATimestamp()-timeBalance>1);
   }
 }
 
