@@ -49,6 +49,9 @@ public class AutoGenerator extends SubsystemBase{
 
     private ShootCubeAuto shootCloseHighInitial;
     private ShootCubeAuto shootCloseHighInitial2;
+    private ShootCubeAuto shootCloseHighInitial3;
+    private ShootCubeAuto shootCloseHighInitial4;
+    private ShootCubeAuto shootCloseHighInitial5;
 
     private ShootCubeAuto shootCloseHigh;
     private ShootCubeAuto shootCloseLow;
@@ -78,6 +81,8 @@ public class AutoGenerator extends SubsystemBase{
 
     private autobalancer2 balance;
     private autobalancer2 balance2;
+    private autobalancer2 balance3;
+    private autobalancer2 balance4;
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
     private HashMap<String, Command> eventMap = new HashMap<>();
@@ -85,12 +90,15 @@ public class AutoGenerator extends SubsystemBase{
     
     //Loading all autonomous paths and storing them in variables
 //    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
-    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("path2b", new PathConstraints(2, 2));
-    public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("testPath2", new PathConstraints(2, 2));
-    public PathPlannerTrajectory testPath3 = PathPlanner.loadPath("testPath3", new PathConstraints(4, 3)); 
+    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("path1", new PathConstraints(2, 2));
+    public PathPlannerTrajectory testPath2 = PathPlanner.loadPath("path1", new PathConstraints(2, 2));
+    public PathPlannerTrajectory testPath3 = PathPlanner.loadPath("path1", new PathConstraints(4, 3)); 
 
     public PathPlannerTrajectory path1 = PathPlanner.loadPath("path1", new PathConstraints(2.5, 2.5));
+    public PathPlannerTrajectory path1b = PathPlanner.loadPath("path1b", new PathConstraints(2.5, 2.5));
+    public PathPlannerTrajectory path1c = PathPlanner.loadPath("path1c", new PathConstraints(2.5, 2.5));
     public PathPlannerTrajectory path2 = PathPlanner.loadPath("path2", new PathConstraints(2.2, 2.2));
+    public PathPlannerTrajectory path2b = PathPlanner.loadPath("path2b", new PathConstraints(2.2, 2.2));
 
     //Creates a path using the robot's initial position (from sds) and the desired position (given by vision)
     public PathPlannerTrajectory getPathUsingVision(Translation2d end_pose, Double end_heading, Double end_rotation){
@@ -115,6 +123,8 @@ public class AutoGenerator extends SubsystemBase{
 
         balance = new autobalancer2(sds);
         balance2 = new autobalancer2(sds);
+        balance3 = new autobalancer2(sds);
+        balance4 = new autobalancer2(sds);
         rotateHalfCircle = new InstantCommand( ()-> sds.resetRotatePID(Math.PI));
 
 
@@ -127,6 +137,9 @@ public class AutoGenerator extends SubsystemBase{
 //        shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial2 = new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial3 = new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial4 = new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial5 = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseLow = new ShootCubeAuto(intake, closeLowSpeed);
 
@@ -268,24 +281,49 @@ public class AutoGenerator extends SubsystemBase{
             new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),            
             followEventBuilder(path1),
             balance,
-            //new InstantCommand( () -> sds.allStop()),
-            //rotateHalfCircle,
-            //new InstantCommand(() ->Timer.delay(1)),
-            //shootFarLowEnd,
             new InstantCommand( () -> sds.allStop())
         );
     }
 
+    public SequentialCommandGroup autoCommand1b(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial3,
+            new InstantCommand( () -> sds.resetOdometry(path1b.getInitialHolonomicPose())),            
+            followEventBuilder(path1b),
+            balance3,
+            new InstantCommand( () -> sds.allStop())
+        );
+    }
+
+    public SequentialCommandGroup autoCommand1c(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial5,
+            new InstantCommand( () -> sds.resetOdometry(path1c.getInitialHolonomicPose())),            
+            followEventBuilder(path1c),
+            new InstantCommand( () -> sds.allStop())
+        );
+    }
+
+
     public SequentialCommandGroup autoCommand2(){
         return new SequentialCommandGroup(
             shootCloseHighInitial2,
-            new InstantCommand( () -> sds.resetOdometry(path1.getInitialHolonomicPose())),            
+            new InstantCommand( () -> sds.resetOdometry(path2.getInitialHolonomicPose())),            
             followEventBuilder(path2),
             balance2,
             new InstantCommand( () -> sds.allStop())
         );
     }
 
+    public SequentialCommandGroup autoCommand2b(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial4,
+            new InstantCommand( () -> sds.resetOdometry(path2b.getInitialHolonomicPose())),            
+            followEventBuilder(path2b),
+            balance4,
+            new InstantCommand( () -> sds.allStop())
+        );
+    }
 
 
 

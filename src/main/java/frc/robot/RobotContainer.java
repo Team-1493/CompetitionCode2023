@@ -120,14 +120,15 @@ public class RobotContainer {
     new Trigger(btnResetGyro).onTrue(new ResetGyro(m_swervedriveSystem));
 //    new Trigger(btnUpdateConstants).onTrue( new InstantCommand(()-> updateConstants()));   
 
-
+/* 
     var thingy = new SequentialCommandGroup(
     (Command)m_preautobalancer,
       (Command)m_autobalancer
   );
+  
 new Trigger(driverJoystick.getButton(7)).whileTrue
          (thingy);
-
+*/
     new Trigger(driverJoystick.getButton(7)).whileTrue(ab2);
 
 
@@ -185,9 +186,26 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
     return autoGenerator.autoCommand1();
   }
 
+  public Command getAutonomousCommand1b(){
+    autoGenerator.updatePID();
+    return autoGenerator.autoCommand1b();
+  }
+
+  public Command getAutonomousCommand1c(){
+    autoGenerator.updatePID();
+    return autoGenerator.autoCommand1c();
+  }
+
   public Command getAutonomousCommand2(){
     return autoGenerator.autoCommand2();
   }
+
+  public Command getAutonomousCommand2b(){
+    autoGenerator.updatePID();
+    return autoGenerator.autoCommand2b();
+  }
+
+
 
 
 // We have different PID constants for the drive wheels between teleop and auto

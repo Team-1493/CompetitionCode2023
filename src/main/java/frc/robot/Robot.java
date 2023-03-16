@@ -20,14 +20,16 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private static final String kTestAuto1 = "Test Auto 1";
-  private static final String kTestAuto2 = "Test Auto 2";
-  private static final String kTestAuto3 = "Test Auto 3";
   private static final String kAuto1 = "Auto 1";
+  private static final String kAuto1b = "Auto 1b";
+  private static final String kAuto1c = "Auto 1c";
   private static final String kAuto2 = "Auto 2";
+  private static final String kAuto2b = "Auto 2b";
   private String m_autoSelected;
   public static boolean enabled;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   Command testAuto1Command, testAuto2Command, testAuto3Command, auto1Command, auto2Command;
+  Command auto1bCommand, auto2bCommand,auto1cCommand;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,13 +42,19 @@ public class Robot extends TimedRobot {
     testAuto1Command=m_robotContainer.getTestAutonomousCommand1();
     testAuto2Command=m_robotContainer.getTestAutonomousCommand2();
     testAuto3Command=m_robotContainer.getTestAutonomousCommand3();
+
     auto1Command=m_robotContainer.getAutonomousCommand1();
+    auto1bCommand=m_robotContainer.getAutonomousCommand1b();
+    auto1cCommand=m_robotContainer.getAutonomousCommand1c();
     auto2Command=m_robotContainer.getAutonomousCommand2();
-    m_chooser.setDefaultOption("Auto 1", kAuto1);
-    m_chooser.addOption("Auto 2", kAuto2);
+    auto2bCommand=m_robotContainer.getAutonomousCommand2b();
+    
+    m_chooser.setDefaultOption("Red Right Bal", kAuto1);
+    m_chooser.addOption("Blue Left Bal", kAuto1b);
+    m_chooser.addOption("Red Left Bal", kAuto2);
+    m_chooser.addOption("Blue Right Bal", kAuto2b);
+    m_chooser.addOption("Red Right", kAuto1c);
     m_chooser.addOption("Test Auto 1", kTestAuto1);
-    m_chooser.addOption("Test Auto 2", kTestAuto2);
-    m_chooser.addOption("Test Auto 3", kTestAuto3);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -85,17 +93,21 @@ public class Robot extends TimedRobot {
       case kAuto1:
         m_autonomousCommand=auto1Command;
         break;
+      case kAuto1b:
+        m_autonomousCommand=auto1bCommand;
+        break;
       case kAuto2:
         m_autonomousCommand=auto2Command;
+        break;
+      case kAuto2b:
+        m_autonomousCommand=auto2bCommand;
+        break;
+      case kAuto1c:
+        m_autonomousCommand=auto1cCommand;
         break;
       case kTestAuto1:
         m_autonomousCommand=testAuto1Command;
         break;
-      case kTestAuto2:
-        m_autonomousCommand=testAuto2Command;
-        break;
-      case kTestAuto3:
-        m_autonomousCommand=testAuto3Command;
       default:
         m_autonomousCommand=auto1Command;
         break;

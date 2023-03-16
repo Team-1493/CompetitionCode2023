@@ -10,6 +10,13 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auto choices": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/Auto choices": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {

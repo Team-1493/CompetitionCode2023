@@ -45,8 +45,8 @@ public class autobalancer2 extends CommandBase {
     double omega=(heading-directionRad)*2;
     if(Math.abs(pitch)<4) vx=0;
     if(Math.abs(omega)<0.02) omega=0;
-    System.out.println("pitch = "+pitch+"    vx = "+
-      vx+"   heading = "+heading+"     omega = "+omega);
+//    System.out.println("pitch = "+pitch+"    vx = "+
+//      vx+"   heading = "+heading+"     omega = "+omega);
     sds.setMotors(vx*sign, 0, 0);
     
   }
