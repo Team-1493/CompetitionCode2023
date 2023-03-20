@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -31,8 +32,8 @@ public class IntakeSystem extends SubsystemBase {
     private double ShootSpeedUpper2=650;
     private double ShootSpeedLower2=650;
 
-    private double ShootSpeedUpper3=925;
-    private double ShootSpeedLower3=925;
+    private double ShootSpeedUpper3=905;
+    private double ShootSpeedLower3=905;
 
     private double ShootSpeedUpper4=1325;
     private double ShootSpeedLower4=1125;
@@ -135,6 +136,9 @@ public class IntakeSystem extends SubsystemBase {
         ShooterTop.config_kF(0,shooterKf);
         ShooterTop.config_kI(0,shooterKi);
         ShooterTop.config_IntegralZone(0,shooterKizone);
+
+        ShooterTop.setNeutralMode(NeutralMode.Coast);
+        ShooterBottom.setNeutralMode(NeutralMode.Coast);
 
 
         ShooterTop.setInverted(InvertType.InvertMotorOutput);

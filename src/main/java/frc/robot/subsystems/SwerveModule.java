@@ -58,7 +58,7 @@ public class SwerveModule{
     private double kF_drive=0.0;   // 1023/20660
     private double kD_drive=0.0;   // 1023/20660
     private double kS_drive= 0.05; //0.05
-    private double kV_drive= 0.220;  // 0.220
+    private double kV_drive= 0.280;  // 0.220
     private double kA_drive= 0.0;  //
    
 

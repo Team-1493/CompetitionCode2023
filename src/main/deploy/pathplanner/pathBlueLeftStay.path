@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 2.3153234877898328,
-        "y": 4.280108131644835
+        "x": 1.8286222286730291,
+        "y": 4.394626074966436
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.17420806270184,
-        "y": 4.552088247033637
+        "x": 3.503447149751443,
+        "y": 4.4948292753728385
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 1.97176965782503,
-        "y": 1.0449762328096084
+        "x": 7.6,
+        "y": 3.85
       },
       "prevControl": {
-        "x": 4.534108639645851,
-        "y": 0.6727929170144054
+        "x": 4.233499038426649,
+        "y": 5.196251678217642
       },
       "nextControl": {
-        "x": 4.534108639645851,
-        "y": 0.6727929170144054
+        "x": 4.233499038426649,
+        "y": 5.196251678217642
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -49,15 +49,15 @@
     },
     {
       "anchorPoint": {
-        "x": 1.97,
-        "y": 1.04
+        "x": 1.7856779999274288,
+        "y": 4.4089408178816365
       },
       "prevControl": {
-        "x": 4.548423382561051,
-        "y": 0.6584781740992056
+        "x": 3.2314670343626406,
+        "y": 4.4805145324576365
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -70,23 +70,26 @@
       }
     }
   ],
+  "maxVelocity": 2.0,
+  "maxAcceleration": 2.0,
+  "isReversed": null,
   "markers": [
     {
-      "position": 0.0,
-      "names": [
-        "place_cone"
-      ]
-    },
-    {
-      "position": 0.7727272727272766,
+      "position": 0.1,
       "names": [
         "intake_cube"
       ]
     },
     {
-      "position": 1.090909090909091,
+      "position": 0.0,
       "names": [
-        "intake_off"
+        "event"
+      ]
+    },
+    {
+      "position": 1.1,
+      "names": [
+        "cancel_intake_cube"
       ]
     }
   ]

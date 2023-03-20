@@ -33,14 +33,13 @@ public class Stick extends SubsystemBase {
     double[] stickValues = new double[3];
     double direction = joy0.getDirectionDegrees();
     double mag=joy0.getMagnitude();
+    if (Math.abs(mag)<0.04) mag=0;
+ 
     double omega;
-    if(joy0.getRawButton(5))
-      omega = joy0.getRawAxis(4);
-    else omega = 4*joy0.getRawAxis(4);
+    omega = joy0.getRawAxis(4);
+    if (Math.abs(omega)<0.04) omega=0;
+   omega = 4*omega;
     
-    // deadband
-    if (Math.abs(mag)<0.02) mag=0;
-    if (Math.abs(omega)<0.02) omega=0;
     stickValues[0]= mag*mag*Math.cos(direction*Math.PI/180);
     stickValues[1]=mag*mag*Math.sin(direction*Math.PI/180);
     stickValues[2]=omega;

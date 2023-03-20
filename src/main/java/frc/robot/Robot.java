@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.server.PathPlannerServer;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,17 +22,28 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
   private static final String kTestAuto1 = "Test Auto 1";
-  private static final String kAuto1 = "Auto 1";
-  private static final String kAuto1b = "Auto 1b";
-  private static final String kAuto1c = "Auto 1c";
-  private static final String kAuto2 = "Auto 2";
-  private static final String kAuto2b = "Auto 2b";
+
+  private static final String kRRB = "RedRightBal";
+  private static final String kRLB = "RedLeftBal";
+  private static final String kRR = "RedRight";
+  private static final String kRL = "RedLeft";
+  
+  private static final String kBLB = "BlueLeftBal";
+  private static final String kBRB = "BlueRightBal";
+  private static final String kBL = "BlueLeft";
+  private static final String kBR = "BlueRight";
+  private static final String kBLS = "pathBlueLeftStay";
+  private static final String kBRS = "pathBlueRightStay";
+
+  private static final String kMidBal = "Middle Balance";
+  
+
+  private static final String kAutoShootHigh = "Auto Shoot High";
+
   private String m_autoSelected;
   public static boolean enabled;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  Command testAuto1Command, testAuto2Command, testAuto3Command, auto1Command, auto2Command;
-  Command auto1bCommand, auto2bCommand,auto1cCommand;
-
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -39,21 +52,25 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings
     m_robotContainer = new RobotContainer();
-    testAuto1Command=m_robotContainer.getTestAutonomousCommand1();
-    testAuto2Command=m_robotContainer.getTestAutonomousCommand2();
-    testAuto3Command=m_robotContainer.getTestAutonomousCommand3();
+    PathPlannerServer.startServer(5811);
 
-    auto1Command=m_robotContainer.getAutonomousCommand1();
-    auto1bCommand=m_robotContainer.getAutonomousCommand1b();
-    auto1cCommand=m_robotContainer.getAutonomousCommand1c();
-    auto2Command=m_robotContainer.getAutonomousCommand2();
-    auto2bCommand=m_robotContainer.getAutonomousCommand2b();
+
     
-    m_chooser.setDefaultOption("Red Right Bal", kAuto1);
-    m_chooser.addOption("Blue Left Bal", kAuto1b);
-    m_chooser.addOption("Red Left Bal", kAuto2);
-    m_chooser.addOption("Blue Right Bal", kAuto2b);
-    m_chooser.addOption("Red Right", kAuto1c);
+    m_chooser.setDefaultOption("Red Right Bal", kRRB);
+    m_chooser.addOption("Red Left Bal", kRLB);
+    m_chooser.addOption("Red Right", kRR);
+    m_chooser.addOption("Red Left", kRL);
+
+    m_chooser.addOption("Blue Left Bal", kBLB);
+    m_chooser.addOption("Blue Right Bal", kBRB);
+    m_chooser.addOption("Blue Left ", kBL);
+    m_chooser.addOption("Blue Right ", kBR);
+    m_chooser.addOption("Middle Balance ", kMidBal);
+//    m_chooser.addOption("Blue Left Two Cubes Return", kBLS);
+//    m_chooser.addOption("Blue Right Two Cubes Return", kBRS);
+    
+    m_chooser.addOption("Shoot High", kAutoShootHigh);
+   
     m_chooser.addOption("Test Auto 1", kTestAuto1);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
@@ -84,36 +101,69 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    m_robotContainer.turnOffRamp();
     enabled=true;
     m_robotContainer.setPIDslot(1);  // use the auto PID gains for auto
 
     m_autoSelected = m_chooser.getSelected();
 
     switch (m_autoSelected) {
-      case kAuto1:
-        m_autonomousCommand=auto1Command;
+      case kRRB:
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandRedRightBal();
         break;
-      case kAuto1b:
-        m_autonomousCommand=auto1bCommand;
+      
+      case kRLB:
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandRedLeftBal();
+      break;
+
+      case kRR:
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandRedRight();;
+      break;
+
+      case kRL:
+      m_autonomousCommand=m_robotContainer.getAutonomousCommandRedLeft();;
+      break;
+
+      case kBLB:
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandBlueLeftBal();;
         break;
-      case kAuto2:
-        m_autonomousCommand=auto2Command;
+     
+      case kBRB:
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandBlueRightBal();
         break;
-      case kAuto2b:
-        m_autonomousCommand=auto2bCommand;
-        break;
-      case kAuto1c:
-        m_autonomousCommand=auto1cCommand;
-        break;
+
+      case kBL:
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandBlueLeft();
+      break;   
+
+      case kBR:
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandBlueRight();
+      break; 
+
+      case kMidBal:
+      m_autonomousCommand=m_robotContainer.getAutonomousBalanceFromMiddle();
+    break; 
+
+//      case kAutoBLStay:
+//        m_autonomousCommand=m_robotContainer.getAutonomousCommandBlueLeftStay();
+//        break;
+//      case kAutoBRStay:
+//        m_autonomousCommand=m_robotContainer.getAutonomousCommandBlueRightStay();
+//        break;
+      case kAutoShootHigh:
+        m_autonomousCommand= m_robotContainer.getAutonomousShootHigh();;
+        break;                
       case kTestAuto1:
-        m_autonomousCommand=testAuto1Command;
+        m_autonomousCommand=m_robotContainer.getTestAuto1();
         break;
+
       default:
-        m_autonomousCommand=auto1Command;
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandRedRightBal();
         break;
     }
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {        
+      System.out.println("***************************"+m_autoSelected);
       m_autonomousCommand.schedule();
     }
   }
@@ -124,6 +174,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.turnOnRamp();
     enabled=true;
      if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();

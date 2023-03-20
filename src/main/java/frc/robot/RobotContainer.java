@@ -164,54 +164,75 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
   }
 
 
- 
-
-  public Command getTestAutonomousCommand1() {
+  public Command getTestAuto1() {
     // An example command will be run in autonomous
     return autoGenerator.testAutoCommand1();
   }
+ 
 
-  public Command getTestAutonomousCommand2() {
-    // An example command will be run in autonomous
-    return autoGenerator.testAutoCommand2();
-  }
-
-  public Command getTestAutonomousCommand3() {
-    //An example command will be run in autonomous
-    return autoGenerator.testAutoCommand3();
-  }
-
-  public Command getAutonomousCommand1(){
+  public Command getAutonomousCommandRedRightBal(){
     autoGenerator.updatePID();
-    return autoGenerator.autoCommand1();
+    return autoGenerator.autoCommandRedRightBal();
   }
 
-  public Command getAutonomousCommand1b(){
-    autoGenerator.updatePID();
-    return autoGenerator.autoCommand1b();
+  public Command getAutonomousCommandRedLeftBal(){
+    return autoGenerator.autoCommandRedLeftBal();
   }
 
-  public Command getAutonomousCommand1c(){
-    autoGenerator.updatePID();
-    return autoGenerator.autoCommand1c();
+  public Command getAutonomousCommandRedRight(){
+    return autoGenerator.autoCommandRedRight();
   }
 
-  public Command getAutonomousCommand2(){
-    return autoGenerator.autoCommand2();
+  public Command getAutonomousCommandRedLeft(){
+    return autoGenerator.autoCommandRedLeft();
   }
 
-  public Command getAutonomousCommand2b(){
-    autoGenerator.updatePID();
-    return autoGenerator.autoCommand2b();
+  public Command getAutonomousCommandBlueLeftBal(){
+    return autoGenerator.autoCommandBlueLeftBal();
+  }
+
+  public Command getAutonomousCommandBlueRightBal(){
+    return autoGenerator.autoCommandBlueRightBal();
+  }
+
+  public Command getAutonomousCommandBlueLeft(){
+    return autoGenerator.autoCommandBlueLeft();
+  }
+
+  public Command getAutonomousCommandBlueRight(){
+    return autoGenerator.autoCommandBlueRight();
   }
 
 
+
+  public Command getAutonomousShootHigh(){
+    return autoGenerator.autoShootHigh();
+  }
+
+  public Command getAutonomousCommandBlueLeftStay(){
+    return autoGenerator.autoBlueLeftStay();
+  }
+  public Command getAutonomousCommandBlueRightStay(){
+    return autoGenerator.autoBlueRightStay();
+  }
+
+  public Command getAutonomousBalanceFromMiddle(){
+    return autoGenerator.autoBalanceFromMiddle();
+  }
 
 
 // We have different PID constants for the drive wheels between teleop and auto
 // Switch between slot 0 for teleop and slot 1 for auto 
   public void setPIDslot(int slot){
     m_swervedriveSystem.setPIDSlot(slot);
+  }
+
+  public void turnOnRamp(){
+    m_swervedriveSystem.turnOnRamp();
+  }
+
+  public void turnOffRamp(){
+    m_swervedriveSystem.turnOffRamp();
   }
 
   public void updateConstants(){
