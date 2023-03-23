@@ -166,6 +166,7 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
 
   public Command getTestAuto1() {
     // An example command will be run in autonomous
+    autoGenerator.updatePID();
     return autoGenerator.testAutoCommand1();
   }
  
@@ -233,6 +234,14 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
 
   public void turnOffRamp(){
     m_swervedriveSystem.turnOffRamp();
+  }
+
+  public void turnOnVoltageComp(){
+    m_swervedriveSystem.turnOnVoltageComp();;
+  }
+
+  public void turnOffVoltageComp(){
+    m_swervedriveSystem.turnOffVoltageComp();
   }
 
   public void updateConstants(){

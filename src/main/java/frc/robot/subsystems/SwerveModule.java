@@ -6,7 +6,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard; 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Robot;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -54,7 +56,7 @@ public class SwerveModule{
 
 
     // Drive Motor Constants
-    private double kP_drive=0.01;  //1.19 from characterization;
+    private double kP_drive=0.0;  //1.19 from characterization;
     private double kF_drive=0.0;   // 1023/20660
     private double kD_drive=0.0;   // 1023/20660
     private double kS_drive= 0.05; //0.05
@@ -63,12 +65,12 @@ public class SwerveModule{
    
 
    // Drive Motor Constants for auto
-   private double kP_driveAuto=0.025;  // 0.0514 from SYSID
+   private double kP_driveAuto=0.0;  // 0.0514 from SYSID
    private double kF_driveAuto=0.0;   // 1023/20660
    private double kD_driveAuto=0.0;   // 1023/20660
-   private double kS_driveAuto= 0.0399;  //   0.6058/12 = 0.0504 from SYSID
-   private double kV_driveAuto= 0.240;  //  3.0562/12 = 0.254 from SYSID 
-   private double kA_driveAuto= 0.033;  // 0.23728 /12 = 0.024 from SYSID
+   private double kS_driveAuto= 0.0272;  //   0.3269/12 from SYSID
+   private double kV_driveAuto= 0.233;  //  2.7914/12 from SYSID 
+   private double kA_driveAuto= 0.0449;  // 0.5389 /12 from SYSID
   
 //  Turn (Swerve) Motor Constants
     private double kP_turn=0.5; //0.5,   0.421 from characterization 
@@ -87,7 +89,7 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_drive=new TalonFX(driveID);
     m_drive.configFactoryDefault();
     m_drive.configVoltageCompSaturation(voltageComp);
-    m_drive.enableVoltageCompensation(true);
+    m_drive.enableVoltageCompensation(false);
     m_drive.setNeutralMode(NeutralMode.Brake);
     m_drive.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0, 25);
     m_drive.configVelocityMeasurementWindow(8, 10);
@@ -204,8 +206,15 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     public void setMotors(double speed,double turnAngle) {
         double acc = (speed-speedPrev)/0.020;
         speedPrev=speed;
-       m_drive.set(ControlMode.Velocity,  speed*MPSToNativeSpeed,
-            DemandType.ArbitraryFeedForward, feedforward_drive.calculate(speed,acc));
+    
+        if(Robot.inAuto==-0){        
+            m_drive.set(ControlMode.Velocity,  speed*MPSToNativeSpeed,
+                DemandType.ArbitraryFeedForward, feedforward_drive.calculate(speed,acc));
+        }
+        else{
+            m_drive.set(ControlMode.PercentOutput,feedforward_drive.calculate(speed,acc));
+        }
+
         m_turn.set(ControlMode.Position,turnAngle*RadiansToNativePos);
     }
 

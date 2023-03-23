@@ -24,7 +24,6 @@ public class Stow extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-//    System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
     m_ArmSubsystem.resetIntegralAccumulator();  
     m_IntakeSystem.stowRollers();
     currentTime=Timer.getFPGATimestamp();
@@ -61,7 +60,7 @@ public class Stow extends CommandBase {
 //    return !m_ArmSubsystem.getLowerLimitSwitch();
 
 //    checks to see if sufficient time has passed since triggering limit switch 
-    return ( currentTime-lsTime>=timeToRunWheels);
+    return ( currentTime-lsTime>=timeToRunWheels)|| m_ArmSubsystem.getCounts()<1150;
   }
 }
 

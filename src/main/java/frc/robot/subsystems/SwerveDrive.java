@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.Sensors.Pigeon;
 
 public class SwerveDrive extends SubsystemBase {
@@ -195,6 +196,22 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
     }
   }
 
+  public void turnOnVoltageComp(){
+    int i = 0;
+    while(i<4){
+      modules[i].m_drive.enableVoltageCompensation(true);;
+      i++;
+    }
+  }
+
+  public void turnOffVoltageComp(){
+    int i = 0;
+    while(i<4){
+      modules[i].m_drive.enableVoltageCompensation(false);;
+      i++;
+    }
+  }
+
 
 // a bunch of getters - so that the everything except the SwerveModules class can be 
 // independant of the type of motors being used
@@ -290,8 +307,10 @@ public void resetOdometryToZero(){
 //        SmartDashboard.putNumber("module state 0 mps", modules[0].getState().speedMetersPerSecond);
       }
         catch(Exception e){
-          
         }
+        
+//        if(Robot.inAuto==1) System.out.println(
+//          heading+","+m_odometry.getPoseMeters().getRotation().getDegrees());
   }
 
 

@@ -36,13 +36,12 @@ public class Robot extends TimedRobot {
   private static final String kBRS = "pathBlueRightStay";
 
   private static final String kMidBal = "Middle Balance";
-  
-
   private static final String kAutoShootHigh = "Auto Shoot High";
 
   private String m_autoSelected;
   public static boolean enabled;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  static public int inAuto=0;
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -53,8 +52,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings
     m_robotContainer = new RobotContainer();
     PathPlannerServer.startServer(5811);
-
-
     
     m_chooser.setDefaultOption("Red Right Bal", kRRB);
     m_chooser.addOption("Red Left Bal", kRLB);
@@ -98,10 +95,12 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {}
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /** This autonomous runs the autonomous command selercted by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    inAuto=1;
     m_robotContainer.turnOffRamp();
+    m_robotContainer.turnOnVoltageComp();
     enabled=true;
     m_robotContainer.setPIDslot(1);  // use the auto PID gains for auto
 
@@ -154,7 +153,7 @@ public class Robot extends TimedRobot {
         m_autonomousCommand= m_robotContainer.getAutonomousShootHigh();;
         break;                
       case kTestAuto1:
-        m_autonomousCommand=m_robotContainer.getTestAuto1();
+        m_autonomousCommand=m_robotContainer.getAutonomousCommandRedRightBal();
         break;
 
       default:
@@ -174,11 +173,13 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    m_robotContainer.turnOnRamp();
-    enabled=true;
-     if (m_autonomousCommand != null) {
+    if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    inAuto=0;
+    m_robotContainer.turnOnRamp();
+    m_robotContainer.turnOffVoltageComp();
+    enabled=true;
     m_robotContainer.setPIDslot(0);  // use the auto PID gains for teleop
 //  need to call re-enable gyro?  See 2022 code
   }
