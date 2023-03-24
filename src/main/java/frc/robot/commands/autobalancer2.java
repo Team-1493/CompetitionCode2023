@@ -15,6 +15,7 @@ public class autobalancer2 extends CommandBase {
     private SwerveDrive sds;
     private double direction,directionRad;
     private double sign;
+    public int armfaceFwd = 0;
     double scaleFactor=1./32.; //was 40
     double xposStart;
     double pitch;
@@ -24,7 +25,6 @@ public class autobalancer2 extends CommandBase {
   public autobalancer2(SwerveDrive m_sds) {
     sds=m_sds;
     directionRad=0;
-    addRequirements(sds);
   }
 
   // Called when the command is initially scheduled.
@@ -38,18 +38,33 @@ public class autobalancer2 extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    pitch=sds.pitch;
-    double vx=-pitch*scaleFactor;
-    double heading = sds.heading;
-    double omega=(heading-directionRad)*2;
-    if(Math.abs(pitch)<6) vx=0;
-    if(Math.abs(omega)<0.02) omega=0;
-//    System.out.println("pitch = "+pitch+"    vx = "+
-//      vx+"   heading = "+heading+"     omega = "+omega);
-    sds.setMotors(vx*sign, 0, 0);
+  public void execute(){
+    if (armfaceFwd == 0){
+      pitch=sds.pitch;
+      double vx=-pitch*scaleFactor;
+      double heading = sds.heading;
+      double omega=(heading-directionRad)*2;
+      if(Math.abs(pitch)<6) vx=0;
+      if(Math.abs(omega)<0.02) omega=0;
+  //    System.out.println("pitch = "+pitch+"    vx = "+
+  //      vx+"   heading = "+heading+"     omega = "+omega);
+      sds.setMotors(vx*sign, 0, 0);
+      
+    } else {
+      sign = sign*-1;
+      pitch=sds.pitch;
+      double vx=-pitch*scaleFactor;
+      double heading = sds.heading;
+      double omega=(heading-directionRad)*2;
+      if(Math.abs(pitch)<6) vx=0;
+      if(Math.abs(omega)<0.02) omega=0;
+  //    System.out.println("gnpitch = "+pitch+"    vx = "+
+  //      vx+"   heading = "+heading+"     omega = "+omega);
+      sds.setMotors(vx*sign, 0, 0);
+    }
     
   }
+  
 
   // Called once the command ends or is interrupted.
   @Override
