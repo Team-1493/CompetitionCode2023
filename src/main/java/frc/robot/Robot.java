@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings
     m_robotContainer = new RobotContainer();
-    PathPlannerServer.startServer(5811);
+//    PathPlannerServer.startServer(5811);
     
     m_chooser.setDefaultOption("Red Right Bal", kRRB);
     m_chooser.addOption("Red Left Bal", kRLB);
@@ -153,7 +153,7 @@ public class Robot extends TimedRobot {
         m_autonomousCommand= m_robotContainer.getAutonomousShootHigh();;
         break;                
       case kTestAuto1:
-        m_autonomousCommand=m_robotContainer.getAutonomousCommandRedRightBal();
+        m_autonomousCommand=m_robotContainer.getTestAuto1();
         break;
 
       default:
@@ -175,6 +175,7 @@ public class Robot extends TimedRobot {
   public void teleopInit() {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
+      m_robotContainer.m_swervedriveSystem.allStop();
     }
     inAuto=0;
     m_robotContainer.turnOnRamp();
