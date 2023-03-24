@@ -39,7 +39,9 @@ public class autobalancer2 extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute(){
-    if (armfaceFwd == 0){
+    if (armfaceFwd == 1){
+    sign = sign*-1;
+    }
       pitch=sds.pitch;
       double vx=-pitch*scaleFactor;
       double heading = sds.heading;
@@ -49,21 +51,8 @@ public class autobalancer2 extends CommandBase {
   //    System.out.println("pitch = "+pitch+"    vx = "+
   //      vx+"   heading = "+heading+"     omega = "+omega);
       sds.setMotors(vx*sign, 0, 0);
-      
-    } else {
-      sign = sign*-1;
-      pitch=sds.pitch;
-      double vx=-pitch*scaleFactor;
-      double heading = sds.heading;
-      double omega=(heading-directionRad)*2;
-      if(Math.abs(pitch)<6) vx=0;
-      if(Math.abs(omega)<0.02) omega=0;
-  //    System.out.println("gnpitch = "+pitch+"    vx = "+
-  //      vx+"   heading = "+heading+"     omega = "+omega);
-      sds.setMotors(vx*sign, 0, 0);
-    }
-    
   }
+
   
 
   // Called once the command ends or is interrupted.
