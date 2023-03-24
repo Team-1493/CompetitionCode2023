@@ -166,7 +166,7 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
 
   public Command getTestAuto1() {
     // An example command will be run in autonomous
-//    autoGenerator.updatePID();
+    autoGenerator.updatePID();
     return autoGenerator.testAutoCommand1();
   }
  

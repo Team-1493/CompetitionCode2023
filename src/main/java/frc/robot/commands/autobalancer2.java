@@ -15,7 +15,7 @@ public class autobalancer2 extends CommandBase {
     private SwerveDrive sds;
     private double direction,directionRad;
     private double sign;
-    double scaleFactor=1./72.; //was 40
+    double scaleFactor=1./32.; //was 40
     double xposStart;
     double pitch;
     double timeBalance;
@@ -43,7 +43,7 @@ public class autobalancer2 extends CommandBase {
     double vx=-pitch*scaleFactor;
     double heading = sds.heading;
     double omega=(heading-directionRad)*2;
-    if(Math.abs(pitch)<4) vx=0;
+    if(Math.abs(pitch)<6) vx=0;
     if(Math.abs(omega)<0.02) omega=0;
 //    System.out.println("pitch = "+pitch+"    vx = "+
 //      vx+"   heading = "+heading+"     omega = "+omega);

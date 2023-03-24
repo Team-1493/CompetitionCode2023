@@ -56,6 +56,8 @@ public class AutoGenerator extends SubsystemBase{
     private InstantCommand endShoot;
     private InstantCommand cancelIntakeCube;
     private ShootCubeAuto shootCloseHighInitial1;
+    private ShootCubeAuto shootCloseMidInitialTest;
+    private ShootCubeAuto shootCloseMidEndTest;
 
     private ShootCubeAuto shootCloseMidEnd1;
     private autobalancer2 bal1;
@@ -128,6 +130,8 @@ public class AutoGenerator extends SubsystemBase{
         intake=m_intake;
 
         shootCloseHighInitial1=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseMidInitialTest=new ShootCubeAuto(intake, closeLowSpeed);
+        shootCloseMidEndTest=new ShootCubeAuto(intake, closeLowSpeed);
 
 
         shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
@@ -259,8 +263,9 @@ public class AutoGenerator extends SubsystemBase{
     //This is a list commands to run during autonomous if testPath1 is being run
     public SequentialCommandGroup testAutoCommand1() {
         return new SequentialCommandGroup(
-            new InstantCommand( () -> sds.resetOdometry(trajTestPath1.getInitialHolonomicPose())),
-            followEventBuilder(trajTestPath1),
+//            new InstantCommand( () -> sds.resetOdometry(trajTestPath1.getInitialHolonomicPose())),
+//            followEventBuilder(trajTestPath1),
+            bal1.asProxy(),
             new InstantCommand( () -> sds.allStop())
         );
     }
@@ -273,7 +278,7 @@ public class AutoGenerator extends SubsystemBase{
             shootCloseHighInitial1.asProxy(),
             new InstantCommand( () -> sds.resetOdometry(trajRedRightBal.getInitialHolonomicPose())),            
             followEventBuilder(trajRedRightBal),
-            bal1,
+            bal1.asProxy(),
             new InstantCommand( () -> sds.allStop())
         );
     }
