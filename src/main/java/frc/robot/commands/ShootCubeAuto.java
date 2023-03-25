@@ -22,7 +22,6 @@ public class ShootCubeAuto extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-//    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     timeStart=Timer.getFPGATimestamp();
     m_IntakeSystem.ShootCube(speedLevel);
     if (speedLevel == 2) {
@@ -34,7 +33,7 @@ public class ShootCubeAuto extends CommandBase {
     } else if (speedLevel == 4){
       eject_delay = 0.25;
       shoot_delay = 1.25;
-    } else if (speedLevel == 5){
+    } else {
       eject_delay = 0.25;
       shoot_delay = 1.25;
     }

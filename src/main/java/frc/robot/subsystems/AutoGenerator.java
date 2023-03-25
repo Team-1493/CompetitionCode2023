@@ -269,8 +269,8 @@ public class AutoGenerator extends SubsystemBase{
             new InstantCommand( () -> sds.resetOdometry(trajRedLeft1.getInitialHolonomicPose())),            
             followEventBuilder(trajRedLeft1),
             new InstantCommand( () -> sds.allStop())
-            );
-    }
+            
+        );}
 
     public SequentialCommandGroup autoRedLeftBal1(){
         return new SequentialCommandGroup(

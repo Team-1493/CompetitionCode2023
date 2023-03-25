@@ -15,6 +15,7 @@ public class autobalancer2 extends CommandBase {
     private SwerveDrive sds;
     private double direction,directionRad;
     private double sign;
+    public int armfaceFwd = 0;
     double scaleFactor=1./32.; //was 40
     double xposStart;
     double pitch;
@@ -47,6 +48,8 @@ public class autobalancer2 extends CommandBase {
     sds.setMotors(vx, 0, 0);
     
   }
+
+  
 
   // Called once the command ends or is interrupted.
   @Override
