@@ -36,7 +36,7 @@ public class SwerveModule{
 
 
     // Robot Dimensions for MK4 Swerve
-    private  double  wheelDiamInches = 3.900; //4.084;
+    private  double  wheelDiamInches = 3.90; //4.084;
     private double wheelCircumferenceMeters=wheelDiamInches*Math.PI*0.0254; // 0.319185
     private double gearRatioDrive=8.1428; 
     // 1499  (3mps = 4695 rpm)
@@ -68,8 +68,8 @@ public class SwerveModule{
    private double kP_driveAuto=0.0;  // 0.0514 from SYSID
    private double kF_driveAuto=0.0;   // 1023/20660
    private double kD_driveAuto=0.0;   // 1023/20660
-   private double kS_driveAuto= 0.05;  //   0.3269/12 from SYSID
-   private double kV_driveAuto= 0.233;  //  2.7914/12 from SYSID 
+   private double kS_driveAuto= 0.04;  //   0.3269/12 from SYSID
+   private double kV_driveAuto= 0.250;  //  2.7914/12 from SYSID 
    private double kA_driveAuto= 0.0449;  // 0.5389 /12 from SYSID
   
 //  Turn (Swerve) Motor Constants

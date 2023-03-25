@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 7.110762364381872,
-        "y": 4.580717732864038
+        "x": 7.1,
+        "y": 4.1
       },
       "prevControl": {
-        "x": 6.110762364381872,
-        "y": 4.580717732864038
+        "x": 6.1,
+        "y": 4.1
       },
       "nextControl": {
-        "x": 6.110762364381872,
-        "y": 4.580717732864038
+        "x": 6.1,
+        "y": 4.1
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -50,19 +50,19 @@
     {
       "anchorPoint": {
         "x": 5.063754127508256,
-        "y": 3.134928698428826
+        "y": 3.0
       },
       "prevControl": {
         "x": 6.710011799592467,
-        "y": 3.134928698428826
+        "y": 3.0
       },
       "nextControl": {
         "x": 4.419431663256481,
-        "y": 3.134928698428826
+        "y": 3.0
       },
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 0.75,
+      "velOverride": 0.5,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -74,12 +74,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.7324830363946444,
-        "y": 3.13
+        "x": 3.517761892666643,
+        "y": 3.0
       },
       "prevControl": {
-        "x": 4.070500377559382,
-        "y": 3.13
+        "x": 3.85577923383138,
+        "y": 3.0
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -132,7 +132,7 @@
     {
       "position": 2.2,
       "names": [
-        "shoot_far_low"
+        "shoot_close_high"
       ]
     }
   ]

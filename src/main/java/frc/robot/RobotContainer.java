@@ -53,7 +53,7 @@ public class RobotContainer {
   public JoystickButton btnRot180 = driverJoystick.getButton(4);
   // button 5 used for slow rotate in Stick
   public JoystickButton btnResetGyro = driverJoystick.getButton(6);
-  public JoystickButton btnAprilTagAlign = driverJoystick.getButton(10);
+  public JoystickButton btnAprilTagAlign = driverJoystick.getButton(7);
   public JoystickButton btnUpdateConstants = driverJoystick.getButton(8);
     
   public JoystickButton btnShootCube2 = operatorJoystick.getButton(1); //B - med\
@@ -178,6 +178,14 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
     return autoGenerator.autoRedLeft1();
   }
 
+  public Command getAutonomousRedLeft2(){
+    return autoGenerator.autoRedLeft2();
+  }
+
+  public Command getAutonomousRedLeft2Bal(){
+    return autoGenerator.autoRedLeft2Bal();
+  }
+
   public Command getAutonomousRedLeftBalance1(){
     return autoGenerator.autoRedLeftBal1();
   }
@@ -192,6 +200,10 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
 
   public Command getAutonomousRedRightBal3(){
     return autoGenerator.autoRedRightBal3();
+  }
+
+  public Command getAutonomousRedLeftReturn2(){
+    return autoGenerator.autoRedLeftReturn2();
   }
 
   

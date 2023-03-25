@@ -39,7 +39,7 @@ public class AutoGenerator extends SubsystemBase{
     private int closeHighSpeed = 3; //placeholder
     private int closeMidSpeed = 2; //placeholder shoot to mid close
     private int farHighSpeed = 5; //placeholder
-    private int farLowSpeed = 4; //placeholder
+    private int farLowSpeed = 7; //changed from 4 to 7
 
     private InstantCommand prepareCloseHigh;
     private InstantCommand prepareCloseLow;
@@ -54,14 +54,18 @@ public class AutoGenerator extends SubsystemBase{
     private ShootCubeAuto shootFarHigh;
     private ShootCubeAuto shootFarLow;
     private ShootCubeAuto shootFarLowEnd;
+    private ShootCubeAuto shootFarMid;
+    private ShootCubeAuto shootFarMid2;
 
     private ShootCubeAuto shootFarHighInitial1;
+    private ShootCubeAuto shootFarHighInitial2;
+    private ShootCubeAuto shootFarHighInitial3;
     private ShootCubeAuto shootCloseHighInitial1,shootCloseHighInitial2,shootCloseHighInitial3;
     private ShootCubeAuto shootCloseHighInitial4,shootCloseHighInitial5,shootCloseHighInitial6;
     private ShootCubeAuto shootCloseMidEnd1,shootCloseMidEnd2;
  
      private autobalancer2 bal1,bal2,bal3,bal4,bal5,bal6;
-     private autobalancer2 balShooter1,balShooter2,balShooter3,balShooter4;
+     private autobalancer2 balShooter1,balShooter2,balShooter3,balShooter4,balShooter5;
 
      
 
@@ -82,20 +86,26 @@ public class AutoGenerator extends SubsystemBase{
     public PathPlannerTrajectory trajRedLeft1 = PathPlanner.loadPath(
         "pathRedLeft1", new PathConstraints(1.5, 1.5));
 
+    public PathPlannerTrajectory trajRedLeft2 = PathPlanner.loadPath(
+        "pathRedLeft2", new PathConstraints(1.5, 1.5));
+
+    public PathPlannerTrajectory trajRedLeft2Bal = PathPlanner.loadPath(
+        "pathRedLeft2Bal", new PathConstraints(1.75, 1.75));
+
     public PathPlannerTrajectory trajRedLeftBal1 = PathPlanner.loadPath(
         "pathRedLeftBal1", new PathConstraints(1.75, 1.25));
     
     public PathPlannerTrajectory trajRedLeftReturn2 = PathPlanner.loadPath(
-        "pathRedLeftReturn2", new PathConstraints(2.0, 2.0));
+        "pathRedLeftReturn2", new PathConstraints(1.5, 1.5));
     
     public PathPlannerTrajectory trajRedRightBal1 = PathPlanner.loadPath(
-        "pathRedRightBal1", new PathConstraints(2, 2));
+        "pathRedRightBal1", new PathConstraints(1.5, 1.5));
 
     public PathPlannerTrajectory trajRedRightBal2 = PathPlanner.loadPath(
         "pathRedRightBal2", new PathConstraints(1.5, 1.5));   
 
     public PathPlannerTrajectory trajRedRightBal3 = PathPlanner.loadPath(
-        "pathRedRightBal3", new PathConstraints(2.0, 1.75));           
+        "pathRedRightBal3", new PathConstraints(2.0, 1.5));           
 
         
 
@@ -125,9 +135,15 @@ public class AutoGenerator extends SubsystemBase{
         shootCloseMid = new ShootCubeAuto(intake, closeMidSpeed);
         shootFarHigh= new ShootCubeAuto(intake, farHighSpeed);
         shootFarLow= new ShootCubeAuto(intake, farLowSpeed);
+
+        shootFarMid2 = new ShootCubeAuto(intake, 6);
+        
         shootFarLowEnd= new ShootCubeAuto(intake, farLowSpeed);
     
         shootFarHighInitial1=new ShootCubeAuto(intake, farLowSpeed);
+        shootFarHighInitial2=new ShootCubeAuto(intake, farLowSpeed);
+        shootFarHighInitial3=new ShootCubeAuto(intake, farLowSpeed);
+        
         shootCloseHighInitial1=new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial2=new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial3=new ShootCubeAuto(intake, closeHighSpeed);
@@ -137,6 +153,7 @@ public class AutoGenerator extends SubsystemBase{
 
         shootCloseMidEnd1=new ShootCubeAuto(intake, 6);
         shootCloseMidEnd2=new ShootCubeAuto(intake, 6);
+        shootFarMid=new ShootCubeAuto(intake, 6);
      
          bal1 = new autobalancer2(sds,1);
          bal2 = new autobalancer2(sds,1);
@@ -145,11 +162,11 @@ public class AutoGenerator extends SubsystemBase{
          bal5 = new autobalancer2(sds,1);
          bal6 = new autobalancer2(sds,1);
 
-         balShooter1 = new autobalancer2(sds,-1);
-         balShooter2 = new autobalancer2(sds,-1);
-         balShooter3 = new autobalancer2(sds,-1);
-         balShooter4 = new autobalancer2(sds,-1);
-         
+         balShooter1 = new autobalancer2(sds,1);
+         balShooter2 = new autobalancer2(sds,1);
+         balShooter3 = new autobalancer2(sds,1);
+         balShooter4 = new autobalancer2(sds,1);
+         balShooter5 = new autobalancer2(sds,1);
    
 
         //defining the CubeIntake and Stow commands used by this class by using the given ArmSubsystem and IntakeSystem
@@ -171,6 +188,7 @@ public class AutoGenerator extends SubsystemBase{
         SmartDashboard.putString("Path3_position", "none");
         
         //These events are used in all or multiple autonomous paths
+        eventMap.put("shoot_far_mid", shootFarMid);
         eventMap.put("intake_cube", intakeCube);
         eventMap.put("cancel_intake_cube", cancelIntakeCube);
         eventMap.put("stow", stowArm);
@@ -212,8 +230,8 @@ public class AutoGenerator extends SubsystemBase{
             retrievedPath, //the given path, which will be run
             sds::getPose,
             SwerveDrive.m_kinematics, 
-            new PIDController(.2, 0,0), //x PID controller
-            new PIDController(.2, 0,0), //y PID controller
+            new PIDController(.1, 0,0), //x PID controller
+            new PIDController(.1, 0,0), //y PID controller
             thetaController, //rotation PID controller
             sds::setModuleStates, 
             false, //if the robot is on the red alliance, the path will be reflected
@@ -272,6 +290,26 @@ public class AutoGenerator extends SubsystemBase{
             
         );}
 
+    public SequentialCommandGroup autoRedLeft2(){
+        return new SequentialCommandGroup(
+            shootFarHighInitial2,
+            new InstantCommand( () -> sds.resetOdometry(trajRedLeft2.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedLeft2),
+            new InstantCommand( () -> sds.allStop()),
+            shootFarMid2
+        );
+    }
+
+    public SequentialCommandGroup autoRedLeft2Bal(){
+        return new SequentialCommandGroup(
+            shootFarHighInitial3,
+            new InstantCommand( () -> sds.resetOdometry(trajRedLeft2Bal.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedLeft2Bal),
+            balShooter5,
+            new InstantCommand( () -> sds.allStop())
+        );
+    }
+
     public SequentialCommandGroup autoRedLeftBal1(){
         return new SequentialCommandGroup(
             shootCloseHighInitial2,
@@ -283,13 +321,25 @@ public class AutoGenerator extends SubsystemBase{
             );
     }
 
+
+    public SequentialCommandGroup autoRedLeftReturn2(){
+        return new SequentialCommandGroup(
+            shootFarHighInitial1,
+            new InstantCommand( () -> sds.resetOdometry(trajRedLeftReturn2.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedLeftReturn2),
+            new InstantCommand( () -> sds.allStop()),
+            shootCloseMidEnd1
+            );
+    }
+
+
     public SequentialCommandGroup autoRedRightBal1(){
         return new SequentialCommandGroup(
             shootCloseHighInitial3,
             new InstantCommand( () -> sds.resetOdometry(trajRedRightBal1.getInitialHolonomicPose())),            
             followEventBuilder(trajRedRightBal1),
             new InstantCommand( () -> sds.allStop()),
-            bal2
+            balShooter4
             );
     }
 
@@ -315,15 +365,6 @@ public class AutoGenerator extends SubsystemBase{
 
 
 
-    public SequentialCommandGroup autoRedLeftReturn2(){
-        return new SequentialCommandGroup(
-            shootFarHighInitial1,
-            new InstantCommand( () -> sds.resetOdometry(trajRedLeftReturn2.getInitialHolonomicPose())),            
-            followEventBuilder(trajRedLeftReturn2),
-            new InstantCommand( () -> sds.allStop()),
-            shootCloseMidEnd1
-            );
-    }
 
 
     //Runs a path from the robot's current position to a new position (given by vision)

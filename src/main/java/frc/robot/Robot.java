@@ -42,11 +42,13 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Middle Balance", "Middle Balance");
     m_chooser.addOption("Test Auto 1", "Test Auto 1");
     m_chooser.addOption("Red Left 1", "Red Left 1");
+    m_chooser.addOption("Red Left 2", "Red Left 2");
+    m_chooser.addOption("Red Left 2 Balance", "Red Left 2 Balance");
     m_chooser.addOption("Red Left Balance 1", "Red Left Balance 1");
     m_chooser.addOption("Red Right Balance 1", "Red Right Balance 1");
     m_chooser.addOption("Red Right Balance 2", "Red Right Balance 2");
     m_chooser.addOption("Red Right Balance 3", "Red Right Balance 3");
-
+    m_chooser.addOption("Red Left Return 2", "Red Left Return 2");
     
 
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -105,6 +107,14 @@ public class Robot extends TimedRobot {
       m_autonomousCommand=m_robotContainer.getAutonomousRedLeft1();
     break;
 
+      case "Red Left 2":
+        m_autonomousCommand=m_robotContainer.getAutonomousRedLeft2();
+      break;
+
+      case "Red Left 2 Balance":
+        m_autonomousCommand=m_robotContainer.getAutonomousRedLeft2Bal();
+      break;
+
     case "Red Left Balance 1":
         m_autonomousCommand=m_robotContainer.getAutonomousRedLeftBalance1();
     break;
@@ -120,6 +130,10 @@ public class Robot extends TimedRobot {
     case "Red Right Balance 3":
       m_autonomousCommand=m_robotContainer.getAutonomousRedRightBal3();
     break;
+
+    case "Red Left Return 2":
+      m_autonomousCommand=m_robotContainer.getAutonomousRedLeftReturn2();
+      break;
   
 
     default:

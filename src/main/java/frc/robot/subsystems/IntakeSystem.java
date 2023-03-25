@@ -44,6 +44,8 @@ public class IntakeSystem extends SubsystemBase {
     private double ShootSpeedUpper5=2000;
     private double ShootSpeedLower5=1975;
 
+    private double ShootSpeedUpper7=1500;
+
     private double ShooterUpperRevSetSpeed=-1000;
     private double ShooterLowerRevSetSpeed=-1000;
 
@@ -241,7 +243,12 @@ public void runFrontIntakeBar(double speed) {
       ShooterLowerSetSpeed=ShootSpeedLower5;
     }
 
-    else  {
+    else if (level == 7){
+      ShooterUpperSetSpeed=ShootSpeedUpper7;
+      ShooterLowerSetSpeed=ShootSpeedLower6;
+    }
+
+    else {
       ShooterUpperSetSpeed=ShootSpeedUpper6;
       ShooterLowerSetSpeed=ShootSpeedLower6;
     }

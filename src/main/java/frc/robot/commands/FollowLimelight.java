@@ -12,12 +12,12 @@ public class FollowLimelight extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private SwerveDrive m_SwerveDrive;
   private Limelight m_limelight;
-  private double kP_forward = -0.3;
+  private double kP_forward = 0.1;
   private double kD_forward = 0;
-  private double kP_rotation = 0.05;
-  private double kD_rotation = 0.0005;
-  private double kP_side = -0.5;
-  private double kD_side = 0.001;
+  private double kP_rotation = -0.05;
+  private double kD_rotation = 0;
+  private double kP_side = 0.5;
+  private double kD_side = 0;
 
   private PIDController RotPIDController;
   private PIDController FDPIDController;
@@ -35,7 +35,7 @@ public class FollowLimelight extends CommandBase {
 
   private double rotationCutOff = 0.5;
   private double sideDistanceCutOff = 0.05;
-  private double desiredForwardDistance = 2.5;
+  private double desiredForwardDistance = 11.8;
   private double forwardDistanceCutOff = 0.5;
 
 

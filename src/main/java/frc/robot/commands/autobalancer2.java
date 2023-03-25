@@ -44,7 +44,7 @@ public class autobalancer2 extends CommandBase {
   public void execute() {
     pitch=sds.pitch;
     double vx=-pitch*scaleFactor*sign;
-    if(Math.abs(pitch)<6) vx=0;
+    if(Math.abs(pitch)<5) vx=0;
     sds.setMotors(vx, 0, 0);
     
   }
@@ -60,8 +60,8 @@ public class autobalancer2 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-    if(pitch<4)timeBalance=Timer.getFPGATimestamp();
-    return (Timer.getFPGATimestamp()-timeBalance>1);
+    if(Math.abs(pitch)<5)timeBalance=Timer.getFPGATimestamp();
+    return (Timer.getFPGATimestamp()-timeBalance>2);
   }
 }
 
