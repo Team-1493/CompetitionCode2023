@@ -76,7 +76,6 @@ public class RobotContainer {
   public final AutoGenerator autoGenerator = new AutoGenerator(m_swervedriveSystem, m_ArmSystem, m_IntakeSystem);
   public final LEDsystem led = new LEDsystem();
   public final autobalancer m_autobalancer = new autobalancer(m_swervedriveSystem);
-  public final autobalancer2 ab2 = new autobalancer2(m_swervedriveSystem);
   public final PreAutoBalancer m_preautobalancer = new PreAutoBalancer(m_swervedriveSystem);
   // public final 
 
@@ -129,8 +128,6 @@ public class RobotContainer {
 new Trigger(driverJoystick.getButton(7)).whileTrue
          (thingy);
 */
-    new Trigger(driverJoystick.getButton(7)).whileTrue(ab2);
-
 
     new Trigger(btnRot0).onTrue
         (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(0)));
@@ -166,61 +163,38 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
 
   public Command getTestAuto1() {
     // An example command will be run in autonomous
-    autoGenerator.updatePID();
     return autoGenerator.testAutoCommand1();
-  }
- 
-
-  public Command getAutonomousCommandRedRightBal(){
-    autoGenerator.updatePID();
-    return autoGenerator.autoCommandRedRightBal();
-  }
-
-  public Command getAutonomousCommandRedLeftBal(){
-    return autoGenerator.autoCommandRedLeftBal();
-  }
-
-  public Command getAutonomousCommandRedRight(){
-    return autoGenerator.autoCommandRedRight();
-  }
-
-  public Command getAutonomousCommandRedLeft(){
-    return autoGenerator.autoCommandRedLeft();
-  }
-
-  public Command getAutonomousCommandBlueLeftBal(){
-    return autoGenerator.autoCommandBlueLeftBal();
-  }
-
-  public Command getAutonomousCommandBlueRightBal(){
-    return autoGenerator.autoCommandBlueRightBal();
-  }
-
-  public Command getAutonomousCommandBlueLeft(){
-    return autoGenerator.autoCommandBlueLeft();
-  }
-
-  public Command getAutonomousCommandBlueRight(){
-    return autoGenerator.autoCommandBlueRight();
-  }
-
-
-
-  public Command getAutonomousShootHigh(){
-    return autoGenerator.autoShootHigh();
-  }
-
-  public Command getAutonomousCommandBlueLeftStay(){
-    return autoGenerator.autoBlueLeftStay();
-  }
-  public Command getAutonomousCommandBlueRightStay(){
-    return autoGenerator.autoBlueRightStay();
   }
 
   public Command getAutonomousBalanceFromMiddle(){
     return autoGenerator.autoBalanceFromMiddle();
   }
 
+  public Command getAutonomousShootHigh(){
+    return autoGenerator.autoShootHigh();
+  }
+
+  public Command getAutonomousRedLeft1(){
+    return autoGenerator.autoRedLeft1();
+  }
+
+  public Command getAutonomousRedLeftBalance1(){
+    return autoGenerator.autoRedLeftBal1();
+  }
+
+  public Command getAutonomousRedRightBal1(){
+    return autoGenerator.autoRedRightBal1();
+  }
+
+  public Command getAutonomousRedRightBal2(){
+    return autoGenerator.autoRedRightBal2();
+  }
+
+  public Command getAutonomousRedRightBal3(){
+    return autoGenerator.autoRedRightBal3();
+  }
+
+  
 
 // We have different PID constants for the drive wheels between teleop and auto
 // Switch between slot 0 for teleop and slot 1 for auto 
@@ -248,8 +222,6 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
     m_swervedriveSystem.updateConstants();
     m_ArmSystem.updateConstants();
     m_IntakeSystem.UpdateConstants(); 
-    autoGenerator.updatePID();
-
   }
 
 

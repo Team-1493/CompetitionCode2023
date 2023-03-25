@@ -2,13 +2,13 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.0,
-        "y": 3.0
+        "x": 4.348016981748249,
+        "y": 0.7729961174208069
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 3.0
+        "x": 5.34801698174825,
+        "y": 0.7729961174208069
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 3.0,
-        "y": 5.0
+        "x": 7.125077107297073,
+        "y": 0.77
       },
       "prevControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 6.348774463886755,
+        "y": 0.77
       },
       "nextControl": {
-        "x": 3.0,
-        "y": 4.0
+        "x": 6.348774463886755,
+        "y": 0.77
       },
       "holonomicAngle": 0,
       "isReversal": true,
@@ -50,11 +50,11 @@
     {
       "anchorPoint": {
         "x": 5.0,
-        "y": 3.0
+        "y": 0.77
       },
       "prevControl": {
-        "x": 4.0,
-        "y": 3.0
+        "x": 5.918935141642329,
+        "y": 0.77
       },
       "nextControl": null,
       "holonomicAngle": 0,
@@ -70,5 +70,18 @@
       }
     }
   ],
-  "markers": []
+  "markers": [
+    {
+      "position": 0.12727272727272715,
+      "names": [
+        "intake_cube"
+      ]
+    },
+    {
+      "position": 1.4181818181818162,
+      "names": [
+        "cancel_intake_cube"
+      ]
+    }
+  ]
 }

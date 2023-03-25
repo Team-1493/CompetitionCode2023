@@ -19,11 +19,14 @@ public class autobalancer2 extends CommandBase {
     double xposStart;
     double pitch;
     double timeBalance;
+
   
 
-  public autobalancer2(SwerveDrive m_sds) {
+  public autobalancer2(SwerveDrive m_sds,double m_sign) {
     sds=m_sds;
     directionRad=0;
+    // sign = 1 for arm first, sign = -1 for shooter first
+    sign=m_sign;
     addRequirements(sds);
   }
 
@@ -32,7 +35,6 @@ public class autobalancer2 extends CommandBase {
   public void initialize() {
 //    sds.resetGyro();
     pitch=sds.pitch;
-    sign=1;
     timeBalance=Timer.getFPGATimestamp();
 }
 
@@ -40,14 +42,9 @@ public class autobalancer2 extends CommandBase {
   @Override
   public void execute() {
     pitch=sds.pitch;
-    double vx=-pitch*scaleFactor;
-    double heading = sds.heading;
-    double omega=(heading-directionRad)*2;
+    double vx=-pitch*scaleFactor*sign;
     if(Math.abs(pitch)<6) vx=0;
-    if(Math.abs(omega)<0.02) omega=0;
-//    System.out.println("pitch = "+pitch+"    vx = "+
-//      vx+"   heading = "+heading+"     omega = "+omega);
-    sds.setMotors(vx*sign, 0, 0);
+    sds.setMotors(vx, 0, 0);
     
   }
 

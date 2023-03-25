@@ -89,7 +89,7 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_drive=new TalonFX(driveID);
     m_drive.configFactoryDefault();
     m_drive.configVoltageCompSaturation(voltageComp);
-    m_drive.enableVoltageCompensation(false);
+    m_drive.enableVoltageCompensation(true);
     m_drive.setNeutralMode(NeutralMode.Brake);
     m_drive.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0, 25);
     m_drive.configVelocityMeasurementWindow(8, 10);

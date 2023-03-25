@@ -37,30 +37,34 @@ public class AutoGenerator extends SubsystemBase{
     private Stow stowArm;
 
     private int closeHighSpeed = 3; //placeholder
-    private int closeLowSpeed = 2; //placeholder shoot to mid close
+    private int closeMidSpeed = 2; //placeholder shoot to mid close
     private int farHighSpeed = 5; //placeholder
     private int farLowSpeed = 4; //placeholder
-
-
-    private ShootCubeAuto shootCloseHigh;
-    private ShootCubeAuto shootCloseLow;
-    private ShootCubeAuto shootFarHigh;
-    private ShootCubeAuto shootFarLow;
-    private ShootCubeAuto shootFarLowEnd;
 
     private InstantCommand prepareCloseHigh;
     private InstantCommand prepareCloseLow;
     private InstantCommand prepareFarHigh;
     private InstantCommand prepareFarLow;
+
     private InstantCommand injectCube;
     private InstantCommand endShoot;
     private InstantCommand cancelIntakeCube;
-    private ShootCubeAuto shootCloseHighInitial1;
-    private ShootCubeAuto shootCloseMidInitialTest;
-    private ShootCubeAuto shootCloseMidEndTest;
+    private ShootCubeAuto shootCloseHigh;
+    private ShootCubeAuto shootCloseMid;
+    private ShootCubeAuto shootFarHigh;
+    private ShootCubeAuto shootFarLow;
+    private ShootCubeAuto shootFarLowEnd;
 
-    private ShootCubeAuto shootCloseMidEnd1;
-    private autobalancer2 bal1;
+    private ShootCubeAuto shootFarHighInitial1;
+    private ShootCubeAuto shootCloseHighInitial1,shootCloseHighInitial2,shootCloseHighInitial3;
+    private ShootCubeAuto shootCloseHighInitial4,shootCloseHighInitial5,shootCloseHighInitial6;
+    private ShootCubeAuto shootCloseMidEnd1,shootCloseMidEnd2;
+ 
+     private autobalancer2 bal1,bal2,bal3,bal4,bal5,bal6;
+     private autobalancer2 balShooter1,balShooter2,balShooter3,balShooter4;
+
+     
+
 
     //Defining a HashMap called eventMap, which will store all events that can run during auto
     private HashMap<String, Command> eventMap = new HashMap<>();
@@ -70,41 +74,32 @@ public class AutoGenerator extends SubsystemBase{
 //    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
     public PathPlannerTrajectory trajTestPath1 = PathPlanner.loadPath(
         "testPath1", new PathConstraints(2.2, 2.2));
-    
 
-    public PathPlannerTrajectory trajRedRightBal = PathPlanner.loadPath(
-        "pathRedRightBal", new PathConstraints(2.5, 2.5));
-
-    public PathPlannerTrajectory trajRedLeftBal = PathPlanner.loadPath(
-        "pathRedLeftBal", new PathConstraints(2.2, 2.2));
-    
-    public PathPlannerTrajectory trajBlueRightBal = PathPlanner.loadPath(
-         "pathBlueRightBal", new PathConstraints(2.2, 2.2));
-        
-    public PathPlannerTrajectory trajBlueLeftBal = PathPlanner.loadPath(
-        "pathBlueLeftBal", new PathConstraints(2.5, 2.5));
-    
-    public PathPlannerTrajectory trajRedRight = PathPlanner.loadPath(
-        "pathRedRight", new PathConstraints(2.5, 2.5));
-
-    public PathPlannerTrajectory trajRedLeft = PathPlanner.loadPath(
-        "pathRedLeft", new PathConstraints(2.5, 2.5));
-    
-     public PathPlannerTrajectory trajBlueRight = PathPlanner.loadPath(
-        "pathBlueRight", new PathConstraints(2.2, 2.2));
-            
-    public PathPlannerTrajectory trajBlueLeft = PathPlanner.loadPath(
-        "pathBlueLeft", new PathConstraints(2.5, 2.5));
-
-    public PathPlannerTrajectory trajBlueLeftStay = PathPlanner.loadPath(
-        "pathBlueLeftStay", new PathConstraints(2.2, 2.2));
-        
-    public PathPlannerTrajectory trajBlueRightStay = PathPlanner.loadPath(
-        "pathBlueRightStay", new PathConstraints(2.2, 2.2));
-    
     public PathPlannerTrajectory trajBalanceFromMiddle = PathPlanner.loadPath(
-            "BalanceFromMiddle", new PathConstraints(1, 1));
+        "BalanceFromMiddle", new PathConstraints(1, 1));
+       
+
+    public PathPlannerTrajectory trajRedLeft1 = PathPlanner.loadPath(
+        "pathRedLeft1", new PathConstraints(1.5, 1.5));
+
+    public PathPlannerTrajectory trajRedLeftBal1 = PathPlanner.loadPath(
+        "pathRedLeftBal1", new PathConstraints(1.75, 1.25));
     
+    public PathPlannerTrajectory trajRedLeftReturn2 = PathPlanner.loadPath(
+        "pathRedLeftReturn2", new PathConstraints(2.0, 2.0));
+    
+    public PathPlannerTrajectory trajRedRightBal1 = PathPlanner.loadPath(
+        "pathRedRightBal1", new PathConstraints(2, 2));
+
+    public PathPlannerTrajectory trajRedRightBal2 = PathPlanner.loadPath(
+        "pathRedRightBal2", new PathConstraints(1.5, 1.5));   
+
+    public PathPlannerTrajectory trajRedRightBal3 = PathPlanner.loadPath(
+        "pathRedRightBal3", new PathConstraints(2.0, 1.75));           
+
+        
+
+
 
     //Creates a path using the robot's initial position (from sds) and the desired position (given by vision)
     public PathPlannerTrajectory getPathUsingVision(Translation2d end_pose, Double end_heading, Double end_rotation){
@@ -116,12 +111,7 @@ public class AutoGenerator extends SubsystemBase{
             );
     }
     
-    //PID controllers for position and rotation (position is used for both x and y)
-    // start around 1 ? if need to add kD 
-    PIDController positionControllerX = new PIDController(1.1, 0, 0);  
-    PIDController positionControllerY = new PIDController(1.1, 0, 0);
-    PIDController thetaController = new PIDController(1.0, 0, 0);
-
+ 
 
     //This method will be called once during the beginning of autonomous
     public AutoGenerator(SwerveDrive m_sds, ArmSubsystem arm, IntakeSystem m_intake) {
@@ -129,44 +119,49 @@ public class AutoGenerator extends SubsystemBase{
         sds = m_sds;
         intake=m_intake;
 
+
+     
+        shootCloseHigh =new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseMid = new ShootCubeAuto(intake, closeMidSpeed);
+        shootFarHigh= new ShootCubeAuto(intake, farHighSpeed);
+        shootFarLow= new ShootCubeAuto(intake, farLowSpeed);
+        shootFarLowEnd= new ShootCubeAuto(intake, farLowSpeed);
+    
+        shootFarHighInitial1=new ShootCubeAuto(intake, farLowSpeed);
         shootCloseHighInitial1=new ShootCubeAuto(intake, closeHighSpeed);
-        shootCloseMidInitialTest=new ShootCubeAuto(intake, closeLowSpeed);
-        shootCloseMidEndTest=new ShootCubeAuto(intake, closeLowSpeed);
+        shootCloseHighInitial2=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial3=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial4=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial5=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial6=new ShootCubeAuto(intake, closeHighSpeed);
 
+        shootCloseMidEnd1=new ShootCubeAuto(intake, 6);
+        shootCloseMidEnd2=new ShootCubeAuto(intake, 6);
+     
+         bal1 = new autobalancer2(sds,1);
+         bal2 = new autobalancer2(sds,1);
+         bal3 = new autobalancer2(sds,1);
+         bal4 = new autobalancer2(sds,1);
+         bal5 = new autobalancer2(sds,1);
+         bal6 = new autobalancer2(sds,1);
 
-        shootCloseHigh = new ShootCubeAuto(intake, closeHighSpeed);
-        shootCloseLow = new ShootCubeAuto(intake, closeLowSpeed);
-        shootFarHigh = new ShootCubeAuto(intake, farHighSpeed);
-        shootFarLow = new ShootCubeAuto(intake, farLowSpeed);
-        shootFarLowEnd = new ShootCubeAuto(intake, farLowSpeed);
-        shootCloseMidEnd1=new ShootCubeAuto(intake, closeLowSpeed);
-        bal1 = new autobalancer2(sds);
+         balShooter1 = new autobalancer2(sds,-1);
+         balShooter2 = new autobalancer2(sds,-1);
+         balShooter3 = new autobalancer2(sds,-1);
+         balShooter4 = new autobalancer2(sds,-1);
+         
+   
 
         //defining the CubeIntake and Stow commands used by this class by using the given ArmSubsystem and IntakeSystem
         intakeCube = new CubeIntakeAuto(arm, intake);
         cancelIntakeCube=new InstantCommand(() -> intakeCube.cancel());
-
         stowArm = new Stow(arm, intake);
         injectCube = new InstantCommand(() -> intake.injectCube(0) );
         endShoot = new InstantCommand(() -> intake.StopMotors());
 
 
         //When 360 degrees is exceeded, the rotation will loop back to 1 (no going over 360 degrees or 2*PI radians)
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        
-        //Putting Position PID values in the SmartDashboard
-        SmartDashboard.putNumber("Position_kPx", positionControllerX.getP());
-        SmartDashboard.putNumber("Position_kIx", positionControllerX.getI());
-        SmartDashboard.putNumber("Position_kDx", positionControllerX.getD());
-
-        SmartDashboard.putNumber("Position_kPy", positionControllerY.getP());
-        SmartDashboard.putNumber("Position_kIy", positionControllerY.getI());
-        SmartDashboard.putNumber("Position_kDy", positionControllerY.getD());
-        
-        //Putting Rotation PID values in the SmartDashboard
-        SmartDashboard.putNumber("Rotation_kP", thetaController.getP());
-        SmartDashboard.putNumber("Rotation_kI", thetaController.getI());
-        SmartDashboard.putNumber("Rotation_kD", thetaController.getD());
+       
 
 
 
@@ -179,19 +174,14 @@ public class AutoGenerator extends SubsystemBase{
         eventMap.put("intake_cube", intakeCube);
         eventMap.put("cancel_intake_cube", cancelIntakeCube);
         eventMap.put("stow", stowArm);
-
         eventMap.put("shoot_close_high", shootCloseHigh);
-
-        eventMap.put("shoot_close_low", shootCloseLow);
-
+        eventMap.put("shoot_close_mid", shootCloseMid);
         eventMap.put("shoot_far_high", shootFarHigh);
         eventMap.put("shoot_far_low", shootFarLow);
-
         eventMap.put("inject_cube", injectCube);
         eventMap.put("endShoot", endShoot);
 
-        
-         
+    
         
         //The multi-line comment below is for testing if needed
 /*       
@@ -216,12 +206,14 @@ public class AutoGenerator extends SubsystemBase{
 
     //Builds and returns a PPSwerveControllerCommand for the given path
     public PPSwerveControllerCommand buildSwerveControlCommand(PathPlannerTrajectory retrievedPath) {
+        PIDController thetaController = new PIDController(2, 0, 0);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
         return new PPSwerveControllerCommand(
             retrievedPath, //the given path, which will be run
             sds::getPose,
             SwerveDrive.m_kinematics, 
-            positionControllerX, //x PID controller
-            positionControllerY, //y PID controller
+            new PIDController(.2, 0,0), //x PID controller
+            new PIDController(.2, 0,0), //y PID controller
             thetaController, //rotation PID controller
             sds::setModuleStates, 
             false, //if the robot is on the red alliance, the path will be reflected
@@ -239,159 +231,100 @@ public class AutoGenerator extends SubsystemBase{
     } 
 
     //This method will set all PID values (kP, kI, kD) to the values in the SmartDashboard
-    public void updatePID(){
-        positionControllerX.setPID
-        (SmartDashboard.getNumber("Position_kPx", positionControllerX.getP()),
-        SmartDashboard.getNumber("Position_kIx", positionControllerX.getI()),
-        SmartDashboard.getNumber("Position_kDx", positionControllerX.getD()));
 
-
-        positionControllerY.setPID(
-        SmartDashboard.getNumber("Position_kPy", positionControllerY.getP()),
-        SmartDashboard.getNumber("Position_kIy", positionControllerY.getI()),
-        SmartDashboard.getNumber("Position_kDy", positionControllerY.getD()));
-
-        
-        thetaController.setPID(SmartDashboard.getNumber(
-            "Rotation_kP", thetaController.getP()),SmartDashboard.getNumber(
-                "Rotation_kI", thetaController.getI()),SmartDashboard.getNumber
-                ("Rotation_kD", thetaController.getD()));
-    }
-
-    
 
     //This is a list commands to run during autonomous if testPath1 is being run
     public SequentialCommandGroup testAutoCommand1() {
         return new SequentialCommandGroup(
-//            new InstantCommand( () -> sds.resetOdometry(trajTestPath1.getInitialHolonomicPose())),
-//            followEventBuilder(trajTestPath1),
-            bal1.asProxy(),
+//            shootCloseHighInitial1.asProxy(),
+            new InstantCommand( () -> sds.resetOdometry(trajTestPath1.getInitialHolonomicPose())),
+            followEventBuilder(trajTestPath1),
+            //bal1.asProxy(),
             new InstantCommand( () -> sds.allStop())
+//            shootCloseMidEndTest.asProxy()
         );
     }
 
-    //This is a list of commands to run during autonomous if testPath2 is being run
-
-
-    public SequentialCommandGroup autoCommandRedRightBal(){
+    public SequentialCommandGroup autoBalanceFromMiddle(){
         return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajRedRightBal.getInitialHolonomicPose())),            
-            followEventBuilder(trajRedRightBal),
-            bal1.asProxy(),
-            new InstantCommand( () -> sds.allStop())
+            shootCloseHighInitial1,
+            new InstantCommand( () -> sds.resetOdometry(trajBalanceFromMiddle.getInitialHolonomicPose())),            
+            followEventBuilder(trajBalanceFromMiddle),
+            bal1,
+            new InstantCommand( () -> sds.allStop())                
         );
-    }
-
-
-    public SequentialCommandGroup autoCommandRedLeftBal(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajRedLeftBal.getInitialHolonomicPose())),            
-            followEventBuilder(trajRedLeftBal),
-            bal1.asProxy(),
-            new InstantCommand( () -> sds.allStop())
-        );
-    }
-
-
-    public SequentialCommandGroup autoCommandRedRight(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajRedRight.getInitialHolonomicPose())),            
-            followEventBuilder(trajRedRight),
-            new InstantCommand( () -> sds.allStop())
-        );
-    }
-
-
-    public SequentialCommandGroup autoCommandRedLeft(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajRedLeft.getInitialHolonomicPose())),            
-            followEventBuilder(trajRedLeft),
-            new InstantCommand( () -> sds.allStop())
-        );
-    }
-
-    public SequentialCommandGroup autoCommandBlueRightBal(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajBlueRightBal.getInitialHolonomicPose())),            
-            followEventBuilder(trajBlueRightBal),
-            bal1.asProxy(),
-            new InstantCommand( () -> sds.allStop())
-        );
-    }
-
-    public SequentialCommandGroup autoCommandBlueLeftBal(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajBlueLeftBal.getInitialHolonomicPose())),            
-            followEventBuilder(trajBlueLeftBal),
-            bal1.asProxy(),
-            new InstantCommand( () -> sds.allStop())
-        );
-    }
-
-    public SequentialCommandGroup autoCommandBlueRight(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajBlueRight.getInitialHolonomicPose())),            
-            followEventBuilder(trajBlueRight),
-            new InstantCommand( () -> sds.allStop())
-        );
-    }
-
-    public SequentialCommandGroup autoCommandBlueLeft(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajBlueLeft.getInitialHolonomicPose())),            
-            followEventBuilder(trajBlueLeft),
-            new InstantCommand( () -> sds.allStop())
-        );
-    }
-
-
+}
 
     public SequentialCommandGroup autoShootHigh(){
         return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
+            shootCloseHighInitial1,
             new InstantCommand( () -> sds.allStop())
         );
     }
 
-    public SequentialCommandGroup autoBlueLeftStay(){
-        return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajBlueLeftStay.getInitialHolonomicPose())),            
-            followEventBuilder(trajBlueLeftStay),
-            shootCloseMidEnd1.asProxy(),
-            new InstantCommand( () -> sds.allStop())
-            
-        );
-    }
 
-    public SequentialCommandGroup autoBlueRightStay(){
+    public SequentialCommandGroup autoRedLeft1(){
         return new SequentialCommandGroup(
-            shootCloseHighInitial1.asProxy(),
-            new InstantCommand( () -> sds.resetOdometry(trajBlueRightStay.getInitialHolonomicPose())),            
-            followEventBuilder(trajBlueRightStay),
-            shootCloseMidEnd1.asProxy(),
+            shootCloseHighInitial6,
+            new InstantCommand( () -> sds.resetOdometry(trajRedLeft1.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedLeft1),
             new InstantCommand( () -> sds.allStop())
             );
     }
 
-        public SequentialCommandGroup autoBalanceFromMiddle(){
-            return new SequentialCommandGroup(
-                shootCloseHighInitial1.asProxy(),
-                new InstantCommand( () -> sds.resetOdometry(trajBalanceFromMiddle.getInitialHolonomicPose())),            
-                followEventBuilder(trajBalanceFromMiddle),
-                bal1.asProxy(),
-                new InstantCommand( () -> sds.allStop())
-                
+    public SequentialCommandGroup autoRedLeftBal1(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial2,
+            new InstantCommand( () -> sds.resetOdometry(trajRedLeftBal1.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedLeftBal1),
+            new InstantCommand( () -> sds.allStop()),
+            balShooter1,
+            shootCloseMidEnd2
             );
     }
+
+    public SequentialCommandGroup autoRedRightBal1(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial3,
+            new InstantCommand( () -> sds.resetOdometry(trajRedRightBal1.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedRightBal1),
+            new InstantCommand( () -> sds.allStop()),
+            bal2
+            );
+    }
+
+    public SequentialCommandGroup autoRedRightBal2(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial4,
+            new InstantCommand( () -> sds.resetOdometry(trajRedRightBal2.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedRightBal2),
+            new InstantCommand( () -> sds.allStop()),
+            balShooter2
+            );
+    }
+    
+    public SequentialCommandGroup autoRedRightBal3(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial5,
+            new InstantCommand( () -> sds.resetOdometry(trajRedRightBal3.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedRightBal3),
+            new InstantCommand( () -> sds.allStop()),
+            balShooter3
+            );
+    }
+
+
+
+    public SequentialCommandGroup autoRedLeftReturn2(){
+        return new SequentialCommandGroup(
+            shootFarHighInitial1,
+            new InstantCommand( () -> sds.resetOdometry(trajRedLeftReturn2.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedLeftReturn2),
+            new InstantCommand( () -> sds.allStop()),
+            shootCloseMidEnd1
+            );
+    }
+
 
     //Runs a path from the robot's current position to a new position (given by vision)
     //end_pose = x and y,   end_heading = angle of movement in degrees (look at pathplanner),   end_rotation = robot's rotation in degrees 

@@ -35,8 +35,11 @@ public class IntakeSystem extends SubsystemBase {
     private double ShootSpeedUpper3=905;
     private double ShootSpeedLower3=905;
 
-    private double ShootSpeedUpper4=1325;
-    private double ShootSpeedLower4=1125;
+    private double ShootSpeedUpper6=1325;
+    private double ShootSpeedLower6=1125;
+
+    private double ShootSpeedUpper4=1525;
+    private double ShootSpeedLower4=1325;
 
     private double ShootSpeedUpper5=2000;
     private double ShootSpeedLower5=1975;
@@ -190,7 +193,6 @@ public void runFrontIntakeBar(double speed) {
   }
 
   public void injectCube(int speedLevel){
-//    System.out.println("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
     double speed;
     if (speedLevel==1)speed=0.35;
     else speed=topConveyorInjectSpeed;
@@ -230,20 +232,22 @@ public void runFrontIntakeBar(double speed) {
       }
 
     else if (level==4) {
-//      System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
         ShooterUpperSetSpeed=ShootSpeedUpper4;
         ShooterLowerSetSpeed=ShootSpeedLower4;
     }
 
-    else {
+    else if (level==5){
       ShooterUpperSetSpeed=ShootSpeedUpper5;
       ShooterLowerSetSpeed=ShootSpeedLower5;
+    }
+
+    else  {
+      ShooterUpperSetSpeed=ShootSpeedUpper6;
+      ShooterLowerSetSpeed=ShootSpeedLower6;
     }
       
     ShooterTop.set(ControlMode.Velocity, ShooterUpperSetSpeed);
     ShooterBottom.set(ControlMode.Velocity, ShooterLowerSetSpeed);
-    SmartDashboard.putNumber("Shooter Top RPM", getTopShooterRPM());
-    SmartDashboard.putNumber("Shooter Bot RPM", getBottomShooterRPM());
   }
 
 
