@@ -12,12 +12,12 @@ public class FollowLimelight extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private SwerveDrive m_SwerveDrive;
   private Limelight m_limelight;
-  private double kP_forward = 0.1;
+  private double kP_forward = -0.3;
   private double kD_forward = 0;
-  private double kP_rotation = -0.05;
-  private double kD_rotation = 0;
-  private double kP_side = 0.5;
-  private double kD_side = 0;
+  private double kP_rotation = 0.05;
+  private double kD_rotation = 0.0005;
+  private double kP_side = -0.5;
+  private double kD_side = 0.001;
 
   private PIDController RotPIDController;
   private PIDController FDPIDController;
@@ -35,9 +35,9 @@ public class FollowLimelight extends CommandBase {
 
   private double rotationCutOff = 0.5;
   private double sideDistanceCutOff = 0.05;
-  private double desiredForwardDistance = 11.8;
+  private double desiredForwardDistance = 2.5;
   private double forwardDistanceCutOff = 0.5;
-
+  private double speedThreshold = .75;
 
 
   private double[] target;
@@ -111,7 +111,6 @@ public class FollowLimelight extends CommandBase {
       desiredHeading=0;
       sideDistance = (currentHeading-desiredHeading);
     }
-    System.out.print("AAAAAAAAAAAAAAAAAAAAAAAAAA");
 //    if (sideDistance>Math.PI){
 //      sideDistance = sideDistance - 2*Math.PI;
 //    }
@@ -131,13 +130,14 @@ public class FollowLimelight extends CommandBase {
 
     xVel = Math.cos(m_SwerveDrive.heading) * forwardDistance;// + Math.sin(sideDistance)*kP_sideDistance;// FIELD FORWARD
     yVel = Math.sin(m_SwerveDrive.heading) * forwardDistance + SidePIDController.calculate(sideDistance);// + Math.cos(sideDistance)*kP_sideDistance;// FIELD LEFT & RIGHT
-    System.out.print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+    if (Math.abs(xVel) > speedThreshold) xVel = Math.signum(xVel)*speedThreshold;
+    if (Math.abs(yVel) > speedThreshold) xVel = Math.signum(yVel)*speedThreshold;
+  
     if (target[0] == 1) {
-//      System.out.println("vx "+xVel+"  yvel "+yVel+"   rotation"+rotation);
+      System.out.println("vx "+xVel+"  yvel "+yVel+"   rotation"+rotation);
       m_SwerveDrive.setMotors(xVel, yVel, rotation);
     }
 
-    System.out.print("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
     /*if (horizontal){
       if (Math.abs(target[1]) <= rotationCutOff && sideDistance <= sideDistanceCutOff){
         if (forward){
