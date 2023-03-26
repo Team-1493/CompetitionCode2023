@@ -51,6 +51,8 @@ public class RobotContainer {
   public JoystickButton btnRot90 = driverJoystick.getButton(2);
   public JoystickButton btnRotneg90 = driverJoystick.getButton(3);
   public JoystickButton btnRot180 = driverJoystick.getButton(4);
+  public JoystickButton btnAlignAprilTag =  driverJoystick.getButton(4);
+
   // button 5 used for slow rotate in Stick
   public JoystickButton btnResetGyro = driverJoystick.getButton(6);
   public JoystickButton btnAprilTagAlign = driverJoystick.getButton(7);
@@ -65,6 +67,7 @@ public class RobotContainer {
   public JoystickButton btnShootCubeFarHigh = operatorJoystick.getButton(8); // 8 - far high
   public JoystickButton btnReachForCone = operatorJoystick.getButton(9);
   public JoystickButton btnGrabCone = operatorJoystick.getButton(10);
+
   
   
 

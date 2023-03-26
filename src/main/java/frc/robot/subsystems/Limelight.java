@@ -46,33 +46,4 @@ public class Limelight extends SubsystemBase {
     targetInfo[4] = Bts.getDouble(0.0);//Rotation
     return targetInfo;
   }
-
-  public void switchVision(Boolean type){
-    if(type){ // REFLECTIVE TAPE
-        NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("<pipeline>").setNumber(0);
-    }
-    else{ // APRIL TAG
-        NetworkTableInstance.getDefault().getTable("limelight-back").getEntry("<pipeline>").setNumber(1);
-    }
-  }
-
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
-
-  @Override
-  public void periodic() {
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
 }
