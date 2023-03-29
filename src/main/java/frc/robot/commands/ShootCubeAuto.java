@@ -25,8 +25,8 @@ public class ShootCubeAuto extends CommandBase {
     timeStart=Timer.getFPGATimestamp();
     m_IntakeSystem.ShootCube(speedLevel);
     if (speedLevel == 2) {
-      eject_delay = 0.75;
-      shoot_delay = 0.75;
+      eject_delay = 0.25;
+      shoot_delay = 1.0;
     } else if (speedLevel == 3){
       eject_delay = 0.25;
       shoot_delay = 1.0;

@@ -21,8 +21,8 @@ public class IntakeSystem extends SubsystemBase {
     final TalonFX ShooterBottom;
     final DigitalInput irSensorL;
     
-    private double topConveyorIntakeSpeed = 700;
-    private double topConveyorRevIntakeSpeed = 700; 
+    private double topConveyorIntakeSpeed = 750;
+    private double topConveyorRevIntakeSpeed = 750; 
     private double topConveyorInjectSpeed = 0.35;
 
 

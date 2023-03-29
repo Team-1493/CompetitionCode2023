@@ -14,6 +14,7 @@ public class Pigeon {
         pigeon.configFactoryDefault();      
         pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 251);
         pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.RawStatus_4_Mag, 251);
+        
         resetAngle();
 
     }
@@ -25,6 +26,7 @@ public class Pigeon {
         double[] ypr_deg = new double[3];
         pigeon.getYawPitchRoll(ypr_deg);
         double angle=ypr_deg[0] % 360;
+        angle=angle;
         if (angle>180) angle=angle-360;
         else if (angle <-180) angle = angle + 360;
         return angle;

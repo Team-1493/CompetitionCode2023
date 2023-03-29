@@ -2,6 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
+/* Try this from chief delphi
+ * angleMotorInvert = true
+driveMotorInvert = true
+canCoderInvert = false
+ */
+
 package frc.robot.subsystems;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,10 +18,12 @@ import frc.robot.Robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -36,7 +45,7 @@ public class SwerveModule{
 
 
     // Robot Dimensions for MK4 Swerve
-    private  double  wheelDiamInches = 3.90; //4.084;
+    private  double  wheelDiamInches = 4.06; //4.084;
     private double wheelCircumferenceMeters=wheelDiamInches*Math.PI*0.0254; // 0.319185
     private double gearRatioDrive=8.1428; 
     // 1499  (3mps = 4695 rpm)
@@ -56,7 +65,7 @@ public class SwerveModule{
 
 
     // Drive Motor Constants
-    private double kP_drive=0.0;  //1.19 from characterization;
+    private double kP_drive=0;  //1.19 from characterization;
     private double kF_drive=0.0;   // 1023/20660
     private double kD_drive=0.0;   // 1023/20660
     private double kS_drive= 0.05; //0.05
@@ -65,14 +74,16 @@ public class SwerveModule{
    
 
    // Drive Motor Constants for auto
-   private double kP_driveAuto=0.0;  // 0.0514 from SYSID
-   private double kF_driveAuto=0.0;   // 1023/20660
+   private double kP_driveAuto=0.05;  // 0.0514 from SYSID
+   private double kF_driveAuto=0.0;   // 1023/206601
    private double kD_driveAuto=0.0;   // 1023/20660
    private double kS_driveAuto= 0.04;  //   0.3269/12 from SYSID
-   private double kV_driveAuto= 0.250;  //  2.7914/12 from SYSID 
-   private double kA_driveAuto= 0.0449;  // 0.5389 /12 from SYSID
+   private double kV_driveAuto= 0.28;  //  2.7914/12 from SYSID 
+   private double kA_driveAuto= 0.05;  // 0.5389 /12 from SYSID
   
-//  Turn (Swerve) Motor Constants
+
+
+   //  Turn (Swerve) Motor Constants
     private double kP_turn=0.5; //0.5,   0.421 from characterization 
     private double kD_turn=0;  // 0 from characterization    
     private double kF_turn=0.0;   //  max turn RPM on ground = 485, 3310 units/100ms
@@ -92,8 +103,8 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_drive.enableVoltageCompensation(true);
     m_drive.setNeutralMode(NeutralMode.Brake);
     m_drive.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor,0, 25);
-    m_drive.configVelocityMeasurementWindow(8, 10);
-
+//    m_drive.configVelocityMeasurementWindow(8, 10);
+    
     m_drive.setStatusFramePeriod(21, 20);
     m_drive.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,251);
     m_drive.setStatusFramePeriod(8,249);
@@ -113,13 +124,22 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_drive.config_kD(1, kD_driveAuto);
     
     m_drive.configClosedLoopPeakOutput(0,kMaxOutputDrive);
-//    m_drive.configClosedloopRamp(0.35);                    
+    m_drive.configClosedloopRamp(0.35);                   
 
+// original
+    m_drive.setInverted(false);
+// changed
+//m_drive.setInverted(true);
 
 // set up the turn encoder
-    e_turn=new CANCoder(cancoderID);
-    e_turn.configSensorDirection(true);                    
-    e_turn.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    e_turn=new CANCoder(cancoderID);    
+
+// original
+    e_turn.configSensorDirection(true);
+// changed                        
+//    e_turn.configSensorDirection(false);                    
+ 
+e_turn.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     e_turn.setPosition(e_turn.getAbsolutePosition()-zeropos);
 
     e_turn.setStatusFramePeriod(CANCoderStatusFrame.VbatAndFaults, 231);  
@@ -160,6 +180,14 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_turn.config_kP(0,kP_turn);
     m_turn.config_kD(0,kD_turn);
     m_turn.config_kF(0,kF_turn);
+
+
+// original
+    m_turn.setInverted(false);
+
+    //  changed (inverted was false, no phase statement)
+//    m_turn.setSensorPhase(true);
+//    m_turn.setInverted(true);
     
 
     feedforward_drive_T=new SimpleMotorFeedforward(kS_drive, kV_drive, kA_drive);
@@ -207,12 +235,14 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
         double acc = (speed-speedPrev)/0.020;
         speedPrev=speed;
     
-        if(Robot.inAuto==-0){        
+        if(Robot.inAuto==0){     
             m_drive.set(ControlMode.Velocity,  speed*MPSToNativeSpeed,
                 DemandType.ArbitraryFeedForward, feedforward_drive.calculate(speed,acc));
         }
         else{
-            m_drive.set(ControlMode.PercentOutput,feedforward_drive.calculate(speed,acc));
+//            m_drive.set(ControlMode.PercentOutput,feedforward_drive.calculate(speed,acc));
+            m_drive.set(ControlMode.Velocity,  speed*MPSToNativeSpeed,
+                    DemandType.ArbitraryFeedForward, feedforward_drive.calculate(speed,acc));
         }
 
         m_turn.set(ControlMode.Position,turnAngle*RadiansToNativePos);
@@ -221,8 +251,9 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
 
 // set all motors to zero 
 public void setMotorsAllStop() {
-    m_drive.set(ControlMode.PercentOutput,0);
     m_turn.set(ControlMode.PercentOutput,0);
+    m_drive.set(ControlMode.PercentOutput,0);
+
 }
 
 
@@ -273,7 +304,7 @@ public void setMotorsAllStop() {
 
 // get the drive position, measured in meters
      public double getDrivePositionMeters() {
-        return (2*m_drive.getSelectedSensorPosition()*PosNativeUnitsToMeters);
+        return (m_drive.getSelectedSensorPosition()*PosNativeUnitsToMeters);
        }
 
 // get the drive encoder velocity, measured in rpm
@@ -334,12 +365,14 @@ public void setMotorsAllStop() {
 
     public void setPIDslot(int slot){
         if(slot==0) {
+            System.out.println("DDDDDD  "+slot);
             feedforward_drive=feedforward_drive_T;             
             m_drive.selectProfileSlot(slot, 0);
         }
         else {
+            System.out.println("CCCCCC  "+slot);
             feedforward_drive=feedforward_drive_A;               
-            m_drive.selectProfileSlot(slot, 1); 
+            m_drive.selectProfileSlot(slot, 0); 
         }
     }
 }

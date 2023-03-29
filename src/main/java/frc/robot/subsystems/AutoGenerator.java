@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.CubeIntakeAuto;
+import frc.robot.commands.ResetOdometryAuto;
 import frc.robot.commands.ShootCubeAuto;
 import frc.robot.commands.Stow;
+import frc.robot.subsystems.CustomPPS;
 import frc.robot.commands.autobalancer2;
 
 
@@ -32,6 +34,8 @@ public class AutoGenerator extends SubsystemBase{
     private SwerveDrive sds;   
     private IntakeSystem intake;
     
+    private ResetOdometryAuto resetRedRightBal1;
+
     //Defining the CubeIntake and Stow commands used by the AutoGenerator in placeholder variables
     private CubeIntakeAuto intakeCube;
     private Stow stowArm;
@@ -55,17 +59,18 @@ public class AutoGenerator extends SubsystemBase{
     private ShootCubeAuto shootFarLow;
     private ShootCubeAuto shootFarLowEnd;
     private ShootCubeAuto shootFarMid;
-    private ShootCubeAuto shootFarMid2;
+    private ShootCubeAuto shootFarMid2,shootFarMid3;
 
     private ShootCubeAuto shootFarHighInitial1;
     private ShootCubeAuto shootFarHighInitial2;
     private ShootCubeAuto shootFarHighInitial3;
     private ShootCubeAuto shootCloseHighInitial1,shootCloseHighInitial2,shootCloseHighInitial3;
-    private ShootCubeAuto shootCloseHighInitial4,shootCloseHighInitial5,shootCloseHighInitial6;
+    private ShootCubeAuto shootCloseHighInitial4,shootCloseHighInitial5,shootCloseHighInitial6, shootCloseHighInitial7;
     private ShootCubeAuto shootCloseMidEnd1,shootCloseMidEnd2;
  
      private autobalancer2 bal1,bal2,bal3,bal4,bal5,bal6;
-     private autobalancer2 balShooter1,balShooter2,balShooter3,balShooter4,balShooter5;
+     private autobalancer2 balShooter1,balShooter2,balShooter3,balShooter4,balShooter5,balShooter6;
+
 
      
 
@@ -77,7 +82,7 @@ public class AutoGenerator extends SubsystemBase{
     //Loading all autonomous paths and storing them in variables
 //    public PathPlannerTrajectory testPath1 = PathPlanner.loadPath("testPath1", new PathConstraints(4, 3));
     public PathPlannerTrajectory trajTestPath1 = PathPlanner.loadPath(
-        "testPath1", new PathConstraints(2.2, 2.2));
+        "testPath1", new PathConstraints(.75, .75));
 
     public PathPlannerTrajectory trajBalanceFromMiddle = PathPlanner.loadPath(
         "BalanceFromMiddle", new PathConstraints(1, 1));
@@ -107,6 +112,8 @@ public class AutoGenerator extends SubsystemBase{
     public PathPlannerTrajectory trajRedRightBal3 = PathPlanner.loadPath(
         "pathRedRightBal3", new PathConstraints(2.0, 1.5));           
 
+    public PathPlannerTrajectory trajRedRight3 = PathPlanner.loadPath(
+        "pathRedRight3", new PathConstraints(1.75, 1.75)); 
         
 
 
@@ -130,6 +137,9 @@ public class AutoGenerator extends SubsystemBase{
         intake=m_intake;
 
 
+        resetRedRightBal1 = new ResetOdometryAuto(sds, trajRedRightBal1.getInitialHolonomicPose());
+
+
      
         shootCloseHigh =new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseMid = new ShootCubeAuto(intake, closeMidSpeed);
@@ -137,6 +147,7 @@ public class AutoGenerator extends SubsystemBase{
         shootFarLow= new ShootCubeAuto(intake, farLowSpeed);
 
         shootFarMid2 = new ShootCubeAuto(intake, 6);
+        shootFarMid3 = new ShootCubeAuto(intake, 6);
         
         shootFarLowEnd= new ShootCubeAuto(intake, farLowSpeed);
     
@@ -150,6 +161,7 @@ public class AutoGenerator extends SubsystemBase{
         shootCloseHighInitial4=new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial5=new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial6=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial7=new ShootCubeAuto(intake, closeHighSpeed);
 
         shootCloseMidEnd1=new ShootCubeAuto(intake, 6);
         shootCloseMidEnd2=new ShootCubeAuto(intake, 6);
@@ -167,6 +179,7 @@ public class AutoGenerator extends SubsystemBase{
          balShooter3 = new autobalancer2(sds,1);
          balShooter4 = new autobalancer2(sds,1);
          balShooter5 = new autobalancer2(sds,1);
+         balShooter6 = new autobalancer2(sds,1);
    
 
         //defining the CubeIntake and Stow commands used by this class by using the given ArmSubsystem and IntakeSystem
@@ -223,15 +236,15 @@ public class AutoGenerator extends SubsystemBase{
 
 
     //Builds and returns a PPSwerveControllerCommand for the given path
-    public PPSwerveControllerCommand buildSwerveControlCommand(PathPlannerTrajectory retrievedPath) {
+    public CustomPPS buildSwerveControlCommand(PathPlannerTrajectory retrievedPath) {
         PIDController thetaController = new PIDController(2, 0, 0);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
-        return new PPSwerveControllerCommand(
+        return new CustomPPS(
             retrievedPath, //the given path, which will be run
             sds::getPose,
             SwerveDrive.m_kinematics, 
-            new PIDController(.1, 0,0), //x PID controller
-            new PIDController(.1, 0,0), //y PID controller
+            new PIDController(.75, 0,0 ), //x PID controller
+            new PIDController(.75, 0,0), //y PID controller
             thetaController, //rotation PID controller
             sds::setModuleStates, 
             false, //if the robot is on the red alliance, the path will be reflected
@@ -336,7 +349,11 @@ public class AutoGenerator extends SubsystemBase{
     public SequentialCommandGroup autoRedRightBal1(){
         return new SequentialCommandGroup(
             shootCloseHighInitial3,
-            new InstantCommand( () -> sds.resetOdometry(trajRedRightBal1.getInitialHolonomicPose())),            
+            resetRedRightBal1,            
+            new InstantCommand( () ->
+                System.out.println("IIIIIIIIIIIIIIIIIIIIIIIIIIIII  "+sds.getPose().getX()+
+                "   "+sds.getPose().getY())),
+        
             followEventBuilder(trajRedRightBal1),
             new InstantCommand( () -> sds.allStop()),
             balShooter4
@@ -363,7 +380,15 @@ public class AutoGenerator extends SubsystemBase{
             );
     }
 
-
+    public SequentialCommandGroup autoRedRight3(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial7,
+            new InstantCommand( () -> sds.resetOdometry(trajRedRight3.getInitialHolonomicPose())),            
+            followEventBuilder(trajRedRight3),
+            new InstantCommand( () -> sds.allStop()),
+            shootFarMid3
+            );
+    }
 
 
 

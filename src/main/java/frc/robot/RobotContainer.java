@@ -205,6 +205,10 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
     return autoGenerator.autoRedRightBal3();
   }
 
+  public Command getAutonomousRedRight3(){
+    return autoGenerator.autoRedRight3();
+  }
+
   public Command getAutonomousRedLeftReturn2(){
     return autoGenerator.autoRedLeftReturn2();
   }
@@ -214,6 +218,7 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
 // We have different PID constants for the drive wheels between teleop and auto
 // Switch between slot 0 for teleop and slot 1 for auto 
   public void setPIDslot(int slot){
+    System.out.println("AAA  "+slot);
     m_swervedriveSystem.setPIDSlot(slot);
   }
 

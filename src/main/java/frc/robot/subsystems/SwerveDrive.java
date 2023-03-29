@@ -30,12 +30,20 @@ public class SwerveDrive extends SubsystemBase {
     public double maxVelocityMPS = 0.3048*maxVelocityFPS; // 3.5     
 
 
-      
+// original      
 public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
-  new Translation2d(0.2131, +0.2105), 
+  new Translation2d(0.2131,0.2105), 
   new Translation2d(0.2131, -0.2105), 
   new Translation2d(-0.2131, +0.2105), 
   new Translation2d(-0.2131, -0.2105));
+
+
+// changed  
+//  new Translation2d(0.2131,-0.2105), 
+//  new Translation2d(0.2131, +0.2105), 
+//  new Translation2d(-0.2131, -0.2105), 
+//  new Translation2d(-0.2131, 0.2105));
+ 
 
   public final Pigeon gyro = new Pigeon(20);
   public SwerveModuleState[] moduleStatesOptimized = new SwerveModuleState[4];
@@ -56,13 +64,19 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
   double pitchOffset=0;
   public double pitch;
   public boolean rotatePIDon=false;
-  
+  public static ChassisSpeeds currentChassisSpeed;
+  public static double[] vel = new double[4];
+  public static double[] ang = new double[4];
 
  // Constrcutor 
   public SwerveDrive(){
     
     // Turn Module Offsets in degrees   FR-FL-BR-BL
-    double[] turnMotorZeroPos={57.7,-85.4,117.2,-77.6};
+    // original
+  double[] turnMotorZeroPos={57.7,-85.4,117.2,-77.6};
+
+//  changed
+//    double[] turnMotorZeroPos={-57.7,85.4,-117.2,77.6};
 
     modules[0]=new SwerveModule("FR",2,1,11,
         turnMotorZeroPos[0]);
@@ -97,9 +111,16 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
   // convert joystick magnitudes to velocity (mps) and rotational rate (rad/sec)
   // then call set mootors to those speeds      StickState Array:  vx,vy,omega 
   public void setMotorsFromStick(double[] stickState ) {
+
+    //original
     double vx=stickState[0]*maxVelocityMPS;
     double vy=stickState[1]*maxVelocityMPS;
     double omega=stickState[2];
+
+  //changed
+//    double vx=-stickState[0]*maxVelocityMPS;
+//    double vy=stickState[1]*maxVelocityMPS;
+//    double omega=stickState[2];
 
     if (Math.abs(omega)<0.001){
 /* 
@@ -156,8 +177,13 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
     // get the current turn encoder position in radians
     encPositionRad[i]=modules[i].getTurnPosition_Rad();
     // optimize module state to minimize the turn rotation needed
-    moduleStatesOptimized[i]=optimize(moduleStates[i],encPositionRad[i]);
-    // get the drive motor's setpoint in rpm 
+
+    //original
+//    moduleStatesOptimized[i]=optimize(moduleStates[i],encPositionRad[i]);
+    //changed
+    moduleStatesOptimized[i]=optimize2(moduleStates[i],encPositionRad[i]);
+
+// get the drive motor's setpoint in rpm 
     double speedSet=moduleStatesOptimized[i].speedMetersPerSecond;
     // get the turn motor's rotation setpoint radians
     double turnSet = moduleStatesOptimized[i].angle.getRadians();
@@ -257,6 +283,7 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
 
   public void setPIDSlot(int slot){
     int i=0;
+    System.out.println("BBB  "+slot);
     while(i<4){
       modules[i].setPIDslot(slot);
       i++;
@@ -294,7 +321,10 @@ public void resetOdometryToZero(){
   @Override
   public void periodic() {
     heading=-gyro.getHeadingRadians();
-    modulePos=getModulePositions();    
+    modulePos=getModulePositions(); 
+    currentChassisSpeed = m_kinematics.toChassisSpeeds(
+      modules[0].getState(), modules[1].getState(),
+      modules[2].getState(), modules[3].getState());   
     pitch=gyro.getPitch()-pitchOffset;
     SmartDashboard.putNumber("Pitch", pitch);
     try{
@@ -304,13 +334,9 @@ public void resetOdometryToZero(){
         SmartDashboard.putNumber("pose-x", m_odometry.getPoseMeters().getX()*39.37);
         SmartDashboard.putNumber("pose-y", m_odometry.getPoseMeters().getY()*39.37);
         printModuleStates();
-//        SmartDashboard.putNumber("module state 0 mps", modules[0].getState().speedMetersPerSecond);
       }
         catch(Exception e){
         }
-        
-//        if(Robot.inAuto==1) System.out.println(
-//          heading+","+m_odometry.getPoseMeters().getRotation().getDegrees());
   }
 
 
@@ -319,12 +345,15 @@ private void printModuleStates(){
 int i=0;
 while(i<4){
 // add whatever values you want to see
-  SmartDashboard.putNumber(moduleNames[i]+" Dpos",modules[i].getDrivePositionRotations());            
-  SmartDashboard.putNumber(moduleNames[i]+" Dvel",modules[i].getDriveVelocity()); 
-  SmartDashboard.putNumber(moduleNames[i]+" DCLE",modules[i].getDriveCLE()); 
 
-  SmartDashboard.putNumber(moduleNames[i]+" TPos",modules[i].getTurnPosition_Deg());
-  SmartDashboard.putNumber(moduleNames[i]+" TabsPos",modules[i].getTurnAbsPosition());
+    vel[i]=modules[i].getDriveVelocity();
+    ang[i]=modules[i].getTurnPosition_Deg();
+//  SmartDashboard.putNumber(moduleNames[i]+" Dpos",modules[i].getDrivePositionRotations());            
+  SmartDashboard.putNumber(moduleNames[i]+" Dvel",vel[i] ); 
+//  SmartDashboard.putNumber(moduleNames[i]+" DCLE",modules[i].getDriveCLE()); 
+
+  SmartDashboard.putNumber(moduleNames[i]+" TPos",ang[i]);
+//  SmartDashboard.putNumber(moduleNames[i]+" TabsPos",modules[i].getTurnAbsPosition());
 
   i++;
 }
@@ -374,10 +403,59 @@ static public  SwerveModuleState optimize(SwerveModuleState sms, double currentA
         rev=-1;}    
     else angleChange=anglediff;    
     optimizedAngle=angleChange+currentAngle;
-    double speed = sms.speedMetersPerSecond*rev;    
-    return new SwerveModuleState(
-        speed, new Rotation2d(optimizedAngle));
+    double speed = sms.speedMetersPerSecond*rev;
+    //changed
+//    if(Robot.inAuto==1) return sms;    
+//    else return new SwerveModuleState(speed, new Rotation2d(optimizedAngle));
+return new SwerveModuleState(speed, new Rotation2d(optimizedAngle));
 }
+
+
+public SwerveModuleState optimize2(SwerveModuleState sms, double oldAngle ){
+  double newAngle=sms.angle.getDegrees();
+  newAngle=makePositiveDegrees(newAngle);
+  double steerAngle =newAngle;
+  double rev = 1;
+  steerAngle %= (360);
+  if (steerAngle < 0.0) {
+      steerAngle += 360;
+  }
+  oldAngle=oldAngle*180./Math.PI;
+  
+  double difference = steerAngle - oldAngle;
+
+  // Change the target angle so the difference is in the range [-360, 360) instead of [0, 360)
+  if (difference >= 360) {
+      steerAngle -= 360;
+  } else if (difference < -360) {
+      steerAngle += 360;
+  }
+  difference = steerAngle - oldAngle; // Recalculate difference
+
+  // If the difference is greater than 90 deg or less than -90 deg the drive can be inverted so the total
+  // movement of the module is less than 90 deg
+  if (difference >90 || difference < -90) {
+      // Only need to add 180 deg here because the target angle will be put back into the range [0, 2pi)
+      steerAngle += 180;
+      rev = -1;   
+  }
+
+  steerAngle=makePositiveDegrees(steerAngle);
+  double speed = sms.speedMetersPerSecond*rev;
+  return new SwerveModuleState(speed, new Rotation2d(steerAngle*Math.PI/180.));
+//  return Rotation2d.fromDegrees(makePositiveDegrees(steerAngle));
+}
+
+public double makePositiveDegrees(double anAngle) {
+  double degrees = anAngle;
+  degrees = degrees % 360;
+  if (degrees < 0.0){
+      degrees = degrees + 360;
+  }
+  return degrees;
+}
+
+
 
 public void resetRotatePID(double goal){
   rotatePID.reset(heading);

@@ -16,9 +16,9 @@ public class autobalancer2 extends CommandBase {
     private double direction,directionRad;
     private double sign;
     public int armfaceFwd = 0;
-    double scaleFactor=1./32.; //was 40
+    double scaleFactor=1/48.; //was 32
     double xposStart;
-    double pitch;
+    double pitch,pitchPrev,deltaPitch;
     double timeBalance;
 
   
@@ -36,6 +36,9 @@ public class autobalancer2 extends CommandBase {
   public void initialize() {
 //    sds.resetGyro();
     pitch=sds.pitch;
+    pitchPrev=pitch;
+    deltaPitch=0;
+
     timeBalance=Timer.getFPGATimestamp();
 }
 
@@ -43,8 +46,14 @@ public class autobalancer2 extends CommandBase {
   @Override
   public void execute() {
     pitch=sds.pitch;
+    deltaPitch=pitch-pitchPrev;
     double vx=-pitch*scaleFactor*sign;
     if(Math.abs(pitch)<5) vx=0;
+//    if(pitch>0 && deltaPitch<1.5) vx=0;
+//    if(pitch<0 && deltaPitch>1.5) vx=0;
+//    System.out.println(pitch+"   "+pitchPrev+"   "+deltaPitch+"   "+vx);
+
+    pitchPrev=pitch;
     sds.setMotors(vx, 0, 0);
     
   }
@@ -60,7 +69,9 @@ public class autobalancer2 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-    if(Math.abs(pitch)<5)timeBalance=Timer.getFPGATimestamp();
+//      return Math.abs(pitch)<5;
+
+    if(Math.abs(pitch)>5)timeBalance=Timer.getFPGATimestamp();
     return (Timer.getFPGATimestamp()-timeBalance>2);
   }
 }

@@ -151,13 +151,14 @@ public class ArmSubsystem extends SubsystemBase {
         ls_lower=limitLower.get();
         lsState=!ls_upper;
 
-        SmartDashboard.putNumber("arm voltage", armMotor.getMotorOutputVoltage());
-        SmartDashboard.putNumber("arm current", armMotor.getStatorCurrent());
+//       SmartDashboard.putNumber("arm voltage", armMotor.getMotorOutputVoltage());
+//       SmartDashboard.putNumber("arm current", armMotor.getStatorCurrent());
         SmartDashboard.putNumber("arm Pos Counts", angleCounts);
-        SmartDashboard.putNumber("arm Angle", angle);
-        SmartDashboard.putNumber("arm CLE", armMotor.getClosedLoopError());
-        SmartDashboard.putBoolean("arm Upper LS", ls_upper);
-        SmartDashboard.putBoolean("arm Lower LS", ls_lower);
+//        SmartDashboard.putNumber("arm Angle", angle);
+//        SmartDashboard.putNumber("arm CLE", armMotor.getClosedLoopError());
+//        SmartDashboard.putBoolean("arm Upper LS", ls_upper);
+//        SmartDashboard.putBoolean("arm Lower LS", ls_lower);
+        
     }
 
 

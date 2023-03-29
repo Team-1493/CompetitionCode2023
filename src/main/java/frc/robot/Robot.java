@@ -1,4 +1,4 @@
-// Copyright (c) FIRST and other WPILib contributors.
+// Copy` (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 //    PathPlannerServer.startServer(5811);
     
-    m_chooser.setDefaultOption("Shoot High", "Shoot High");
+    m_chooser.setDefaultOption("Test Auto 1", "Test Auto 1");
     m_chooser.addOption("Shoot High", "Shoot High");
     m_chooser.addOption("Middle Balance", "Middle Balance");
     m_chooser.addOption("Test Auto 1", "Test Auto 1");
@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Red Right Balance 1", "Red Right Balance 1");
     m_chooser.addOption("Red Right Balance 2", "Red Right Balance 2");
     m_chooser.addOption("Red Right Balance 3", "Red Right Balance 3");
+    m_chooser.addOption("Red Right 3", "Red Right 3");
     m_chooser.addOption("Red Left Return 2", "Red Left Return 2");
     
 
@@ -131,6 +132,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand=m_robotContainer.getAutonomousRedRightBal3();
     break;
 
+    case "Red Right 3":
+      m_autonomousCommand=m_robotContainer.getAutonomousRedRight3();
+      break;
     case "Red Left Return 2":
       m_autonomousCommand=m_robotContainer.getAutonomousRedLeftReturn2();
       break;
