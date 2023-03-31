@@ -100,10 +100,10 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
     rotatePID.enableContinuousInput(-Math.PI, Math.PI);
     resetRotatePID(0);
 
-    SmartDashboard.putNumber("Max Vel FPS",maxVelocityFPS);
-    SmartDashboard.putNumber("Max Drive RPM",modules[0].MPStoRPM(maxVelocityMPS));
-    SmartDashboard.putNumber("kProtate",kProtate);
-    SmartDashboard.putNumber("kDrotate",kDrotate);
+    // SmartDashboard.putNumber("Max Vel FPS",maxVelocityFPS);
+    // SmartDashboard.putNumber("Max Drive RPM",modules[0].MPStoRPM(maxVelocityMPS));
+    // SmartDashboard.putNumber("kProtate",kProtate);
+    // SmartDashboard.putNumber("kDrotate",kDrotate);
 
   }      
 
@@ -136,8 +136,8 @@ public static SwerveDriveKinematics m_kinematics = new SwerveDriveKinematics(
       rotatePIDon=false;
       setMotors(vx,vy,omega);
     }
-    SmartDashboard.putBoolean("rotateMode", rotatePIDon);
-    SmartDashboard.putNumber("heading set", headingSet);
+    // SmartDashboard.putBoolean("rotateMode", rotatePIDon);
+    // SmartDashboard.putNumber("heading set", headingSet);
 }
 
   public double roll = Pigeon.getRoll();
@@ -150,8 +150,8 @@ public void setMotors(double vx,double vy) {
   // until rotate stick is pushed or this method is called again. 
 
   double pidOutput= rotatePID.calculate(heading);
-  SmartDashboard.putNumber("rotatePID calc",pidOutput);
-  SmartDashboard.putNumber("heading error", rotatePID.getPositionError());
+  // SmartDashboard.putNumber("rotatePID calc",pidOutput);
+  // SmartDashboard.putNumber("heading error", rotatePID.getPositionError());
   setMotors(vx,vy,pidOutput);
   if (rotatePID.atGoal()) rotatePIDon=false;
 }
@@ -176,11 +176,17 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
   while(i<4){
     // get the current turn encoder position in radians
     encPositionRad[i]=modules[i].getTurnPosition_Rad();
+    
     // optimize module state to minimize the turn rotation needed
-
+    //  original optimizer sometimes recorded 1/2x pose, problem in auto
+    // new optimizer doesn't always implement reversals, issue in teleop
+    // but acceptable in auto
+    
     //original
-//    moduleStatesOptimized[i]=optimize(moduleStates[i],encPositionRad[i]);
+    if(Robot.inAuto==0)
+    moduleStatesOptimized[i]=optimize(moduleStates[i],encPositionRad[i]);
     //changed
+    else
     moduleStatesOptimized[i]=optimize2(moduleStates[i],encPositionRad[i]);
 
 // get the drive motor's setpoint in rpm 
@@ -208,6 +214,7 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
 
   public void turnOnRamp(){
     int i = 0;
+    System.out.println("*********************  Ramp On");
     while(i<4){
       modules[i].m_drive.configClosedloopRamp(.35);
       i++;
@@ -216,6 +223,7 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
 
   public void turnOffRamp(){
     int i = 0;
+    System.out.println("*********************  Ramp Off");
     while(i<4){
       modules[i].m_drive.configClosedloopRamp(0);
       i++;
@@ -224,6 +232,7 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
 
   public void turnOnVoltageComp(){
     int i = 0;
+    System.out.println("*********************  VC On");
     while(i<4){
       modules[i].m_drive.enableVoltageCompensation(true);;
       i++;
@@ -232,6 +241,7 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
 
   public void turnOffVoltageComp(){
     int i = 0;
+    System.out.println("*********************  VC Off");
     while(i<4){
       modules[i].m_drive.enableVoltageCompensation(false);;
       i++;
@@ -269,21 +279,21 @@ public void setModuleStates(SwerveModuleState[] moduleStates){
   public void updateConstants() {
 
     maxVelocityMPS = 0.3048*maxVelocityFPS; 
-    SmartDashboard.putNumber("Max Drive RPM",modules[0].MPStoRPM(maxVelocityMPS));
+    // SmartDashboard.putNumber("Max Drive RPM",modules[0].MPStoRPM(maxVelocityMPS));
     int i=0;
      while(i<4){
       modules[i].updateConstants();
       i++;
     } 
-    kProtate=SmartDashboard.getNumber("kProtate", 0);
-    kDrotate=SmartDashboard.getNumber("kDrotate", 0);
+    // kProtate=SmartDashboard.getNumber("kProtate", 0);
+    // kDrotate=SmartDashboard.getNumber("kDrotate", 0);
     rotatePID.setP(kProtate);
     rotatePID.setD(kDrotate);
   }
 
   public void setPIDSlot(int slot){
     int i=0;
-    System.out.println("BBB  "+slot);
+    System.out.println("************************"+slot);
     while(i<4){
       modules[i].setPIDslot(slot);
       i++;
@@ -322,18 +332,18 @@ public void resetOdometryToZero(){
   public void periodic() {
     heading=-gyro.getHeadingRadians();
     modulePos=getModulePositions(); 
-    currentChassisSpeed = m_kinematics.toChassisSpeeds(
-      modules[0].getState(), modules[1].getState(),
-      modules[2].getState(), modules[3].getState());   
+//    currentChassisSpeed = m_kinematics.toChassisSpeeds(
+//      modules[0].getState(), modules[1].getState(),
+//      modules[2].getState(), modules[3].getState());   
     pitch=gyro.getPitch()-pitchOffset;
-    SmartDashboard.putNumber("Pitch", pitch);
+    // SmartDashboard.putNumber("Pitch", pitch);
     try{
     m_odometry.update(
         new Rotation2d(heading),modulePos);
-        SmartDashboard.putNumber("pose-rot", m_odometry.getPoseMeters().getRotation().getDegrees());
-        SmartDashboard.putNumber("pose-x", m_odometry.getPoseMeters().getX()*39.37);
-        SmartDashboard.putNumber("pose-y", m_odometry.getPoseMeters().getY()*39.37);
-        printModuleStates();
+        // SmartDashboard.putNumber("pose-rot", m_odometry.getPoseMeters().getRotation().getDegrees());
+        // SmartDashboard.putNumber("pose-x", m_odometry.getPoseMeters().getX()*39.37);
+        // SmartDashboard.putNumber("pose-y", m_odometry.getPoseMeters().getY()*39.37);
+//        printModuleStates();
       }
         catch(Exception e){
         }
@@ -346,19 +356,19 @@ int i=0;
 while(i<4){
 // add whatever values you want to see
 
-    vel[i]=modules[i].getDriveVelocity();
-    ang[i]=modules[i].getTurnPosition_Deg();
+//    vel[i]=modules[i].getDriveVelocity();
+//    ang[i]=modules[i].getTurnPosition_Deg();
 //  SmartDashboard.putNumber(moduleNames[i]+" Dpos",modules[i].getDrivePositionRotations());            
-  SmartDashboard.putNumber(moduleNames[i]+" Dvel",vel[i] ); 
+  // SmartDashboard.putNumber(moduleNames[i]+" Dvel",vel[i] ); 
 //  SmartDashboard.putNumber(moduleNames[i]+" DCLE",modules[i].getDriveCLE()); 
 
-  SmartDashboard.putNumber(moduleNames[i]+" TPos",ang[i]);
+  // SmartDashboard.putNumber(moduleNames[i]+" TPos",ang[i]);
 //  SmartDashboard.putNumber(moduleNames[i]+" TabsPos",modules[i].getTurnAbsPosition());
 
   i++;
 }
-SmartDashboard.putNumber("Heading",heading);
-SmartDashboard.putNumber("PIDRotate Error",rotatePID.getPositionError());
+// SmartDashboard.putNumber("Heading",heading);
+// SmartDashboard.putNumber("PIDRotate Error",rotatePID.getPositionError());
 
 }
 

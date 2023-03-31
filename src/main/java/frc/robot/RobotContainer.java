@@ -12,13 +12,12 @@ import frc.robot.commands.FollowLimelight;
 import frc.robot.commands.GrabCone;
 import frc.robot.commands.IntakeFromShooter;
 import frc.robot.commands.ReachForCone;
-import frc.robot.commands.ArmOverCone;
+import frc.robot.commands.SpitCube;
 import frc.robot.commands.CubeIntake;
 import frc.robot.commands.ResetGyro;
 import frc.robot.commands.ReverseIntake;
 import frc.robot.commands.ShootCube;
 import frc.robot.commands.Stow;
-import frc.robot.commands.autobalancer;
 import frc.robot.commands.autobalancer2;
 import frc.robot.subsystems.IntakeSystem;
 import frc.robot.subsystems.LEDsystem;
@@ -66,7 +65,7 @@ public class RobotContainer {
   public JoystickButton btnReverseIntake = operatorJoystick.getButton(7);
   public JoystickButton btnShootCubeFarHigh = operatorJoystick.getButton(8); // 8 - far high
   public JoystickButton btnReachForCone = operatorJoystick.getButton(9);
-  public JoystickButton btnGrabCone = operatorJoystick.getButton(10);
+  public JoystickButton btnStow = operatorJoystick.getButton(5);
 
   
   
@@ -74,11 +73,10 @@ public class RobotContainer {
 
   private final ArmSubsystem m_ArmSystem = new ArmSubsystem();
   public final SwerveDrive m_swervedriveSystem = new SwerveDrive();
-  public final Limelight m_Limelight = new Limelight();
+  // public final Limelight m_Limelight = new Limelight();
   public final IntakeSystem m_IntakeSystem = new IntakeSystem();
   public final AutoGenerator autoGenerator = new AutoGenerator(m_swervedriveSystem, m_ArmSystem, m_IntakeSystem);
   public final LEDsystem led = new LEDsystem();
-  public final autobalancer m_autobalancer = new autobalancer(m_swervedriveSystem);
   public final PreAutoBalancer m_preautobalancer = new PreAutoBalancer(m_swervedriveSystem);
   // public final 
 
@@ -91,8 +89,8 @@ public class RobotContainer {
   public final ReverseIntake reverseIntake = new ReverseIntake(m_ArmSystem,m_IntakeSystem);
 
   public final CubeIntake cubeIntake = new CubeIntake(m_ArmSystem,m_IntakeSystem,btnIntakeCube);
-  public final ArmOverCone armOverConeCommand = 
-      new ArmOverCone(m_ArmSystem, m_IntakeSystem,btnReverseIntake);
+  public final SpitCube SpitCubeCommand = 
+      new SpitCube(m_ArmSystem, m_IntakeSystem);
   
   public final ReachForCone reachForCone = new ReachForCone(m_ArmSystem,m_IntakeSystem, btnReverseIntake);
   public final GrabCone grabCone = new GrabCone(m_IntakeSystem,m_ArmSystem, btnReverseIntake);
@@ -141,7 +139,7 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
     new Trigger(btnRotneg90).onTrue
        (new InstantCommand( ()-> m_swervedriveSystem.resetRotatePID(-Math.PI/2)));
 
-    new Trigger(btnAprilTagAlign).whileTrue(new FollowLimelight(m_swervedriveSystem,m_Limelight));
+    // new Trigger(btnAprilTagAlign).whileTrue(new FollowLimelight(m_swervedriveSystem,m_Limelight));
 
 // operator functions
     new Trigger(btnShootCube1).whileTrue(new ShootCube(m_IntakeSystem,1));
@@ -155,11 +153,11 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
       new Trigger(btnIntakeCube).onTrue(new SequentialCommandGroup(cubeIntake,stowCommand));
    
     
-    new Trigger(btnReverseIntake).onTrue(armOverConeCommand);
+    new Trigger(btnReverseIntake).whileTrue(SpitCubeCommand);
     new Trigger(btnReverseIntake).onFalse(stowCommand2);
 
     new Trigger(btnReachForCone).whileTrue(reachForCone);
-    new Trigger(btnGrabCone).whileTrue(grabCone);
+    new Trigger(btnStow).whileTrue(stowCommand2);
 
   }
 
@@ -177,48 +175,82 @@ new Trigger(driverJoystick.getButton(7)).whileTrue
     return autoGenerator.autoShootHigh();
   }
 
-  public Command getAutonomousRedLeft1(){
-    return autoGenerator.autoRedLeft1();
-  }
 
+
+//*************   
   public Command getAutonomousRedLeft2(){
     return autoGenerator.autoRedLeft2();
   }
+  public Command getAutonomousBlueLeft2(){
+    return autoGenerator.autoBlueLeft2();
+  }
 
+
+
+//*************   
   public Command getAutonomousRedLeft2Bal(){
     return autoGenerator.autoRedLeft2Bal();
   }
+  public Command getAutonomousBlueLeft2Bal(){
+    return autoGenerator.autoBlueLeft2Bal();
+  }
 
+
+//*************   
   public Command getAutonomousRedLeftBalance1(){
     return autoGenerator.autoRedLeftBal1();
   }
-
-  public Command getAutonomousRedRightBal1(){
-    return autoGenerator.autoRedRightBal1();
+  public Command getAutonomousBlueLeftBalance1(){
+    return autoGenerator.autoBlueLeftBal1();
   }
 
+
+//*************   
+public Command getAutonomousRedLeftReturn2(){
+  return autoGenerator.autoRedLeftReturn2();
+}
+public Command getAutonomousBlueLeftReturn2(){
+  return autoGenerator.autoBlueLeftReturn2();
+}
+
+
+// ****************************
+public Command getAutonomousRedRightBal3(){
+  return autoGenerator.autoRedRightBal3();
+}
+public Command getAutonomousBlueRightBal3(){
+  return autoGenerator.autoBlueRightBal3();
+}
+
+
+//***************************
+public Command getAutonomousRedRight3(){
+  return autoGenerator.autoRedRight3();
+}
+public Command getAutonomousBlueRight3(){
+  return autoGenerator.autoBlueRight3();
+}
+
+
+//***************************
   public Command getAutonomousRedRightBal2(){
     return autoGenerator.autoRedRightBal2();
   }
-
-  public Command getAutonomousRedRightBal3(){
-    return autoGenerator.autoRedRightBal3();
+  public Command getAutonomousBlueRightBal2(){
+    return autoGenerator.autoBlueRightBal2();
   }
 
-  public Command getAutonomousRedRight3(){
-    return autoGenerator.autoRedRight3();
-  }
 
-  public Command getAutonomousRedLeftReturn2(){
-    return autoGenerator.autoRedLeftReturn2();
-  }
+
+
+
+
 
   
 
 // We have different PID constants for the drive wheels between teleop and auto
 // Switch between slot 0 for teleop and slot 1 for auto 
   public void setPIDslot(int slot){
-    System.out.println("AAA  "+slot);
     m_swervedriveSystem.setPIDSlot(slot);
   }
 

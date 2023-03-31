@@ -44,10 +44,10 @@ public class ShootCubeAuto extends CommandBase {
   public void execute() {
     
     if(Timer.getFPGATimestamp()>timeStart+eject_delay) m_IntakeSystem.injectCube(speedLevel);
-    SmartDashboard.putNumber("Top Conveyor RPM", m_IntakeSystem.getTopConveyorSpeed()*600/2048);
-    SmartDashboard.putNumber("Shooter Top RPM", m_IntakeSystem.getTopShooterRPM() );
-    SmartDashboard.putNumber("Shooter Bot RPM", m_IntakeSystem.getBottomShooterRPM() );
-    SmartDashboard.putNumber("BotConveyor CLE", m_IntakeSystem.getShooterCLE());
+    // SmartDashboard.putNumber("Top Conveyor RPM", m_IntakeSystem.getTopConveyorSpeed()*600/2048);
+    // SmartDashboard.putNumber("Shooter Top RPM", m_IntakeSystem.getTopShooterRPM() );
+    // SmartDashboard.putNumber("Shooter Bot RPM", m_IntakeSystem.getBottomShooterRPM() );
+    // SmartDashboard.putNumber("BotConveyor CLE", m_IntakeSystem.getShooterCLE());
   } 
 
   

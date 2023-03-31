@@ -113,7 +113,8 @@ public SwerveModule(String name, int driveID, int turnID, int cancoderID, double
     m_drive.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,229);
     m_drive.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus,227);
 
-  
+    m_drive.setStatusFramePeriod(StatusFrame.Status_2_Feedback0,5,25);
+
 
 
     m_drive.config_kP(0, kP_drive);
@@ -194,27 +195,27 @@ e_turn.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     feedforward_drive_A=new SimpleMotorFeedforward(kS_driveAuto, kV_driveAuto, kA_driveAuto);
     feedforward_drive=feedforward_drive_T;               
 
-    SmartDashboard.putNumber("kD_Drive",kD_drive);
-    SmartDashboard.putNumber("kP_Drive",kP_drive);
-    SmartDashboard.putNumber("kF_Drive",kF_drive);
-    SmartDashboard.putNumber("kS_Drive",kS_drive);
-    SmartDashboard.putNumber("kV_Drive",kV_drive);
-    SmartDashboard.putNumber("kA_Drive",kA_drive);
+    // SmartDashboard.putNumber("kD_Drive",kD_drive);
+    // SmartDashboard.putNumber("kP_Drive",kP_drive);
+    // SmartDashboard.putNumber("kF_Drive",kF_drive);
+    // SmartDashboard.putNumber("kS_Drive",kS_drive);
+    // SmartDashboard.putNumber("kV_Drive",kV_drive);
+    // SmartDashboard.putNumber("kA_Drive",kA_drive);
 
 
-    SmartDashboard.putNumber("kD_DriveAuto",kD_driveAuto);
-    SmartDashboard.putNumber("kP_DriveAuto",kP_driveAuto);
-    SmartDashboard.putNumber("kF_DriveAuto",kF_driveAuto);
-    SmartDashboard.putNumber("kS_DriveAuto",kS_driveAuto);
-    SmartDashboard.putNumber("kV_DriveAuto",kV_driveAuto);
-    SmartDashboard.putNumber("kA_DriveAuto",kA_driveAuto);
+    // SmartDashboard.putNumber("kD_DriveAuto",kD_driveAuto);
+    // SmartDashboard.putNumber("kP_DriveAuto",kP_driveAuto);
+    // SmartDashboard.putNumber("kF_DriveAuto",kF_driveAuto);
+    // SmartDashboard.putNumber("kS_DriveAuto",kS_driveAuto);
+    // SmartDashboard.putNumber("kV_DriveAuto",kV_driveAuto);
+    // SmartDashboard.putNumber("kA_DriveAuto",kA_driveAuto);
 
     
 
-    SmartDashboard.putNumber("kP_Turn",kP_turn);
-    SmartDashboard.putNumber("kD_Turn",kD_turn);
-    SmartDashboard.putNumber("kF_Turn",kF_turn);
-    SmartDashboard.putNumber("MaxOutput Turn",kMaxOutputTurn);
+    // SmartDashboard.putNumber("kP_Turn",kP_turn);
+    // SmartDashboard.putNumber("kD_Turn",kD_turn);
+    // SmartDashboard.putNumber("kF_Turn",kF_turn);
+    // SmartDashboard.putNumber("MaxOutput Turn",kMaxOutputTurn);
 
 }
 
@@ -329,23 +330,23 @@ public void setMotorsAllStop() {
     }
 
     public void updateConstants(){
-        kP_drive= SmartDashboard.getNumber("kP_Drive",kP_drive);
-        kF_drive= SmartDashboard.getNumber("kF_Drive",kF_drive);
-        kD_drive= SmartDashboard.getNumber("kD_Drive",kD_drive);
-        kS_drive= SmartDashboard.getNumber("kS_Drive",kS_drive);
-        kV_drive= SmartDashboard.getNumber("kV_Drive",kV_drive);
-        kA_drive= SmartDashboard.getNumber("kA_Drive",kA_drive);
+        // kP_drive= SmartDashboard.getNumber("kP_Drive",kP_drive);
+        // kF_drive= SmartDashboard.getNumber("kF_Drive",kF_drive);
+        // kD_drive= SmartDashboard.getNumber("kD_Drive",kD_drive);
+        // kS_drive= SmartDashboard.getNumber("kS_Drive",kS_drive);
+        // kV_drive= SmartDashboard.getNumber("kV_Drive",kV_drive);
+        // kA_drive= SmartDashboard.getNumber("kA_Drive",kA_drive);
 
-        kP_driveAuto= SmartDashboard.getNumber("kP_DriveAuto",kP_driveAuto);
-        kF_driveAuto= SmartDashboard.getNumber("kF_DriveAuto",kF_driveAuto);
-        kD_driveAuto= SmartDashboard.getNumber("kD_DriveAuto",kD_driveAuto);
-        kS_driveAuto= SmartDashboard.getNumber("kS_DriveAuto",kS_driveAuto);
-        kV_driveAuto= SmartDashboard.getNumber("kV_DriveAuto",kV_driveAuto);
-        kA_driveAuto= SmartDashboard.getNumber("kA_DriveAuto",kA_driveAuto);
+        // kP_driveAuto= SmartDashboard.getNumber("kP_DriveAuto",kP_driveAuto);
+        // kF_driveAuto= SmartDashboard.getNumber("kF_DriveAuto",kF_driveAuto);
+        // kD_driveAuto= SmartDashboard.getNumber("kD_DriveAuto",kD_driveAuto);
+        // kS_driveAuto= SmartDashboard.getNumber("kS_DriveAuto",kS_driveAuto);
+        // kV_driveAuto= SmartDashboard.getNumber("kV_DriveAuto",kV_driveAuto);
+        // kA_driveAuto= SmartDashboard.getNumber("kA_DriveAuto",kA_driveAuto);
 
-        kP_turn= SmartDashboard.getNumber("kP_Turn",kP_turn);
-        kD_turn= SmartDashboard.getNumber("kD_Turn",kD_turn);
-        kMaxOutputTurn=SmartDashboard.getNumber("MaxOutput Turn",kMaxOutputTurn);
+        // kP_turn= SmartDashboard.getNumber("kP_Turn",kP_turn);
+        // kD_turn= SmartDashboard.getNumber("kD_Turn",kD_turn);
+        // kMaxOutputTurn=SmartDashboard.getNumber("MaxOutput Turn",kMaxOutputTurn);
 
             
         m_drive.config_kF(0,0);
@@ -365,12 +366,12 @@ public void setMotorsAllStop() {
 
     public void setPIDslot(int slot){
         if(slot==0) {
-            System.out.println("DDDDDD  "+slot);
+            System.out.println("******************** slot "+slot);
             feedforward_drive=feedforward_drive_T;             
             m_drive.selectProfileSlot(slot, 0);
         }
         else {
-            System.out.println("CCCCCC  "+slot);
+            System.out.println("********************** slot "+slot);
             feedforward_drive=feedforward_drive_A;               
             m_drive.selectProfileSlot(slot, 0); 
         }

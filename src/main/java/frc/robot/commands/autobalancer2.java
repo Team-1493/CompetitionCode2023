@@ -16,7 +16,7 @@ public class autobalancer2 extends CommandBase {
     private double direction,directionRad;
     private double sign;
     public int armfaceFwd = 0;
-    double scaleFactor=1/48.; //was 32
+    double scaleFactor=1/60.; //was 32
     double xposStart;
     double pitch,pitchPrev,deltaPitch;
     double timeBalance;
@@ -71,7 +71,7 @@ public class autobalancer2 extends CommandBase {
   public boolean isFinished() { 
 //      return Math.abs(pitch)<5;
 
-    if(Math.abs(pitch)>5)timeBalance=Timer.getFPGATimestamp();
+    if(Math.abs(pitch)<5)timeBalance=Timer.getFPGATimestamp();
     return (Timer.getFPGATimestamp()-timeBalance>2);
   }
 }

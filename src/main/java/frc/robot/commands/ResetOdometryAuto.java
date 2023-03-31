@@ -31,7 +31,6 @@ public class ResetOdometryAuto  extends CommandBase {
   @Override
   public void execute() {
     sds.resetOdometry(pose);
-    System.out.println("IIIIIIIIIIIIIIIIIIIIIIIIII"+pose.getX()+"   "+pose.getY());
 
   } 
 

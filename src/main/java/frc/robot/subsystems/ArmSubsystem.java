@@ -59,11 +59,13 @@ public class ArmSubsystem extends SubsystemBase {
 
     public ArmSubsystem() {
 
-        SmartDashboard.putNumber("arbff cubein",-.01);
+        // SmartDashboard.putNumber("arbff cubein",-.01);
         enc.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         enc.setPositionToAbsolute(20);
         enc.configSensorDirection(true);
-        enc.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 5, 20);
+        enc.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10, 20);
+
+
 
         armMotor.configFactoryDefault();
         armMotor.configNeutralDeadband(0.001);
@@ -93,6 +95,17 @@ public class ArmSubsystem extends SubsystemBase {
         armMotor.configMotionAcceleration(magicAcc);
         armMotor.configMotionCruiseVelocity(magicVel);
 
+
+        armMotor.setStatusFramePeriod(21, 20);
+        armMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,251);
+        armMotor.setStatusFramePeriod(8,249);
+        armMotor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic,239);
+        armMotor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1,233);
+        armMotor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,229);
+        armMotor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus,227);
+  
+
+
     // set current limit
         StatorCurrentLimitConfiguration currentConfig = 
         new StatorCurrentLimitConfiguration(true, 40, 
@@ -102,42 +115,42 @@ public class ArmSubsystem extends SubsystemBase {
         armMotor.setStatusFramePeriod(StatusFrame.Status_10_Targets, 5);
         armMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, 5);
 
-        SmartDashboard.putNumber("arm kP", armkP);
-        SmartDashboard.putNumber("arm kI", armkI);
-        SmartDashboard.putNumber("arm kD", armkD);
-        SmartDashboard.putNumber("arm kF", armkF);
-        SmartDashboard.putNumber("arm kIzone", armkIZone);
+        // SmartDashboard.putNumber("arm kP", armkP);
+        // SmartDashboard.putNumber("arm kI", armkI);
+        // SmartDashboard.putNumber("arm kD", armkD);
+        // SmartDashboard.putNumber("arm kF", armkF);
+        // SmartDashboard.putNumber("arm kIzone", armkIZone);
 
-        SmartDashboard.putNumber("arm kP1", armkP1);
-        SmartDashboard.putNumber("arm kI1", armkI1);
-        SmartDashboard.putNumber("arm kD1", armkD1);
-        SmartDashboard.putNumber("arm kF1", armkF1);
-        SmartDashboard.putNumber("arm kIzone1", armkIZone1);
+        // SmartDashboard.putNumber("arm kP1", armkP1);
+        // SmartDashboard.putNumber("arm kI1", armkI1);
+        // SmartDashboard.putNumber("arm kD1", armkD1);
+        // SmartDashboard.putNumber("arm kF1", armkF1);
+        // SmartDashboard.putNumber("arm kIzone1", armkIZone1);
 
-        SmartDashboard.putNumber("arm kP2", armkP2);
-        SmartDashboard.putNumber("arm kI2", armkI2);
-        SmartDashboard.putNumber("arm kD2", armkD2);
-        SmartDashboard.putNumber("arm kF2", armkF2);
-        SmartDashboard.putNumber("arm kIzone2", armkIZone2);
+        // SmartDashboard.putNumber("arm kP2", armkP2);
+        // SmartDashboard.putNumber("arm kI2", armkI2);
+        // SmartDashboard.putNumber("arm kD2", armkD2);
+        // SmartDashboard.putNumber("arm kF2", armkF2);
+        // SmartDashboard.putNumber("arm kIzone2", armkIZone2);
 
-        SmartDashboard.putNumber("arm Pos Stow", posStow);
-        SmartDashboard.putNumber("arm Pos StowFinish", posStowFinish);
-        SmartDashboard.putNumber("arm Pos Cube", posCubeIntake);
-        SmartDashboard.putNumber("arm Pos Cone Grab", posConeGrab);
-        SmartDashboard.putNumber("arm Pos Over Cone", posOverCone);
-        SmartDashboard.putNumber("arm Pos Cone Place", posConePlace);
+        // SmartDashboard.putNumber("arm Pos Stow", posStow);
+        // SmartDashboard.putNumber("arm Pos StowFinish", posStowFinish);
+        // SmartDashboard.putNumber("arm Pos Cube", posCubeIntake);
+        // SmartDashboard.putNumber("arm Pos Cone Grab", posConeGrab);
+        // SmartDashboard.putNumber("arm Pos Over Cone", posOverCone);
+        // SmartDashboard.putNumber("arm Pos Cone Place", posConePlace);
 
-        SmartDashboard.putNumber("arm kG1", armkG1);
-        SmartDashboard.putNumber("arm kS1", armkS1);
-
-
-        SmartDashboard.putNumber("arm MagicAcc", magicAcc);
-        SmartDashboard.putNumber("arm MagicVel", magicVel);
+        // SmartDashboard.putNumber("arm kG1", armkG1);
+        // SmartDashboard.putNumber("arm kS1", armkS1);
 
 
-        SmartDashboard.putNumber("arm ForSensorLim", armForwardSensorLim);
-        SmartDashboard.putNumber("arm RevSensorLim", armReverseSensorLim);
-        SmartDashboard.putNumber("arm MaxOutput", armMaxOutput);
+        // SmartDashboard.putNumber("arm MagicAcc", magicAcc);
+        // SmartDashboard.putNumber("arm MagicVel", magicVel);
+
+
+        // SmartDashboard.putNumber("arm ForSensorLim", armForwardSensorLim);
+        // SmartDashboard.putNumber("arm RevSensorLim", armReverseSensorLim);
+        // SmartDashboard.putNumber("arm MaxOutput", armMaxOutput);
         updateConstants();
 
     }
@@ -153,7 +166,7 @@ public class ArmSubsystem extends SubsystemBase {
 
 //       SmartDashboard.putNumber("arm voltage", armMotor.getMotorOutputVoltage());
 //       SmartDashboard.putNumber("arm current", armMotor.getStatorCurrent());
-        SmartDashboard.putNumber("arm Pos Counts", angleCounts);
+        // SmartDashboard.putNumber("arm Pos Counts", angleCounts);
 //        SmartDashboard.putNumber("arm Angle", angle);
 //        SmartDashboard.putNumber("arm CLE", armMotor.getClosedLoopError());
 //        SmartDashboard.putBoolean("arm Upper LS", ls_upper);
@@ -249,26 +262,26 @@ public class ArmSubsystem extends SubsystemBase {
 
 
     public void updateConstants() {
-        armkG1 = SmartDashboard.getNumber("arm kG1", 0);
-        armkS1 = SmartDashboard.getNumber("arm kS1", 0);
+        // armkG1 = SmartDashboard.getNumber("arm kG1", 0);
+        // armkS1 = SmartDashboard.getNumber("arm kS1", 0);
 
-        armkP = SmartDashboard.getNumber("arm kP", 0);
-        armkI = SmartDashboard.getNumber("arm kI", 0);
-        armkD = SmartDashboard.getNumber("arm kD", 0);
-        armkF = SmartDashboard.getNumber("arm kF", 0);
-        armkIZone = SmartDashboard.getNumber("arm kIzone", 0);
+        // armkP = SmartDashboard.getNumber("arm kP", 0);
+        // armkI = SmartDashboard.getNumber("arm kI", 0);
+        // armkD = SmartDashboard.getNumber("arm kD", 0);
+        // armkF = SmartDashboard.getNumber("arm kF", 0);
+        // armkIZone = SmartDashboard.getNumber("arm kIzone", 0);
 
-        armkP2 = SmartDashboard.getNumber("arm kP2", 0);
-        armkI2 = SmartDashboard.getNumber("arm kI2", 0);
-        armkD2 = SmartDashboard.getNumber("arm kD2", 0);
-        armkF2 = SmartDashboard.getNumber("arm kF2", 0);
-        armkIZone2 = SmartDashboard.getNumber("arm kIzone2", 0);
+        // armkP2 = SmartDashboard.getNumber("arm kP2", 0);
+        // armkI2 = SmartDashboard.getNumber("arm kI2", 0);
+        // armkD2 = SmartDashboard.getNumber("arm kD2", 0);
+        // armkF2 = SmartDashboard.getNumber("arm kF2", 0);
+        // armkIZone2 = SmartDashboard.getNumber("arm kIzone2", 0);
 
-        magicAcc=SmartDashboard.getNumber("arm MagicAcc", magicAcc);
-        magicVel=SmartDashboard.getNumber("arm MagicVel", magicVel);
+        // magicAcc=SmartDashboard.getNumber("arm MagicAcc", magicAcc);
+        // magicVel=SmartDashboard.getNumber("arm MagicVel", magicVel);
 
-        SmartDashboard.putNumber("arm MagicVel", magicVel);
-        SmartDashboard.putNumber("arm MagicAcc", magicAcc);
+        // SmartDashboard.putNumber("arm MagicVel", magicVel);
+        // SmartDashboard.putNumber("arm MagicAcc", magicAcc);
 
 
         armMotor.config_kP(0, armkP);
@@ -292,22 +305,22 @@ public class ArmSubsystem extends SubsystemBase {
         armMotor.configMotionAcceleration(magicAcc);
         armMotor.configMotionCruiseVelocity(magicVel);
 
-        armForwardSensorLim = SmartDashboard.getNumber("arm ForSensorLim", 0);
-        armReverseSensorLim = SmartDashboard.getNumber("arm RevSensorLim", 0);
+        // armForwardSensorLim = SmartDashboard.getNumber("arm ForSensorLim", 0);
+        // armReverseSensorLim = SmartDashboard.getNumber("arm RevSensorLim", 0);
         armMotor.configForwardSoftLimitThreshold(armForwardSensorLim);
         armMotor.configReverseSoftLimitThreshold(armReverseSensorLim);
 
-        armMaxOutput = SmartDashboard.getNumber("arm MaxOutput", 0);
+        // armMaxOutput = SmartDashboard.getNumber("arm MaxOutput", 0);
         armMotor.configClosedLoopPeakOutput(0, armMaxOutput);
         armMotor.configPeakOutputForward(armMaxOutput);
         armMotor.configPeakOutputReverse(-armMaxOutput);
 
-        posStow=SmartDashboard.getNumber("arm Pos Stow", posStow);
-        posStowFinish=SmartDashboard.getNumber("arm Pos StowFinish", posStowFinish);
-        posCubeIntake=SmartDashboard.getNumber("arm Pos Cube", posCubeIntake);
-        posConeGrab=SmartDashboard.getNumber("arm Pos Cone Grab", posConeGrab);
-        posOverCone=SmartDashboard.getNumber("arm Pos Over Cone", posOverCone);
-        posConePlace=SmartDashboard.getNumber("arm Pos Cone Place", posConePlace);
+        // posStow=SmartDashboard.getNumber("arm Pos Stow", posStow);
+        // posStowFinish=SmartDashboard.getNumber("arm Pos StowFinish", posStowFinish);
+        // posCubeIntake=SmartDashboard.getNumber("arm Pos Cube", posCubeIntake);
+        // posConeGrab=SmartDashboard.getNumber("arm Pos Cone Grab", posConeGrab);
+        // posOverCone=SmartDashboard.getNumber("arm Pos Over Cone", posOverCone);
+        // posConePlace=SmartDashboard.getNumber("arm Pos Cone Place", posConePlace);
     }
 
 }

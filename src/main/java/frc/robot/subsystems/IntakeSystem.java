@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -52,7 +53,7 @@ public class IntakeSystem extends SubsystemBase {
     private double cubeIntakePower = 0.20;
     private double frontIntakePower = 0.2;
     private double rearIntakePower = 0.2;
-    private double stowRollerSpeed = -0.4;
+    private double stowRollerSpeed = -0.5;
     private double unstowRollerSpeed =1.0;
 
     private double topConveyorKf = .244;
@@ -73,46 +74,46 @@ public class IntakeSystem extends SubsystemBase {
 
     
     public IntakeSystem() {
-        SmartDashboard.putNumber("Top Conveyor Intake Speed",topConveyorIntakeSpeed);
-        SmartDashboard.putNumber("Top Conveyor Inject Speed",topConveyorInjectSpeed);
-        SmartDashboard.putNumber("Top Conveyor Intake Rev Speed",topConveyorRevIntakeSpeed);
-        SmartDashboard.putNumber("Front Intake Power",frontIntakePower);
-        SmartDashboard.putNumber("Rear Intake Power",rearIntakePower);
-        SmartDashboard.putNumber("Stow Roller Speed",stowRollerSpeed);
-        SmartDashboard.putNumber("Unstow Roller Speed",unstowRollerSpeed);
+        // SmartDashboard.putNumber("Top Conveyor Intake Speed",topConveyorIntakeSpeed);
+        // SmartDashboard.putNumber("Top Conveyor Inject Speed",topConveyorInjectSpeed);
+        // SmartDashboard.putNumber("Top Conveyor Intake Rev Speed",topConveyorRevIntakeSpeed);
+        // SmartDashboard.putNumber("Front Intake Power",frontIntakePower);
+        // SmartDashboard.putNumber("Rear Intake Power",rearIntakePower);
+        // SmartDashboard.putNumber("Stow Roller Speed",stowRollerSpeed);
+        // SmartDashboard.putNumber("Unstow Roller Speed",unstowRollerSpeed);
 
 
-        SmartDashboard.putNumber("Shoot Speed U1", ShootSpeedUpper1);
-        SmartDashboard.putNumber("Shoot Speed U2", ShootSpeedUpper2);
-        SmartDashboard.putNumber("Shoot Speed U3", ShootSpeedUpper3);
-        SmartDashboard.putNumber("Shoot Speed U4", ShootSpeedUpper4);
-        SmartDashboard.putNumber("Shoot Speed U5", ShootSpeedUpper5);
+        // SmartDashboard.putNumber("Shoot Speed U1", ShootSpeedUpper1);
+        // SmartDashboard.putNumber("Shoot Speed U2", ShootSpeedUpper2);
+        // SmartDashboard.putNumber("Shoot Speed U3", ShootSpeedUpper3);
+        // SmartDashboard.putNumber("Shoot Speed U4", ShootSpeedUpper4);
+        // SmartDashboard.putNumber("Shoot Speed U5", ShootSpeedUpper5);
 
 
-        SmartDashboard.putNumber("Shoot Speed L1", ShootSpeedLower1);
-        SmartDashboard.putNumber("Shoot Speed L2", ShootSpeedLower2);
-        SmartDashboard.putNumber("Shoot Speed L3", ShootSpeedLower3);
-        SmartDashboard.putNumber("Shoot Speed L4", ShootSpeedLower4);
-        SmartDashboard.putNumber("Shoot Speed L5", ShootSpeedLower5);
+        // SmartDashboard.putNumber("Shoot Speed L1", ShootSpeedLower1);
+        // SmartDashboard.putNumber("Shoot Speed L2", ShootSpeedLower2);
+        // SmartDashboard.putNumber("Shoot Speed L3", ShootSpeedLower3);
+        // SmartDashboard.putNumber("Shoot Speed L4", ShootSpeedLower4);
+        // SmartDashboard.putNumber("Shoot Speed L5", ShootSpeedLower5);
 
-        SmartDashboard.putNumber("Shoot Rev Speed L", ShooterLowerRevSetSpeed);
-        SmartDashboard.putNumber("Shoot Rev Speed U", ShooterUpperRevSetSpeed);
+        // SmartDashboard.putNumber("Shoot Rev Speed L", ShooterLowerRevSetSpeed);
+        // SmartDashboard.putNumber("Shoot Rev Speed U", ShooterUpperRevSetSpeed);
 
-        SmartDashboard.putNumber("Top Conveyor kF", topConveyorKf);
-        SmartDashboard.putNumber("Top Conveyor kP", topConveyorKp);
-        SmartDashboard.putNumber("Top Conveyor ki", topConveyorKi);
-        SmartDashboard.putNumber("Top Conveyor kizone", topConveyorKizone);
+        // SmartDashboard.putNumber("Top Conveyor kF", topConveyorKf);
+        // SmartDashboard.putNumber("Top Conveyor kP", topConveyorKp);
+        // SmartDashboard.putNumber("Top Conveyor ki", topConveyorKi);
+        // SmartDashboard.putNumber("Top Conveyor kizone", topConveyorKizone);
 
-        SmartDashboard.putNumber("shooter kF", shooterKf);
-        SmartDashboard.putNumber("shooter kP", shooterKp); 
-        SmartDashboard.putNumber("shooter kI", shooterKi);
-        SmartDashboard.putNumber("shooter kIzone", shooterKizone);
+        // SmartDashboard.putNumber("shooter kF", shooterKf);
+        // SmartDashboard.putNumber("shooter kP", shooterKp); 
+        // SmartDashboard.putNumber("shooter kI", shooterKi);
+        // SmartDashboard.putNumber("shooter kIzone", shooterKizone);
 
-        SmartDashboard.putNumber("Shooter Top RPM",0);
-        SmartDashboard.putNumber("Shooter Bot RPM", 0);
-        SmartDashboard.putNumber("Top Conveyor RPM",0);    
+        // SmartDashboard.putNumber("Shooter Top RPM",0);
+        // SmartDashboard.putNumber("Shooter Bot RPM", 0);
+        // SmartDashboard.putNumber("Top Conveyor RPM",0);    
 
-        SmartDashboard.putNumber("Rev Shooter dt", 0.2);
+        // SmartDashboard.putNumber("Rev Shooter dt", 0.2);
 
 
         TopConveyor = new TalonFX(15);
@@ -154,6 +155,56 @@ public class IntakeSystem extends SubsystemBase {
         
 
 
+
+
+        TopConveyor.setStatusFramePeriod(21, 20);
+        TopConveyor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,251);
+        TopConveyor.setStatusFramePeriod(8,249);
+        TopConveyor.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic,239);
+        TopConveyor.setStatusFramePeriod(StatusFrame.Status_12_Feedback1,233);
+        TopConveyor.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,229);
+        TopConveyor.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus,227);
+
+
+        FrontIntakeBar.setStatusFramePeriod(21, 20);
+        FrontIntakeBar.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,251);
+        FrontIntakeBar.setStatusFramePeriod(8,249);
+        FrontIntakeBar.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic,239);
+        FrontIntakeBar.setStatusFramePeriod(StatusFrame.Status_12_Feedback1,233);
+        FrontIntakeBar.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,229);
+        FrontIntakeBar.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus,227);
+//        FrontIntakeBar.setStatusFramePeriod(StatusFrame.Status_2_Feedback0,227);
+
+
+      RearIntakeBars.setStatusFramePeriod(21, 20);
+      RearIntakeBars.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,251);
+      RearIntakeBars.setStatusFramePeriod(8,249);
+      RearIntakeBars.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic,239);
+      RearIntakeBars.setStatusFramePeriod(StatusFrame.Status_12_Feedback1,233);
+      RearIntakeBars.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,229);
+      RearIntakeBars.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus,227);
+//        RearIntakeBars.setStatusFramePeriod(StatusFrame.Status_2_Feedback0,227);
+
+      ShooterTop.setStatusFramePeriod(21, 20);
+      ShooterTop.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,251);
+      ShooterTop.setStatusFramePeriod(8,249);
+      ShooterTop.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic,239);
+      ShooterTop.setStatusFramePeriod(StatusFrame.Status_12_Feedback1,233);
+      ShooterTop.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,229);
+      ShooterTop.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus,227);
+
+      ShooterBottom.setStatusFramePeriod(21, 20);
+      ShooterBottom.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat,251);
+      ShooterBottom.setStatusFramePeriod(8,249);
+      ShooterBottom.setStatusFramePeriod(StatusFrame.Status_10_MotionMagic,239);
+      ShooterBottom.setStatusFramePeriod(StatusFrame.Status_12_Feedback1,233);
+      ShooterBottom.setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1,229);
+      ShooterBottom.setStatusFramePeriod(StatusFrame.Status_15_FirmwareApiStatus,227);
+
+
+
+
+
         irSensorL = new DigitalInput(1);        
     }
 
@@ -172,6 +223,13 @@ public class IntakeSystem extends SubsystemBase {
       FrontIntakeBar.set(ControlMode.PercentOutput, cubeIntakePower);
       RearIntakeBars.set(ControlMode.PercentOutput, rearIntakePower);
   }
+
+  public void SpitCube(){
+    TopConveyor.set(ControlMode.Velocity,-topConveyorIntakeSpeed);
+    FrontIntakeBar.set(ControlMode.PercentOutput, -cubeIntakePower);
+    RearIntakeBars.set(ControlMode.PercentOutput, -rearIntakePower);
+  }
+
 
   public void Unstow(){
     FrontIntakeBar.set(ControlMode.PercentOutput, unstowRollerSpeed);

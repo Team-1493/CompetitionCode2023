@@ -51,16 +51,16 @@ public class FollowLimelight extends CommandBase {
   public FollowLimelight(SwerveDrive sd, Limelight limelight) {
     m_SwerveDrive = sd;
     m_limelight = limelight;
-    SmartDashboard.putNumber("Limelight Rotation kP", kP_rotation);
-    SmartDashboard.putNumber("Limelight Rotation kD", kD_rotation);
-    SmartDashboard.putNumber("Limelight Rotation Cut Off", rotationCutOff);
-    SmartDashboard.putNumber("Limelight Side kP", kP_side);
-    SmartDashboard.putNumber("Limelight Side kD", kD_side);
-    SmartDashboard.putNumber("Limelight Side Distance Cut Off", sideDistanceCutOff);
-    SmartDashboard.putNumber("Limelight Forward kP", kP_forward);
-    SmartDashboard.putNumber("Limelight Forward kD", kD_forward);
-    SmartDashboard.putNumber("Limelight Desired Forward Distance", desiredForwardDistance);
-    SmartDashboard.putNumber("Limelight Forward Distance Cut Off", forwardDistanceCutOff);
+    // SmartDashboard.putNumber("Limelight Rotation kP", kP_rotation);
+    // SmartDashboard.putNumber("Limelight Rotation kD", kD_rotation);
+    // SmartDashboard.putNumber("Limelight Rotation Cut Off", rotationCutOff);
+    // SmartDashboard.putNumber("Limelight Side kP", kP_side);
+    // SmartDashboard.putNumber("Limelight Side kD", kD_side);
+    // SmartDashboard.putNumber("Limelight Side Distance Cut Off", sideDistanceCutOff);
+    // SmartDashboard.putNumber("Limelight Forward kP", kP_forward);
+    // SmartDashboard.putNumber("Limelight Forward kD", kD_forward);
+    // SmartDashboard.putNumber("Limelight Desired Forward Distance", desiredForwardDistance);
+    // SmartDashboard.putNumber("Limelight Forward Distance Cut Off", forwardDistanceCutOff);
 
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -70,16 +70,16 @@ public class FollowLimelight extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    kP_rotation = SmartDashboard.getNumber("Limelight Rotation kP", kP_rotation);
-    kD_rotation = SmartDashboard.getNumber("Limelight Rotation kD", kD_rotation);
-    rotationCutOff  = SmartDashboard.getNumber("Limelight Rotation Cut Off", rotationCutOff);
-    kP_side= SmartDashboard.getNumber("Limelight Side kP", kP_side);
-    kD_side= SmartDashboard.getNumber("Limelight Side kD", kD_side);
-    sideDistanceCutOff  = SmartDashboard.getNumber("Limelight Side Distance Cut Off", sideDistanceCutOff);
-    kP_forward = SmartDashboard.getNumber("Limelight Forward kP", kP_forward);
-    kD_forward = SmartDashboard.getNumber("Limelight Forward kD", kD_forward);
-    desiredForwardDistance = SmartDashboard.getNumber("Limelight Desired Forward Distance", desiredForwardDistance);
-    forwardDistanceCutOff  = SmartDashboard.getNumber("Limelight Forward Distance Cut Off", forwardDistanceCutOff);
+    // kP_rotation = SmartDashboard.getNumber("Limelight Rotation kP", kP_rotation);
+    // kD_rotation = SmartDashboard.getNumber("Limelight Rotation kD", kD_rotation);
+    // rotationCutOff  = SmartDashboard.getNumber("Limelight Rotation Cut Off", rotationCutOff);
+    // kP_side= SmartDashboard.getNumber("Limelight Side kP", kP_side);
+    // kD_side= SmartDashboard.getNumber("Limelight Side kD", kD_side);
+    // sideDistanceCutOff  = SmartDashboard.getNumber("Limelight Side Distance Cut Off", sideDistanceCutOff);
+    // kP_forward = SmartDashboard.getNumber("Limelight Forward kP", kP_forward);
+    // kD_forward = SmartDashboard.getNumber("Limelight Forward kD", kD_forward);
+    // desiredForwardDistance = SmartDashboard.getNumber("Limelight Desired Forward Distance", desiredForwardDistance);
+    // forwardDistanceCutOff  = SmartDashboard.getNumber("Limelight Forward Distance Cut Off", forwardDistanceCutOff);
 
 
     Constraints sideConstraint = new Constraints(2,1);

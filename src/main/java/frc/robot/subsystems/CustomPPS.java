@@ -39,10 +39,10 @@ public class CustomPPS extends CommandBase {
   private final boolean useKinematics;
   private final boolean useAllianceColor;
   private int counter  = 0;
-  private File myFile;
-  private FileWriter myWriter;
+  //private File myFile;
+  //private FileWriter myWriter;
   private PathPlannerTrajectory transformedTrajectory;
-  private double[] ang,vel;
+  // private double[] ang,vel;
   private static Consumer<PathPlannerTrajectory> logActiveTrajectory = null;
   private static Consumer<Pose2d> logTargetPose = null;
   private static Consumer<ChassisSpeeds> logSetpoint = null;
@@ -239,18 +239,18 @@ public class CustomPPS extends CommandBase {
     }
 
 
-    try {
-      LocalDateTime current = LocalDateTime.now();
-      DateTimeFormatter format = DateTimeFormatter.ofPattern("ddMMyyyyHHmmss");
-      String formatedDateTime = current.format(format);
-      String name = "/home/lvuser/swerveOutput_" + formatedDateTime  + ".txt";
-      myFile = new File(name);
-      myFile.createNewFile();
-      myWriter = new FileWriter(name);
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
-    }
+    // try {
+    //   LocalDateTime current = LocalDateTime.now();
+    //   DateTimeFormatter format = DateTimeFormatter.ofPattern("ddMMyyyyHHmmss");
+    //   String formatedDateTime = current.format(format);
+    //   String name = "/home/lvuser/swerveOutput_" + formatedDateTime  + ".txt";
+    //   // myFile = new File(name);
+    //   // myFile.createNewFile();
+    //   // myWriter = new FileWriter(name);
+    // } catch (IOException e) {
+    //   System.out.println("An error occurred.");
+    //   e.printStackTrace();
+    // }
 
 
     timer.reset();
@@ -295,42 +295,42 @@ public class CustomPPS extends CommandBase {
       logSetpoint.accept(targetChassisSpeeds);
     }
 
-    double currentSpeed=Math.sqrt(
-      SwerveDrive.currentChassisSpeed.vxMetersPerSecond*
-      SwerveDrive.currentChassisSpeed.vxMetersPerSecond+
-      SwerveDrive.currentChassisSpeed.vyMetersPerSecond*
-      SwerveDrive.currentChassisSpeed.vyMetersPerSecond
-      );
+    // double currentSpeed=Math.sqrt(
+    //   SwerveDrive.currentChassisSpeed.vxMetersPerSecond*
+    //   SwerveDrive.currentChassisSpeed.vxMetersPerSecond+
+    //   SwerveDrive.currentChassisSpeed.vyMetersPerSecond*
+    //   SwerveDrive.currentChassisSpeed.vyMetersPerSecond
+    //   );
 
-    String output = 
-        desiredState.poseMeters.getX()+","+
-        currentPose.getX()+","+
-        desiredState.poseMeters.getY()+","+
-        currentPose.getY()+","+
-        desiredState.velocityMetersPerSecond+","+
-        currentSpeed+","+
-        targetChassisSpeeds.vxMetersPerSecond+","+
-        SwerveDrive.currentChassisSpeed.vxMetersPerSecond+","+
-        targetChassisSpeeds.vyMetersPerSecond+","+
-        SwerveDrive.currentChassisSpeed.vxMetersPerSecond+","+
-        SwerveDrive.vel[0]+","+
-        SwerveDrive.vel[1]+","+
-        SwerveDrive.vel[2]+","+
-        SwerveDrive.vel[3]+","+
-        SwerveDrive.ang[0]+","+
-        SwerveDrive.ang[1]+","+
-        SwerveDrive.ang[2]+","+
-        SwerveDrive.ang[3]+","+
-        "\n";
+    // String output = 
+    //     desiredState.poseMeters.getX()+","+
+    //     currentPose.getX()+","+
+    //     desiredState.poseMeters.getY()+","+
+    //     currentPose.getY()+","+
+    //     desiredState.velocityMetersPerSecond+","+
+    //     currentSpeed+","+
+    //     targetChassisSpeeds.vxMetersPerSecond+","+
+    //     SwerveDrive.currentChassisSpeed.vxMetersPerSecond+","+
+    //     targetChassisSpeeds.vyMetersPerSecond+","+
+    //     SwerveDrive.currentChassisSpeed.vxMetersPerSecond+","+
+    //     SwerveDrive.vel[0]+","+
+    //     SwerveDrive.vel[1]+","+
+    //     SwerveDrive.vel[2]+","+
+    //     SwerveDrive.vel[3]+","+
+    //     SwerveDrive.ang[0]+","+
+    //     SwerveDrive.ang[1]+","+
+    //     SwerveDrive.ang[2]+","+
+    //     SwerveDrive.ang[3]+","+
+    //     "\n";
 
 
 
-     if (counter<20) System.out.println(output);
-      try {
-      myWriter.write(output);
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-    }
+    //  if (counter<20) System.out.println(output);
+    //   try {
+    //   myWriter.write(output);
+    // } catch (IOException e) {
+    //   System.out.println("An error occurred.");
+    // }
    
     counter ++;
   }
@@ -349,11 +349,11 @@ public class CustomPPS extends CommandBase {
       }
     }
 
-     try {
-      myWriter.close();
-    } catch (IOException e) {
-      System.out.println("error");
-    }
+    //  try {
+    //   myWriter.close();
+    // } catch (IOException e) {
+    //   System.out.println("error");
+    // }
     
   }
 
@@ -363,10 +363,9 @@ public class CustomPPS extends CommandBase {
   }
 
   private static void defaultLogError(Translation2d translationError, Rotation2d rotationError) {
-    SmartDashboard.putNumber("PPSwerveControllerCommand/xErrorMeters", translationError.getX());
-    SmartDashboard.putNumber("PPSwerveControllerCommand/yErrorMeters", translationError.getY());
-    SmartDashboard.putNumber(
-        "PPSwerveControllerCommand/rotationErrorDegrees", rotationError.getDegrees());
+    // SmartDashboard.putNumber("PPSwerveControllerCommand/xErrorMeters", translationError.getX());
+    // SmartDashboard.putNumber("PPSwerveControllerCommand/yErrorMeters", translationError.getY());
+    // SmartDashboard.putNumber("PPSwerveControllerCommand/rotationErrorDegrees", rotationError.getDegrees());
   }
 
   /**

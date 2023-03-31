@@ -2,15 +2,15 @@
   "waypoints": [
     {
       "anchorPoint": {
-        "x": 1.7713632570122286,
-        "y": 4.41
+        "x": 12.55,
+        "y": 1.01
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.049439384593056,
-        "y": 4.637976704524838
+        "x": 11.549999999999999,
+        "y": 1.0100000000000002
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -24,18 +24,18 @@
     },
     {
       "anchorPoint": {
-        "x": 7.33,
-        "y": 4.2
+        "x": 9.32,
+        "y": 1.01
       },
       "prevControl": {
-        "x": 6.074454936528622,
-        "y": 4.230539760170567
+        "x": 10.096302643410318,
+        "y": 1.01
       },
       "nextControl": {
-        "x": 6.074454936528622,
-        "y": 4.230539760170567
+        "x": 10.096302643410318,
+        "y": 1.01
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -49,21 +49,21 @@
     },
     {
       "anchorPoint": {
-        "x": 3.818371493885845,
-        "y": 4.6899999999999995
+        "x": 11.55,
+        "y": 0.81
       },
       "prevControl": {
-        "x": 5.223484633685011,
-        "y": 4.721740200759781
+        "x": 10.30902864708483,
+        "y": 0.7807548892010427
       },
       "nextControl": {
-        "x": 1.9756091843685504,
-        "y": 4.648373710984584
+        "x": 10.30902864708483,
+        "y": 0.7807548892010427
       },
-      "holonomicAngle": 0,
-      "isReversal": false,
+      "holonomicAngle": 180.0,
+      "isReversal": true,
       "velOverride": null,
-      "isLocked": false,
+      "isLocked": true,
       "isStopPoint": false,
       "stopEvent": {
         "names": [],
@@ -74,18 +74,18 @@
     },
     {
       "anchorPoint": {
-        "x": 1.85,
-        "y": 4.03
+        "x": 9.32,
+        "y": 2.1710693421386855
       },
       "prevControl": {
-        "x": 2.1702382429959566,
-        "y": 4.042461356906683
+        "x": 10.229411648718996,
+        "y": 2.1805930267865414
       },
       "nextControl": {
-        "x": 2.1702382429959566,
-        "y": 4.042461356906683
+        "x": 10.229411648718996,
+        "y": 2.1805930267865414
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 153.61,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -99,40 +99,15 @@
     },
     {
       "anchorPoint": {
-        "x": 2.9881164048042383,
-        "y": 3.0
+        "x": 11.55,
+        "y": 0.81
       },
       "prevControl": {
-        "x": 2.587303603178635,
-        "y": 3.020410755107225
-      },
-      "nextControl": {
-        "x": 3.775497761852196,
-        "y": 2.959903855392044
-      },
-      "holonomicAngle": 0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 4.4,
-        "y": 3.0
-      },
-      "prevControl": {
-        "x": 4.472046445833268,
-        "y": 2.8962181138647987
+        "x": 9.883011369347948,
+        "y": 1.0244333849360292
       },
       "nextControl": null,
-      "holonomicAngle": 0,
+      "holonomicAngle": 190.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -145,26 +120,38 @@
       }
     }
   ],
-  "maxVelocity": 1.75,
-  "maxAcceleration": 1.75,
+  "maxVelocity": 2.0,
+  "maxAcceleration": 2.0,
   "isReversed": null,
   "markers": [
     {
-      "position": 0.1,
+      "position": 0.11,
       "names": [
-        "intake_cube"
+        "\rintake_cube"
       ]
     },
     {
-      "position": 1.9,
+      "position": 1.56,
       "names": [
         "cancel_intake_cube"
       ]
     },
     {
-      "position": 2.3,
+      "position": 1.76,
       "names": [
-        "shoot_close_mid"
+        "shoot_far_mid"
+      ]
+    },
+    {
+      "position": 2.32,
+      "names": [
+        "intake_cube"
+      ]
+    },
+    {
+      "position": 3.8,
+      "names": [
+        "cancel_intake_cube"
       ]
     }
   ]

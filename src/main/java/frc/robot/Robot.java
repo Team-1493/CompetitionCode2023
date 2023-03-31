@@ -7,6 +7,7 @@ package frc.robot;
 import com.pathplanner.lib.server.PathPlannerServer;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +27,16 @@ public class Robot extends TimedRobot {
   public static boolean enabled;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   static public int inAuto=0;
+  private Command autoBalanceFromMiddle;
+  private Command autoShootHigh;
+  private Command autoRedLeft2,autoBlueLeft2;
+  private Command autoRedLeft2Bal,autoBlueLeft2Bal;
+  private Command autoRedLeftBalance1,autoBlueLeftBalance1;
+  private Command autoRedLeftReturn2,autoBlueLeftReturn2;
+  private Command autoRedRightBal3,autoBlueRightBal3;
+  private Command autoRedRight3,autoBlueRight3;
+  private Command autoRedRightBal2,autoBlueRightBal2;
+
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,6 +44,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    Timer.delay(3);
     // Instantiate our RobotContainer.  This will perform all our button bindings
     m_robotContainer = new RobotContainer();
 //    PathPlannerServer.startServer(5811);
@@ -41,19 +53,71 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Shoot High", "Shoot High");
     m_chooser.addOption("Middle Balance", "Middle Balance");
     m_chooser.addOption("Test Auto 1", "Test Auto 1");
-    m_chooser.addOption("Red Left 1", "Red Left 1");
+
     m_chooser.addOption("Red Left 2", "Red Left 2");
-    m_chooser.addOption("Red Left 2 Balance", "Red Left 2 Balance");
-    m_chooser.addOption("Red Left Balance 1", "Red Left Balance 1");
-    m_chooser.addOption("Red Right Balance 1", "Red Right Balance 1");
-    m_chooser.addOption("Red Right Balance 2", "Red Right Balance 2");
-    m_chooser.addOption("Red Right Balance 3", "Red Right Balance 3");
-    m_chooser.addOption("Red Right 3", "Red Right 3");
-    m_chooser.addOption("Red Left Return 2", "Red Left Return 2");
+    m_chooser.addOption("Blue Left 2", "Blue Left 2");
     
+    m_chooser.addOption("Red Left 2 Balance", "Red Left 2 Balance");
+    m_chooser.addOption("Blue Left 2 Balance", "Blue Left 2 Balance");
+    
+    m_chooser.addOption("Red Left Balance 1", "Red Left Balance 1");
+    m_chooser.addOption("Blue Left Balance 1", "Blue Left Balance 1");
+
+    m_chooser.addOption("Red Left Return 2", "Red Left Return 2");    
+    m_chooser.addOption("Blue Left Return 2", "Blue Left Return 2");    
+
+
+    m_chooser.addOption("Red Right Balance 3", "Red Right Balance 3");
+    m_chooser.addOption("Blue Right Balance 3", "Blue Right Balance 3");
+
+
+    m_chooser.addOption("Red Right 3", "Red Right 3");
+    m_chooser.addOption("Blue Right 3", "Blue Right 3");
+
+
+    m_chooser.addOption("Red Right Balance 2", "Red Right Balance 2");
+        m_chooser.addOption("Blue Right Balance 2", "Blue Right Balance 2");
 
     SmartDashboard.putData("Auto choices", m_chooser);
+
+
+    autoBalanceFromMiddle = m_robotContainer.getAutonomousBalanceFromMiddle();
+    
+    autoShootHigh = m_robotContainer.getAutonomousShootHigh();
+
+    autoRedLeft2 = m_robotContainer.getAutonomousRedLeft2();
+    autoBlueLeft2 = m_robotContainer.getAutonomousBlueLeft2();
+    
+    autoRedLeft2Bal = m_robotContainer.getAutonomousRedLeft2Bal();
+    autoBlueLeft2Bal = m_robotContainer.getAutonomousBlueLeft2Bal();
+    
+    autoRedLeftBalance1 = m_robotContainer.getAutonomousRedLeftBalance1();
+    autoBlueLeftBalance1 = m_robotContainer.getAutonomousBlueLeftBalance1();
+
+    autoRedLeftReturn2 = m_robotContainer.getAutonomousRedLeftReturn2();
+    autoBlueLeftReturn2 = m_robotContainer.getAutonomousBlueLeftReturn2();
+
+    autoRedRightBal3 = m_robotContainer.getAutonomousRedRightBal3();
+    autoBlueRightBal3 = m_robotContainer.getAutonomousBlueRightBal3();
+
+    autoRedRight3 = m_robotContainer.getAutonomousRedRight3();
+    autoBlueRight3 = m_robotContainer.getAutonomousBlueRight3();
+
+    autoRedRightBal2 = m_robotContainer.getAutonomousRedRightBal2();
+    autoBlueRightBal2 = m_robotContainer.getAutonomousBlueRightBal2();
+    
+    
+
+    
+
+
+// set up for auto    
+    inAuto=1;
     m_robotContainer.turnOffRamp();
+    m_robotContainer.turnOnVoltageComp();
+    m_robotContainer.setPIDslot(1);  // use the auto PID gains for auto
+
+
   }
 
   /**
@@ -82,11 +146,13 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selercted by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    inAuto=1;
-    m_robotContainer.turnOffRamp();
-    m_robotContainer.turnOnVoltageComp();
-    enabled=true;
-    m_robotContainer.setPIDslot(1);  // use the auto PID gains for auto
+    if (inAuto !=1){
+      inAuto=1;
+      m_robotContainer.turnOffRamp();
+      m_robotContainer.turnOnVoltageComp();
+      m_robotContainer.setPIDslot(1);  // use the auto PID gains for auto
+      enabled=true;
+    }   
 
     m_autoSelected = m_chooser.getSelected();
 
@@ -97,51 +163,75 @@ public class Robot extends TimedRobot {
     break;
 
     case "Middle Balance":
-      m_autonomousCommand=m_robotContainer.getAutonomousBalanceFromMiddle();
+      m_autonomousCommand=autoBalanceFromMiddle;
     break; 
 
-    case "Shoot High":
-      m_autonomousCommand= m_robotContainer.getAutonomousShootHigh();;
+      case "Shoot High":
+        m_autonomousCommand= autoShootHigh;
       break;                
 
-    case "Red Left 1":
-      m_autonomousCommand=m_robotContainer.getAutonomousRedLeft1();
-    break;
 
       case "Red Left 2":
-        m_autonomousCommand=m_robotContainer.getAutonomousRedLeft2();
+        m_autonomousCommand=autoRedLeft2;
       break;
+      case "Blue Left 2":
+        m_autonomousCommand=autoBlueLeft2;
+      break;
+
 
       case "Red Left 2 Balance":
-        m_autonomousCommand=m_robotContainer.getAutonomousRedLeft2Bal();
+        m_autonomousCommand=autoRedLeft2Bal;
       break;
+      case "Blue Left 2 Balance":
+        m_autonomousCommand=autoBlueLeft2Bal;
+      break;
+
 
     case "Red Left Balance 1":
-        m_autonomousCommand=m_robotContainer.getAutonomousRedLeftBalance1();
+        m_autonomousCommand=autoRedLeftBalance1;
+    break;
+    case "Blue Left Balance 1":
+        m_autonomousCommand=autoBlueLeftBalance1;
     break;
 
-    case "Red Right Balance 1":
-      m_autonomousCommand=m_robotContainer.getAutonomousRedRightBal1();
+
+    case "Red Left Return 2":
+      m_autonomousCommand=autoRedLeftReturn2;
+    break;
+    case "Blue Left Return 2":
+      m_autonomousCommand=autoBlueLeftReturn2;
     break;
 
-    case "Red Right Balance 2":
-      m_autonomousCommand=m_robotContainer.getAutonomousRedRightBal2();
-    break;
 
     case "Red Right Balance 3":
-      m_autonomousCommand=m_robotContainer.getAutonomousRedRightBal3();
+      m_autonomousCommand=autoRedRightBal3;
+    break;
+    case "Blue Right Balance 3":
+      m_autonomousCommand=autoBlueRightBal3;
     break;
 
+
     case "Red Right 3":
-      m_autonomousCommand=m_robotContainer.getAutonomousRedRight3();
-      break;
-    case "Red Left Return 2":
-      m_autonomousCommand=m_robotContainer.getAutonomousRedLeftReturn2();
-      break;
+      m_autonomousCommand=autoRedRight3;
+    break;
+    case "Blue Right 3":
+      m_autonomousCommand=autoBlueRight3;
+    break;
+
+
+    case "Red Right Balance 2":
+      m_autonomousCommand=autoRedRightBal2;
+    break;
+    case "Blue Right Balance 2":
+      m_autonomousCommand=autoBlueRightBal2;
+    break;
+
+
+
   
 
     default:
-      m_autonomousCommand=m_robotContainer.getAutonomousShootHigh();
+      m_autonomousCommand=autoShootHigh;
     break;
     }
 
@@ -162,11 +252,14 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
       m_robotContainer.m_swervedriveSystem.allStop();
     }
-    inAuto=0;
-    m_robotContainer.turnOnRamp();
-    m_robotContainer.turnOffVoltageComp();
-    enabled=true;
-    m_robotContainer.setPIDslot(0);  // use the auto PID gains for teleop
+    if(inAuto !=0) {
+      inAuto=0;
+      m_robotContainer.turnOnRamp();
+      m_robotContainer.turnOffVoltageComp();
+      m_robotContainer.setPIDslot(0);  // use the auto PID gains for teleop
+      enabled=true;
+    }
+
 //  need to call re-enable gyro?  See 2022 code
   }
 

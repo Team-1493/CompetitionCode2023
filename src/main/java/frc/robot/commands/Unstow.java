@@ -25,7 +25,7 @@ public class Unstow extends CommandBase {
   @Override
   public void initialize() {
     m_ArmSubsystem.resetIntegralAccumulator();  
-    m_IntakeSystem.stowRollers();
+    m_IntakeSystem.Unstow();
     currentTime=Timer.getFPGATimestamp();
     lsTime=currentTime;
 

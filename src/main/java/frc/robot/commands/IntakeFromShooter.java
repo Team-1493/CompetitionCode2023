@@ -21,7 +21,7 @@ public class IntakeFromShooter extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    deltaTime=SmartDashboard.getNumber("Rev Shooter dt", deltaTime);
+    // deltaTime=SmartDashboard.getNumber("Rev Shooter dt", deltaTime);
     m_IntakeSystem.reverseIntake();
     hasCube=false;
   }
