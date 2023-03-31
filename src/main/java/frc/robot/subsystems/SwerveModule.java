@@ -147,7 +147,8 @@ e_turn.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
     // set up the turn motor    
     m_turn=new TalonFX(turnID);
-    
+
+    m_turn.configFactoryDefault();    
     //  reduce the rate of status update to reduce CAN trffic
     m_turn.setStatusFramePeriod(21, 20);
     m_turn.setStatusFramePeriod(8,249);
@@ -165,7 +166,6 @@ e_turn.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     m_turn.setStatusFramePeriod(StatusFrameEnhanced.Status_Brushless_Current, 249);
     
 
-    m_turn.configFactoryDefault();
     
     m_turn.setNeutralMode(NeutralMode.Brake);
     m_turn.configRemoteFeedbackFilter(e_turn, 0, 25);
