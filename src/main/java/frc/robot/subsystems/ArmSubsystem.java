@@ -229,6 +229,11 @@ public class ArmSubsystem extends SubsystemBase {
         armMotor.set(ControlMode.PercentOutput, 0);
     }
 
+    public void HoldIn() {
+        armMotor.set(ControlMode.PercentOutput, -.1);
+    }
+
+
     public boolean getLowerLimitSwitch(){
         return ls_lower;
     }

@@ -57,7 +57,7 @@ public class AutoGenerator extends SubsystemBase{
     private ShootCubeAuto shootCloseHighInitial1,shootCloseHighInitial2,shootCloseHighInitial3;
     private ShootCubeAuto shootCloseHighInitial4,shootCloseHighInitial5,shootCloseHighInitial6;
     private ShootCubeAuto shootCloseHighInitial7,shootCloseHighInitial8;
-    private ShootCubeAuto shootCloseHighInitial9,shootCloseHighInitial10;
+    private ShootCubeAuto shootCloseHighInitial9,shootCloseHighInitial10, shootCloseHighInitial11, shootCloseHighInitial12, shootCloseHighInitial13, shootCloseHighInitial14;
 
 
 
@@ -140,8 +140,11 @@ public class AutoGenerator extends SubsystemBase{
     public PathPlannerTrajectory trajBlueRightBal2 = PathPlanner.loadPath(
             "pathBlueRightBal2", new PathConstraints(1.5, 1.5));   
    
+    public PathPlannerTrajectory trajRedWallExit = PathPlanner.loadPath(
+        "pathRedWallExit", new PathConstraints(1, 1));
         
-
+    public PathPlannerTrajectory trajRedBumpExit = PathPlanner.loadPath(
+        "pathRedBumpExit", new PathConstraints(1,1));
 
 
     //Creates a path using the robot's initial position (from sds) and the desired position (given by vision)
@@ -194,7 +197,10 @@ public class AutoGenerator extends SubsystemBase{
         shootCloseHighInitial8=new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial9=new ShootCubeAuto(intake, closeHighSpeed);
         shootCloseHighInitial10=new ShootCubeAuto(intake, closeHighSpeed);
-
+        shootCloseHighInitial11=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial12=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial13=new ShootCubeAuto(intake, closeHighSpeed);
+        shootCloseHighInitial14=new ShootCubeAuto(intake, closeHighSpeed);
 
 
 
@@ -489,10 +495,41 @@ public SequentialCommandGroup autoBlueRight3(){
             );
     }
     
+    public SequentialCommandGroup autoRedWallExit(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial11,
+            new InstantCommand( () -> sds.resetOdometry(trajRedWallExit.getInitialHolonomicPose())),
+            followEventBuilder(trajRedWallExit),
+            new InstantCommand(() -> sds.allStop())
+        );
+    }
 
+    public SequentialCommandGroup autoBlueBumpExit(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial12,
+            new InstantCommand( () -> sds.resetOdometry(trajRedWallExit.getInitialHolonomicPose())),
+            followEventBuilder(trajRedWallExit),
+            new InstantCommand(() -> sds.allStop())
+        );
+    }
 
+    public SequentialCommandGroup autoRedBumpExit(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial13,
+            new InstantCommand( () -> sds.resetOdometry(trajRedBumpExit.getInitialHolonomicPose())),
+            followEventBuilder(trajRedBumpExit),
+            new InstantCommand(() -> sds.allStop())
+        );
+    }
 
-
+    public SequentialCommandGroup autoBlueWallExit(){
+        return new SequentialCommandGroup(
+            shootCloseHighInitial14,
+            new InstantCommand( () -> sds.resetOdometry(trajRedBumpExit.getInitialHolonomicPose())),
+            followEventBuilder(trajRedBumpExit),
+            new InstantCommand(() -> sds.allStop())
+        );
+    }
 
     //Runs a path from the robot's current position to a new position (given by vision)
     //end_pose = x and y,   end_heading = angle of movement in degrees (look at pathplanner),   end_rotation = robot's rotation in degrees 

@@ -20,8 +20,8 @@ public class ShootCube extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    timeStart=Timer.getFPGATimestamp();
+    public void initialize() {
+      timeStart=Timer.getFPGATimestamp();
     m_IntakeSystem.ShootCube(speedLevel);
     shoot=false;
   }

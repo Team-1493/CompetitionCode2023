@@ -338,12 +338,11 @@ public void resetOdometryToZero(){
     pitch=gyro.getPitch()-pitchOffset;
     // SmartDashboard.putNumber("Pitch", pitch);
     try{
-    m_odometry.update(
-        new Rotation2d(heading),modulePos);
+    m_odometry.update(new Rotation2d(heading),modulePos);
         // SmartDashboard.putNumber("pose-rot", m_odometry.getPoseMeters().getRotation().getDegrees());
         // SmartDashboard.putNumber("pose-x", m_odometry.getPoseMeters().getX()*39.37);
         // SmartDashboard.putNumber("pose-y", m_odometry.getPoseMeters().getY()*39.37);
-//        printModuleStates();
+       printModuleStates();
       }
         catch(Exception e){
         }
@@ -387,7 +386,7 @@ public SwerveModulePosition[] getModulePositions(){
         modules[2].getDrivePositionMeters(),
         new Rotation2d(modules[2].getTurnPosition_Rad())) ;
   positions[3]=new SwerveModulePosition(
-      modules[1].getDrivePositionMeters(),
+      modules[3].getDrivePositionMeters(),
       new Rotation2d(modules[3].getTurnPosition_Rad())) ;
   return positions;
 }

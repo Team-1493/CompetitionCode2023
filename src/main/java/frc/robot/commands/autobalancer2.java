@@ -16,10 +16,13 @@ public class autobalancer2 extends CommandBase {
     private double direction,directionRad;
     private double sign;
     public int armfaceFwd = 0;
-    double scaleFactor=1/60.; //was 32
+    double scaleFactor=1/48.; //was 60
     double xposStart;
     double pitch,pitchPrev,deltaPitch;
-    double timeBalance;
+    double timeBalance=0;
+    boolean tryBalance = false;
+    double startBalance = 0;
+
 
   
 
@@ -69,10 +72,27 @@ public class autobalancer2 extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { 
-//      return Math.abs(pitch)<5;
+      //      return Math.abs(pitch)<5;
+       //   if(Math.abs(pitch)<5) SmartDashboard.putNumber("Pitch AAA",pitch);
+          if (Math.abs(pitch)<5){
+            if (tryBalance == false){
+            tryBalance = true;
+            startBalance = Timer.getFPGATimestamp();}
+          } else{
+            tryBalance = false;
+          }
+      
+          if (tryBalance){
+            timeBalance = Timer.getFPGATimestamp();
+      //      SmartDashboard.putString("balanceState", "trying");
+            return (timeBalance - startBalance >2);
+          } else{
+            return false;
+          }
 
-    if(Math.abs(pitch)<5)timeBalance=Timer.getFPGATimestamp();
-    return (Timer.getFPGATimestamp()-timeBalance>2);
+
+//    if(Math.abs(pitch)<5)timeBalance=Timer.getFPGATimestamp();
+//    return (Timer.getFPGATimestamp()-timeBalance>2);
   }
 }
 

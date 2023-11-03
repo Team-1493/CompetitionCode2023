@@ -24,7 +24,8 @@ public class LEDsystem extends SubsystemBase {
     @Override
     public void periodic() {
       do1.set(IntakeSystem.sensorValue);
-      do2.set(ArmSubsystem.ls_lower);
+//      do2.set(ArmSubsystem.ls_lower);
+      do2.set(false);
       do3.set(Robot.enabled);
 
     }

@@ -51,6 +51,8 @@ public class Stow extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_ArmSubsystem.StopMotors();
+    m_ArmSubsystem.HoldIn();
+
     m_IntakeSystem.StopMotors();
   }
 

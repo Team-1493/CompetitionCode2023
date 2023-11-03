@@ -241,7 +241,21 @@ public Command getAutonomousBlueRight3(){
   }
 
 
+  public Command getAutonomousRedWallExit(){
+    return autoGenerator.autoRedWallExit();
+  }
 
+  public Command getAutonomousRedBumpExit(){
+    return autoGenerator.autoRedBumpExit();
+  }
+
+  public Command getAutonomousBlueWallExit(){
+    return autoGenerator.autoBlueWallExit();
+  }
+
+  public Command getAutonomousBlueBumpExit(){
+    return autoGenerator.autoBlueBumpExit();
+  }
 
 
 
@@ -253,7 +267,6 @@ public Command getAutonomousBlueRight3(){
   public void setPIDslot(int slot){
     m_swervedriveSystem.setPIDSlot(slot);
   }
-
   public void turnOnRamp(){
     m_swervedriveSystem.turnOnRamp();
   }

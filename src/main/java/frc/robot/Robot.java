@@ -36,7 +36,7 @@ public class Robot extends TimedRobot {
   private Command autoRedRightBal3,autoBlueRightBal3;
   private Command autoRedRight3,autoBlueRight3;
   private Command autoRedRightBal2,autoBlueRightBal2;
-
+  private Command autoRedWallExit, autoRedBumpExit, autoBlueWallExit, autoBlueBumpExit;   
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -76,7 +76,13 @@ public class Robot extends TimedRobot {
 
 
     m_chooser.addOption("Red Right Balance 2", "Red Right Balance 2");
-        m_chooser.addOption("Blue Right Balance 2", "Blue Right Balance 2");
+    m_chooser.addOption("Blue Right Balance 2", "Blue Right Balance 2");
+
+
+    m_chooser.addOption("Red Wall Exit", "Red Wall Exit");
+    m_chooser.addOption("Red Bump Exit", "Red Bump Exit");
+    m_chooser.addOption("Blue Wall Exit", "Blue Wall Exit");
+    m_chooser.addOption("Blue Bump Exit", "Blue Bump Exit");
 
     SmartDashboard.putData("Auto choices", m_chooser);
 
@@ -106,7 +112,11 @@ public class Robot extends TimedRobot {
     autoRedRightBal2 = m_robotContainer.getAutonomousRedRightBal2();
     autoBlueRightBal2 = m_robotContainer.getAutonomousBlueRightBal2();
     
-    
+    autoRedWallExit = m_robotContainer.getAutonomousRedWallExit();
+    autoRedBumpExit = m_robotContainer.getAutonomousRedBumpExit();
+    autoBlueWallExit = m_robotContainer.getAutonomousBlueWallExit();
+    autoBlueBumpExit = m_robotContainer.getAutonomousBlueBumpExit();
+
 
     
 
@@ -116,6 +126,7 @@ public class Robot extends TimedRobot {
     m_robotContainer.turnOffRamp();
     m_robotContainer.turnOnVoltageComp();
     m_robotContainer.setPIDslot(1);  // use the auto PID gains for auto
+
 
 
   }
@@ -226,7 +237,21 @@ public class Robot extends TimedRobot {
       m_autonomousCommand=autoBlueRightBal2;
     break;
 
+    case "Red Wall Exit":
+      m_autonomousCommand=autoRedWallExit;
+    break;
+  
+    case "Red Bump Exit":
+      m_autonomousCommand=autoRedBumpExit;
+    break;
 
+    case "Blue Wall Exit":
+      m_autonomousCommand=autoBlueWallExit;
+    break;
+  
+    case "Blue Bump Exit":
+      m_autonomousCommand=autoBlueBumpExit;
+    break;
 
   
 
